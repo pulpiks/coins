@@ -1,6 +1,7 @@
 import Enemy from './Enemy';
 import Coins from './Coins';
 import Person from './Person';
+import Cactus from './Cactus';
 
 import { generatorRandomString } from '../utils';
 
@@ -19,17 +20,19 @@ export default class Game extends Phaser.State{
     coins: Coins;
     person: Person;
     tween: Phaser.Tween;
+    cactuses: Phaser.Group;
 
     init() {
         this.enemiesObj = {};
     }
 
     preload() {
-        this.load.image('person', './src/assets/phaser-dude.png');
+        this.load.image('person', './src/assets/player.png');
         this.load.tilemap('tilemap', './src/assets/level.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('tiles', './src/assets/super_mario.png');
         this.load.image('coin', './src/assets/one-coin.png');
         this.load.image('enemy', './src/assets/enemy.png');
+        this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
     }
 
     create() {
@@ -38,6 +41,7 @@ export default class Game extends Phaser.State{
         this.stage.backgroundColor = '#2d2d2d';
 
         this.map = this.add.tilemap('tilemap');
+        debugger;
         this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
 
         this.backgroundlayer = this.map.createLayer('background');
@@ -64,6 +68,37 @@ export default class Game extends Phaser.State{
 
             this.game.debug.body(enemy);
         });
+
+        this.cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+        this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
+        // this.map.createFromObjects('cactuses', 41, 'tilemap', 41, true, false, this.cactuses);
+        // this.cactuses.scale.set(0.5);
+        this.cactuses.forEach((cactus) => {
+            debugger;
+            let cactusObj = new Cactus({
+                game: this.game,
+                cactus,
+                person: this.person,
+                enemies: this.enemies
+            });
+        });
+
+
+        // this.map.objects.cactuses.forEach((cactus) => {
+        //     // let name = 'enemy_'+ generatorId.getIdForEnemy();
+        //     let cactusObj = new Cactus({
+        //         game: this.game,
+        //         cactus,
+        //         person: this.person,
+        //         enemies: this.enemies
+        //     });
+        //
+        //     this.cactusesObj[cactusObj.enemySprite.name] = enemyObj;
+        //
+        //     this.game.debug.body(enemy);
+        // });
+
         this.cursors = this.input.keyboard.createCursorKeys();
 
     }
@@ -80,7 +115,14 @@ export default class Game extends Phaser.State{
         }
     }
 
+    render() {
+        this.cactuses.forEach((cactus) => {
+            this.game.debug.body(cactus);
+        });
+    }
+
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
         this.enemiesObj[enemy.name].collideWithObstacles();
     }
+
 }

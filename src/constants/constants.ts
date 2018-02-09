@@ -4,7 +4,7 @@ export const COINS = {
 };
 
 export const PERSON = {
-    width: 20,
+    width: 40,
     height: 40,
     speed: 200
 };
@@ -20,4 +20,9 @@ export const ENEMY = {
     speed_max: 200,
     speed: 200,
     time_threshold: 2000,
+};
+
+export const CACTUS = {
+    width: 16,
+    height: 16
 };

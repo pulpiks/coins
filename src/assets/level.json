@@ -115,37 +115,40 @@
          "name":"cactuses",
          "objects":[
                 {
-                 "height":0,
-                 "id":14,
-                 "name":"",
+                 "gid":45,
+                 "height":64,
+                 "id":33,
+                 "name":"cactus",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":263.322884012539,
-                 "y":139.184952978056
+                 "width":48,
+                 "x":449.258481226609,
+                 "y":228.788603163105
                 }, 
                 {
-                 "height":0,
-                 "id":16,
-                 "name":"",
+                 "gid":45,
+                 "height":64,
+                 "id":34,
+                 "name":"cactus",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":951.393005334914,
-                 "y":80.0237107291049
+                 "width":48,
+                 "x":728.142943378003,
+                 "y":158.76566461427
                 }, 
                 {
-                 "height":0,
-                 "id":20,
-                 "name":"",
+                 "gid":45,
+                 "height":64,
+                 "id":36,
+                 "name":"cactus",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":727.622999407232,
-                 "y":197.06
+                 "width":48,
+                 "x":1475.38800489596,
+                 "y":223.758465932273
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -153,7 +156,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":22,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "properties":
     {
@@ -196,7 +199,7 @@
         }, 
         {
          "firstgid":45,
-         "source":"Untitled.json"
+         "source":"tilesetcactus.json"
         }],
  "tilewidth":16,
  "type":"map",
