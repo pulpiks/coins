@@ -2,6 +2,10 @@ import Enemy from './Enemy';
 import Coins from './Coins';
 import Person from './Person';
 
+import { generatorRandomString } from '../utils';
+
+const generatorId = generatorRandomString();
+
 export default class Game extends Phaser.State{
     sprite: Phaser.Sprite;
     group: Phaser.Group;
@@ -49,23 +53,28 @@ export default class Game extends Phaser.State{
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
         this.map.objects.enemies.forEach((enemy) => {
-            this.enemiesObj[enemy.name] = new Enemy({
+            // let name = 'enemy_'+ generatorId.getIdForEnemy();
+             let enemyObj = new Enemy({
                 game: this.game,
                 enemy,
                 person: this.person,
                 enemies: this.enemies
             });
+
+            this.enemiesObj[enemyObj.enemySprite.name] = enemyObj;
+
             this.game.debug.body(enemy);
         });
 
+        this.cursors = this.input.keyboard.createCursorKeys();
         this.cursors = this.input.keyboard.createCursorKeys();
 
     }
 
     update() {
-        this.physics.arcade.collide(this.person.sprite, this.obstacles, this.person.collideWithEnemy, null, this);
-        this.physics.arcade.collide(this.enemies, this.obstacles, null, null, this);
-        this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy, null, this);
+        this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
+        this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
+        this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person), null, this);
 
         this.person.move(this.cursors);
         this.person.coins.renderMoney();
@@ -74,11 +83,8 @@ export default class Game extends Phaser.State{
         }
     }
 
-    collisionEnemyObstaclesHandler(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
-        if (this.enemiesObj[enemy.name].body.deltaX() != 0) {
-            this.enemiesObj[enemy.name].body.velocity.y = -400;
-            // ??? this.enemiesObj[enemy.name].body.velocity.x = this.enemiesObj[enemy.name]['velocityX'];
-        }
+    collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
+        this.enemiesObj[enemy.name].collideWithObstacles();
     }
 
 }

@@ -18,5 +18,6 @@ export const ENEMY = {
     height: 90,
     speed_min: 0,
     speed_max: 200,
-    speed: 200
+    speed: 200,
+    time_threshold: 2000,
 };
