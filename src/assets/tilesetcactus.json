@@ -1,0 +1,12 @@
+{ "columns":1,
+ "image":"cactuses.png",
+ "imageheight":64,
+ "imagewidth":48,
+ "margin":0,
+ "name":"tilesetcactus",
+ "spacing":0,
+ "tilecount":1,
+ "tileheight":64,
+ "tilewidth":48,
+ "type":"tileset"
+}
