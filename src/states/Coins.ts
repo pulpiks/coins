@@ -20,10 +20,11 @@ export default class Coins {
     }
 
     renderMoney() {
-        this.coinSumText.setText(this.coin.toString());
+        this.coinSumText.setText(this.money.toString());
     }
 
     takeMoney(amount:number) {
+        console.log('%%%%%%');
         this.money -= amount;
     }
 

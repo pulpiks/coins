@@ -43,7 +43,6 @@ export default class Game extends Phaser.State{
         this.backgroundlayer = this.map.createLayer('background');
         this.backgroundlayer.resizeWorld();
 
-
         this.obstacles = this.map.createLayer('obstacles');
 
         this.physics.arcade.enable(this.obstacles);
@@ -65,8 +64,6 @@ export default class Game extends Phaser.State{
 
             this.game.debug.body(enemy);
         });
-
-        this.cursors = this.input.keyboard.createCursorKeys();
         this.cursors = this.input.keyboard.createCursorKeys();
 
     }
@@ -86,5 +83,4 @@ export default class Game extends Phaser.State{
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
         this.enemiesObj[enemy.name].collideWithObstacles();
     }
-
 }

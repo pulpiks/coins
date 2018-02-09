@@ -34,7 +34,7 @@ export default class Enemy {
 
     move(personSprite: Phaser.Sprite) {
         if (personSprite.left >= this.enemySprite.left) {
-            this.enemySprite.body.velocity.x = ENEMY.speed;
+            this.enemySprite.body.velocity.x = this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max);
         }
         else {
             if (Date.now() - this.timerChangingVelocity > ENEMY.time_threshold) {

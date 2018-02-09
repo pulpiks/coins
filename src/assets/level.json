@@ -109,8 +109,51 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"cactuses",
+         "objects":[
+                {
+                 "height":0,
+                 "id":14,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":263.322884012539,
+                 "y":139.184952978056
+                }, 
+                {
+                 "height":0,
+                 "id":16,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":951.393005334914,
+                 "y":80.0237107291049
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":727.622999407232,
+                 "y":197.06
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":8,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "properties":
     {

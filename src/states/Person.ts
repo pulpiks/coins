@@ -7,10 +7,12 @@ export default class Person {
     sprite: Phaser.Sprite;
     coins: Coins;
     tween: Phaser.Tween;
+    private timer: any;
 
     constructor( { game }) {
         this.isTouchedEnemy = false;
         this.game = game;
+        this.time = Date.now();
 
         this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
         this.sprite.width = PERSON.width;
@@ -31,19 +33,19 @@ export default class Person {
 
     collideWithEnemy(enemy:Phaser.Sprite, person: Phaser.Sprite) {
         if (!this.isTouchedEnemy) {
+            this.isTouchedEnemy = true;
             this.coins.takeMoney(10);
             this.tween = this.game.add.tween(this.sprite).to(
                 { alpha: 0 },
                 300, Phaser.Easing.Linear.None, true, 0, 100, false
             );
-            this.isTouchedEnemy = true;
-            let timer = this.game.time.create(false);
-            timer.loop(2000, this.finishCollision, this);
-            timer.start();
+            // this.timer = this.game.time.create(false);
+            // this.timer.loop(2000, this.finishCollision, this);
+            // this.timer.start();
+            this.timer = this.game.time.events.loop(2000, this.finishCollision, this);
         }
-        console.log('++++++', this.sprite.body.velocity.x);
-
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
+
     }
 
     move(cursors: Phaser.CursorKeys) {
@@ -57,13 +59,15 @@ export default class Person {
             }
             if (cursors.up.justDown) {
                 if (this.sprite.body.onFloor()) {
-                    this.sprite.body.velocity.y = -600;
+                    this.sprite.body.velocity.y = -700;
                 }
             }
         }
     }
 
     finishCollision() {
+        // this.timer.remove();
+        this.game.time.events.remove(this.timer);
         this.isTouchedEnemy = false;
         this.sprite.alpha = 1;
         this.tween.stop();
