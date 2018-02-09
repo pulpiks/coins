@@ -1,0 +1,12 @@
+{ "columns":3,
+ "image":"..\/..\/..\/..\/Untitled.png",
+ "imageheight":118,
+ "imagewidth":282,
+ "margin":0,
+ "name":"Untitled",
+ "spacing":0,
+ "tilecount":3,
+ "tileheight":116,
+ "tilewidth":94,
+ "type":"tileset"
+}

@@ -1,0 +1,26 @@
+{ "height":2,
+ "infinite":false,
+ "layers":[
+        {
+         "data":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+         "encoding":"base64",
+         "height":2,
+         "name":"\u0421\u043b\u043e\u0439 \u0442\u0430\u0439\u043b\u043e\u0432 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":3,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"left-up",
+ "tiledversion":"2018.01.23",
+ "tileheight":200,
+ "tilesets":[],
+ "tilewidth":200,
+ "type":"map",
+ "version":1,
+ "width":3
+}

@@ -1,0 +1,12 @@
+{ "columns":23,
+ "image":"simples_pimples.png",
+ "imageheight":1280,
+ "imagewidth":800,
+ "margin":2,
+ "name":"simples_pimples",
+ "spacing":2,
+ "tilecount":851,
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset"
+}

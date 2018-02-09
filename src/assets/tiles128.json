@@ -1,0 +1,12 @@
+{ "columns":4,
+ "image":"obstacles.png",
+ "imageheight":640,
+ "imagewidth":640,
+ "margin":2,
+ "name":"tiles128",
+ "spacing":2,
+ "tilecount":16,
+ "tileheight":128,
+ "tilewidth":128,
+ "type":"tileset"
+}

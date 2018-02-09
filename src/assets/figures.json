@@ -1,0 +1,27 @@
+{ "height":116,
+ "infinite":false,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eJxjYBgFo2AUjIJRQA8AAAVwAAE=",
+         "encoding":"base64",
+         "height":116,
+         "name":"\u0421\u043b\u043e\u0439 \u0442\u0430\u0439\u043b\u043e\u0432 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":3,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"2018.01.23",
+ "tileheight":116,
+ "tilesets":[],
+ "tilewidth":94,
+ "type":"map",
+ "version":1,
+ "width":3
+}

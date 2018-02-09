@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5"
+  },
+  "files": [
+    "node_modules/phaser-ce/typescript/phaser.d.ts",
+    "node_modules/phaser-ce/typescript/pixi.d.ts"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ]
+}
