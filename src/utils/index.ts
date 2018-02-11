@@ -17,10 +17,10 @@ export function getString(length = 8){
 export function generatorRandomString() {
     let idsForEnemies = [];
     return {
-        getIdForEnemy() {
+        getId() {
             let id = getString();
             if (idsForEnemies.indexOf(id) >= 0) {
-                this.getIdForEnemy();
+                this.getId();
             }
             else {
                 idsForEnemies.push(id);

@@ -24,7 +24,7 @@ export default class Enemy {
         this.enemySprite.width = ENEMY.width;
         this.enemySprite.height = ENEMY.height;
         console.log(this.enemy.name);
-        this.enemySprite.name = 'enemy_'+ generatorId.getIdForEnemy();
+        this.enemySprite.name = 'enemy_'+ generatorId.getId();
         this.enemySprite.anchor.set(0.5, 1);
         // enemySprite.body.gravity.y = 200;
         this.enemySprite.body.collideWorldBounds = true;

@@ -1,5 +1,6 @@
 import { PERSON } from '../constants/constants';
 import Coins from './Coins';
+import Score from './Score';
 
 export default class Person {
     isTouchedEnemy: boolean;
@@ -7,12 +8,16 @@ export default class Person {
     sprite: Phaser.Sprite;
     coins: Coins;
     tween: Phaser.Tween;
+    time: number;
+    cactusesCount: number;
     private timer: any;
 
-    constructor( { game }) {
+    constructor( { game, coins }) {
         this.isTouchedEnemy = false;
         this.game = game;
+        this.coins = coins;
         this.time = Date.now();
+        this.cactusesCount = 0;
 
         this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
         this.sprite.width = PERSON.width;
@@ -28,7 +33,6 @@ export default class Person {
         this.sprite.body.collideWorldBounds = true;
 
         this.game.camera.follow(this.sprite);
-        this.coins = new Coins({ game: this.game });
     }
 
     collideWithEnemy(enemy:Phaser.Sprite, person: Phaser.Sprite) {
@@ -73,4 +77,12 @@ export default class Person {
         this.tween.stop();
     }
 
+    collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
+        console.log(persionSprite, cactus);
+
+    }
+
+    addCactus() {
+        this.cactusesCount++;
+    }
 }

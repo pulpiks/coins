@@ -1,12 +1,19 @@
 import { CACTUS } from '../constants/constants';
 
+import { generatorRandomString } from '../utils';
+
+const generatorId = generatorRandomString();
+
+
 export default class Cactus {
     props: any;
-    constructor(props) {
-        this.props = props;
-        this.props.cactus.width = 20;
-        this.props.cactus.height = 40;
+    name: string;
 
+    constructor({ cactus, game }: { cactus:Phaser.Sprite, game:Phaser.State }) {
+        cactus.width = 20;
+        cactus.height = 40;
+        cactus.body.immovable = true;
+        cactus.name = 'cactus_'+ generatorId.getId();
         // this.game = game;
         // this.enemy = enemy;
         // this.person = person;
@@ -24,5 +31,14 @@ export default class Cactus {
         // this.enemySprite.body.collideWorldBounds = true;
         // this.enemySprite.body.immovable = true;
         // this.timerChangingVelocity = Date.now();
+    }
+
+    touch(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
+        console.log(persionSprite, cactus);
+        cactus.destroy();
+    }
+
+    throwOne() {
+        console.log('throw');
     }
 }
