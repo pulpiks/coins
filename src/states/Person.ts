@@ -20,6 +20,7 @@ export default class Person {
         this.cactusesCount = 0;
 
         this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
+        this.animationsRunRight = this.sprite.animations.add('runToTheRight', [0, 1]);
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
         this.sprite.anchor.set(0.5, 1);
@@ -60,6 +61,7 @@ export default class Person {
             }
             else if (cursors.right.isDown) {
                 this.sprite.body.velocity.x = 200;
+                this.sprite.animations.play('runToTheRight', 20);
             }
             if (cursors.up.justDown) {
                 if (this.sprite.body.onFloor()) {

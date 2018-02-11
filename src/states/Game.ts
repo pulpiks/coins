@@ -31,7 +31,7 @@ export default class Game extends Phaser.State{
     }
 
     preload() {
-        this.load.image('person', './src/assets/player.png');
+        this.load.spritesheet('person', './src/assets/player.png', 32, 32, 2);
         this.load.tilemap('tilemap', './src/assets/level.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('tiles', './src/assets/super_mario.png');
         this.load.image('coin', './src/assets/one-coin.png');
