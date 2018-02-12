@@ -18,16 +18,15 @@ export default class Game extends Phaser.State{
     enemiesLayer: Phaser.TilemapLayer;
     enemies: Phaser.Group;
     enemiesObj: any;
-    cactusesObj: any;
     coins: Coins;
     person: Person;
     tween: Phaser.Tween;
     cactuses: Phaser.Group;
+    thrownCactuses: Phaser.Sprite[] = [];
     score: any;
 
     init() {
         this.enemiesObj = {};
-        this.cactusesObj = {};
     }
 
     preload() {
@@ -61,7 +60,8 @@ export default class Game extends Phaser.State{
 
         this.person = new Person({
             game: this.game,
-            coins: this.coins
+            coins: this.coins,
+            onThrowCactus: this.throwCactus.bind(this),
         });
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
@@ -82,15 +82,12 @@ export default class Game extends Phaser.State{
         this.cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
         this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
+
         this.cactuses.forEach((cactus) => {
-            let cactusObj = new Cactus({
-                game: this.game,
-                cactus,
-                person: this.person,
-                enemies: this.enemies
-            });
-            this.cactusesObj[cactus.name] = cactusObj;
-        });
+            cactus.body.allowGravity = false;
+            cactus.width = 20;
+            cactus.height = 20;
+        }, this);
 
         this.score = new Score({
             game: this.game,
@@ -106,8 +103,10 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person), null, this);
         this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collideWithCactus, null, this);
+        this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
+        this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
 
-        this.person.move();
+        this.person.update();
         this.score.update();
         for(let name in this.enemiesObj) {
             this.enemiesObj[name].move(this.person.sprite);
@@ -117,7 +116,7 @@ export default class Game extends Phaser.State{
     render() {
         this.cactuses.forEach((cactus) => {
             this.game.debug.body(cactus);
-        });
+        }, this);
 
         this.game.debug.geom(this.person.sprite.getBounds());
     }
@@ -127,8 +126,31 @@ export default class Game extends Phaser.State{
     }
 
     collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
-        this.cactusesObj[cactus.name].touch(persionSprite, cactus);
-        this.person.addCactus();
+
+        this.person.addCactus(cactus);
+        this.thrownCactuses.pop();
     }
 
+    collideEnemyWithCactus(enemy: Phase.Sprite, cactus: Phaser.Sprite) {
+        this.thrownCactuses.pop();
+        cactus.destroy();
+        // todo enemy harm
+    }
+
+    collideObstaclesWithCactus(obstacle: Phase.Sprite, cactus: Phaser.Sprite) {
+        this.thrownCactuses.pop();
+        cactus.destroy();
+    }
+
+    throwCactus(cactus, x, y, velocityX, angularVelocity) {
+        console.log(cactus.parent);
+        this.thrownCactuses.push(cactus);
+        console.log(cactus.parent === this.thrownCactuses);
+
+        cactus.body.x = x;
+        cactus.body.y = y;
+        cactus.body.velocity.x = velocityX;
+        cactus.body.velocity.y = 0;
+        cactus.body.angularVelocity = angularVelocity;
+    }
 }

@@ -9,17 +9,19 @@ export default class Person {
     coins: Coins;
     tween: Phaser.Tween;
     time: number;
-    cactusesCount: number;
-    private cactusSprite;
-    private cactusChild;
+    private direction: number = 1;
+    private cactuses: Phaser.Sprite[] = [];
     private timer: any;
+    private keys: {[key: string]: Phaser.Key};
+    private onThrowCactus: (cactus: Phaser.Sprite, x: number, y: number, velocityX: number, angularVelocity: number) => void;
 
-    constructor( { game, coins }) {
+    constructor( { game, coins, onThrowCactus }) {
         this.isTouchedEnemy = false;
         this.game = game;
         this.coins = coins;
         this.time = Date.now();
-        this.cactusesCount = 0;
+        this.cactuses = [];
+        this.onThrowCactus = onThrowCactus;
 
         this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
         this.animationsRunRight = this.sprite.animations.add('runToTheRight', [2, 3, 4, 5]);
@@ -44,8 +46,8 @@ export default class Person {
             down: this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
             left: this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
             right: this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
-            a: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
-            d: this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+            a: this.game.input.keyboard.addKey(Phaser.Keyboard.A), //throw
+            d: this.game.input.keyboard.addKey(Phaser.Keyboard.D) //delete
         };
     }
 
@@ -66,15 +68,17 @@ export default class Person {
 
     }
 
-    move() {
+    update() {
         if (!this.isTouchedEnemy) {
             this.sprite.body.velocity.x = 0;
 
             if (this.keys.left.isDown) {
+                this.direction = -1;
                 this.sprite.body.velocity.x = -200;
             }
             else if (this.keys.right.isDown) {
                 this.sprite.body.velocity.x = 200;
+                this.direction = 1;
                 // this.sprite.animations.play('runToTheRight', 20);
             }
             if (this.keys.up.isDown) {
@@ -83,11 +87,14 @@ export default class Person {
                     this.sprite.body.velocity.y = -700;
                 }
             }
-            if (this.keys.a.isDown && this.cactusesCount>0) {
-                this.throwCactus();
-            }
-            if (this.keys.d.justDown){
-                this.hideCactus();
+            if (this.cactuses.length > 0) {
+                if (this.keys.a.justDown) {
+                    debugger;
+                    this.throwCactus(this.cactuses.pop());
+                }
+                // if (this.keys.d.isDown){
+                //     this.hideCactus();
+                // }
             }
         }
     }
@@ -105,36 +112,33 @@ export default class Person {
 
     }
 
-    addCactus() {
-        this.cactusesCount++;
+    addCactus(cactus: Phaser.Sprite) {
+        cactus.kill();
+        // this.sprite.addChild(cactus);
+        this.cactuses.push(cactus);
     }
 
-    handleCactus(key) {
-        switch (key.keyCode) {
-            case Phaser.Keyboard.A:
-                this.throwCactus();
-                break;
-            case Phaser.Keyboard.D:
-                this.hideCactus();
-                break;
-            default: break;
-        }
-    }
+    // handleCactus(key) {
+    //     switch (key.keyCode) {
+    //         case Phaser.Keyboard.A:
+    //             this.throwCactus();
+    //             break;
+    //         case Phaser.Keyboard.D:
+    //             this.hideCactus();
+    //             break;
+    //         default: break;
+    //     }
+    // }
 
-    throwCactus() {
-        if (this.cactusesCount) {
-            // TODO make coordinates according to anchor and height without hardcode
-            this.cactusSprite = this.game.make.sprite(5, -30, 'tilescactus');
-            this.cactusSprite.width = 10;
-            this.cactusSprite.height = 20;
-            this.cactusChild = this.sprite.addChild(this.cactusSprite);
-            this.cactusChild.bringToTop();
-            this.cactusChild.anchor.set(0.5, 1);
-        }
-    }
-
-    hideCactus() {
-        console.log('cb remove');
-        this.sprite.removeChild(this.cactusChild);
+    throwCactus(cactus: Phaser.Sprite) {
+        cactus.revive();
+        debugger;
+        this.onThrowCactus(
+            cactus,
+            this.sprite.body.x,
+            this.sprite.body.y - this.sprite.body.halfHeight,
+            this.direction * 200,
+            100
+        );
     }
 }

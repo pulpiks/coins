@@ -22,7 +22,7 @@ class Score {
         this.cactusesText = this.game.add.text(
             0,
             10,
-            this.person.cactusesCount,
+            this.person.cactuses.length,
             {
                 font: '25px Arial',
                 fill: '#fff'
@@ -39,7 +39,7 @@ class Score {
     }
 
     updateCounterCactus() {
-        this.cactusesText.setText(this.person.cactusesCount);
+        this.cactusesText.setText(this.person.cactuses.length);
     }
 
     kill() {
