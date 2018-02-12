@@ -45,7 +45,7 @@ export default class Coins {
         this.money += amount;
     }
 
-    get coin() {
+    get amount() {
         return this.money;
     }
 }

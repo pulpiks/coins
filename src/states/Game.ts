@@ -99,7 +99,6 @@ export default class Game extends Phaser.State{
         });
 
         this.cursors = this.input.keyboard.createCursorKeys();
-
     }
 
     update() {
@@ -119,6 +118,8 @@ export default class Game extends Phaser.State{
         this.cactuses.forEach((cactus) => {
             this.game.debug.body(cactus);
         });
+
+        this.game.debug.geom(this.person.sprite.getBounds());
     }
 
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
