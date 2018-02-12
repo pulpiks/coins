@@ -107,7 +107,7 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person), null, this);
         this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collideWithCactus, null, this);
 
-        this.person.move(this.cursors);
+        this.person.move();
         this.score.update();
         for(let name in this.enemiesObj) {
             this.enemiesObj[name].move(this.person.sprite);

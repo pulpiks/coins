@@ -39,10 +39,14 @@ export default class Person {
 
         this.game.camera.follow(this.sprite);
 
-        this.throwCactusKey = this.game.input.keyboard.addKey(Phaser.KeyCode.A);
-        this.hideCactusKey = this.game.input.keyboard.addKey(Phaser.KeyCode.D);
-        this.throwCactusKey.onDown.add(this.throwCactus, this);
-        this.hideCactusKey.onDown.add(this.hideCactus, this);
+        this.keys = {
+            up: this.game.input.keyboard.addKey(Phaser.Keyboard.UP),
+            down: this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
+            left: this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+            right: this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+            a: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+            d: this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+        };
     }
 
     collideWithEnemy(enemy:Phaser.Sprite, person: Phaser.Sprite) {
@@ -62,23 +66,29 @@ export default class Person {
 
     }
 
-    move(cursors: Phaser.CursorKeys) {
+    move() {
         if (!this.isTouchedEnemy) {
             this.sprite.body.velocity.x = 0;
-            if (cursors.left.isDown) {
+
+            if (this.keys.left.isDown) {
                 this.sprite.body.velocity.x = -200;
             }
-            else if (cursors.right.isDown) {
+            else if (this.keys.right.isDown) {
                 this.sprite.body.velocity.x = 200;
                 // this.sprite.animations.play('runToTheRight', 20);
             }
-            if (cursors.up.justDown) {
+            if (this.keys.up.isDown) {
                 if (this.sprite.body.onFloor()) {
                     this.sprite.animations.play('jump', 20);
                     this.sprite.body.velocity.y = -700;
                 }
             }
-
+            if (this.keys.a.isDown && this.cactusesCount>0) {
+                this.throwCactus();
+            }
+            if (this.keys.d.justDown){
+                this.hideCactus();
+            }
         }
     }
 
@@ -124,8 +134,7 @@ export default class Person {
     }
 
     hideCactus() {
-        if (this.cactusesCount) {
-            this.sprite.removeChild(this.cactusChild);
-        }
+        console.log('cb remove');
+        this.sprite.removeChild(this.cactusChild);
     }
 }
