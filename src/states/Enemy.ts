@@ -23,6 +23,7 @@ export default class Enemy {
         );
         this.enemySprite.width = ENEMY.width;
         this.enemySprite.height = ENEMY.height;
+        this.enemySprite.body.gravity.y = 200;
         console.log(this.enemy.name);
         this.enemySprite.name = 'enemy_'+ generatorId.getId();
         this.enemySprite.anchor.set(0.5, 1);
@@ -33,6 +34,7 @@ export default class Enemy {
     }
 
     move(personSprite: Phaser.Sprite) {
+        console.log('----', this.enemySprite.body);
         if (personSprite.left >= this.enemySprite.left) {
             this.enemySprite.body.velocity.x = this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max);
         }
@@ -45,7 +47,6 @@ export default class Enemy {
                 // ??? this.enemiesObj[this.enemySprite.name]['velocityX'] = this.enemySprite.body.velocity.x;
             }
         }
-        this.enemySprite.body.gravity.y = 200;
     }
 
     collideWithObstacles(enemy: Phaser.Sprite, obstacles: Phaser.Sprite) {

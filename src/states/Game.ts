@@ -99,22 +99,24 @@ export default class Game extends Phaser.State{
     }
 
     update() {
+        console.log('this.thrownCactuses = ', this.thrownCactuses, this.thrownCactuses.length);
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person), null, this);
-        this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collideWithCactus, null, this);
+        this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collidePersonWithCactus, null, this);
         this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
         this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
 
         this.person.update();
         this.score.update();
-        for(let name in this.enemiesObj) {
+        for (let name in this.enemiesObj) {
             this.enemiesObj[name].move(this.person.sprite);
         }
+        this.removeKilledCactuses();
     }
 
     render() {
-        this.cactuses.forEach((cactus) => {
+        this.cactuses.forEachAlive((cactus) => {
             this.game.debug.body(cactus);
         }, this);
 
@@ -125,32 +127,41 @@ export default class Game extends Phaser.State{
         this.enemiesObj[enemy.name].collideWithObstacles();
     }
 
-    collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
-
+    collidePersonWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
         this.person.addCactus(cactus);
-        this.thrownCactuses.pop();
+        // this.thrownCactuses.pop();
     }
 
-    collideEnemyWithCactus(enemy: Phase.Sprite, cactus: Phaser.Sprite) {
+    collideEnemyWithCactus(cactus: Phaser.Sprite, enemy: Phaser.Sprite) {
         this.thrownCactuses.pop();
-        cactus.destroy();
+        cactus.kill();
+        cactus.isKilled = true;
         // todo enemy harm
     }
 
-    collideObstaclesWithCactus(obstacle: Phase.Sprite, cactus: Phaser.Sprite) {
-        this.thrownCactuses.pop();
-        cactus.destroy();
+    collideObstaclesWithCactus(obstacle: Phaser.Sprite) {
+        const cactus = this.thrownCactuses.pop();
+        cactus.kill();
+        cactus.isKilled = true;
     }
 
     throwCactus(cactus, x, y, velocityX, angularVelocity) {
         console.log(cactus.parent);
         this.thrownCactuses.push(cactus);
-        console.log(cactus.parent === this.thrownCactuses);
-
         cactus.body.x = x;
         cactus.body.y = y;
         cactus.body.velocity.x = velocityX;
         cactus.body.velocity.y = 0;
         cactus.body.angularVelocity = angularVelocity;
+    }
+
+
+    removeKilledCactuses() {
+        this.cactuses.forEach((cactus) => {
+            if (cactus.isKilled){
+                debugger;
+                cactus.destroy();
+            }
+        });
     }
 }

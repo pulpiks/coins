@@ -89,7 +89,6 @@ export default class Person {
             }
             if (this.cactuses.length > 0) {
                 if (this.keys.a.justDown) {
-                    debugger;
                     this.throwCactus(this.cactuses.pop());
                 }
                 // if (this.keys.d.isDown){
@@ -114,8 +113,8 @@ export default class Person {
 
     addCactus(cactus: Phaser.Sprite) {
         cactus.kill();
-        // this.sprite.addChild(cactus);
         this.cactuses.push(cactus);
+        // this.sprite.addChild(cactus);
     }
 
     // handleCactus(key) {
@@ -132,7 +131,6 @@ export default class Person {
 
     throwCactus(cactus: Phaser.Sprite) {
         cactus.revive();
-        debugger;
         this.onThrowCactus(
             cactus,
             this.sprite.body.x,
