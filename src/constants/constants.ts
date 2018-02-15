@@ -13,6 +13,8 @@ export const ENEMIES = {
     count: 5
 };
 
+export const ENEMY_TYPES = ['FSB', 'official', 'gangster', 'prosecutor'];
+
 export const ENEMY = {
     width: 30,
     height: 90,
@@ -20,6 +22,7 @@ export const ENEMY = {
     speed_max: 200,
     speed: 200,
     time_threshold: 2000,
+    time_disabled: 1500
 };
 
 export const CACTUS = {

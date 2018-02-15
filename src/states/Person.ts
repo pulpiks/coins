@@ -1,4 +1,4 @@
-import { PERSON } from '../constants/constants';
+import {PERSON, ENEMY} from '../constants/constants';
 import Coins from './Coins';
 import Score from './Score';
 
@@ -52,20 +52,34 @@ export default class Person {
     }
 
     collideWithEnemy(enemy:Phaser.Sprite, person: Phaser.Sprite) {
-        if (!this.isTouchedEnemy) {
-            this.isTouchedEnemy = true;
-            this.coins.takeMoney(10);
-            this.tween = this.game.add.tween(this.sprite).to(
-                { alpha: 0 },
-                300, Phaser.Easing.Linear.None, true, 0, 100, false
-            );
-            // this.timer = this.game.time.create(false);
-            // this.timer.loop(2000, this.finishCollision, this);
-            // this.timer.start();
-            this.timer = this.game.time.events.loop(2000, this.finishCollision, this);
+        switch(enemy.type) {
+            case 'official':
+                if (!this.isTouchedEnemy && !enemy.isDisabled) {
+                    this.coins.takeMoney(10);
+                    this.addDisabledAnimation();
+                }
+                break;
+            case 'gangster':
+                this.coins.takeMoney(10);
+                break;
+            case 'official':
+                this.reduceMood();
+                break;
+            default: break;
         }
-        this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
+    }
 
+    addDisabledAnimation() {
+        this.isTouchedEnemy = true;
+        this.tween = this.game.add.tween(this.sprite).to(
+            { alpha: 0 },
+            300, Phaser.Easing.Linear.None, true, 0, 100, false
+        );
+        // this.timer = this.game.time.create(false);
+        // this.timer.loop(2000, this.finishCollision, this);
+        // this.timer.start();
+        this.timer = this.game.time.events.loop(2000, this.finishCollision, this);
+        this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
 
     update() {
@@ -138,5 +152,9 @@ export default class Person {
             this.direction * 200,
             100
         );
+    }
+
+    reduceMood() {
+        alert('reduce mood');
     }
 }

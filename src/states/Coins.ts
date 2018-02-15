@@ -37,7 +37,6 @@ export default class Coins {
     }
 
     takeMoney(amount:number) {
-        console.log('%%%%%%');
         this.money -= amount;
     }
 

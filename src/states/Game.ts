@@ -136,7 +136,10 @@ export default class Game extends Phaser.State{
         this.thrownCactuses.pop();
         cactus.kill();
         cactus.isKilled = true;
+
         // todo enemy harm
+
+        this.enemiesObj[enemy.name].onCactusCollision();
     }
 
     collideObstaclesWithCactus(obstacle: Phaser.Sprite) {

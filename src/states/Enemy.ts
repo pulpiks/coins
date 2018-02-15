@@ -10,12 +10,14 @@ export default class Enemy {
     enemy: any;
     person: Phaser.Sprite;
     timerChangingVelocity: Phaser.number;
+    isDisabled: boolean;
 
     constructor({ game, enemy, person, enemies }) {
         this.game = game;
         this.enemy = enemy;
         this.person = person;
-        this.enemies = enemies
+        this.enemies = enemies;
+        this.enemy.type = 'fsb';
         this.enemySprite = this.enemies.create(
             this.enemy.x,
             this.enemy.y,
@@ -51,5 +53,35 @@ export default class Enemy {
 
     collideWithObstacles(enemy: Phaser.Sprite, obstacles: Phaser.Sprite) {
             // this.enemiesObj[enemy.name].body.velocity.y = -400;
+    }
+
+    onCactusCollision() {
+        switch(this.enemy.type) {
+            case 'fsb':
+                this.deactivateForTheTime();
+            case 'official':
+                break;
+            default: break;
+        }
+    }
+
+    deactivateForTheTime() {
+        this.isDisabled = true;
+        this.tween = this.game.add.tween(this.enemySprite).to(
+            { alpha: 0 },
+            300, Phaser.Easing.Linear.None, true, 0, 100, false
+        );
+        // this.timer = this.game.time.create(false);
+        // this.timer.loop(2000, this.finishCollision, this);
+        // this.timer.start();
+        this.timer = this.game.time.events.loop(ENEMY.time_disabled, this.finishCollision, this);
+    }
+
+    finishCollision() {
+        // this.timer.remove();
+        this.game.time.events.remove(this.timer);
+        this.isDisabled = false;
+        this.enemySprite.alpha = 1;
+        this.tween.stop();
     }
 }
