@@ -67,16 +67,18 @@ export default class Game extends Phaser.State{
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
         this.map.objects.enemies.forEach((enemy) => {
             // let name = 'enemy_'+ generatorId.getIdForEnemy();
-             let enemyObj = new Enemy({
-                game: this.game,
-                enemy,
-                person: this.person,
-                enemies: this.enemies
-            });
+            if (enemy.visible) {
+                let enemyObj = new Enemy({
+                    game: this.game,
+                    enemy,
+                    person: this.person,
+                    enemies: this.enemies
+                });
 
-            this.enemiesObj[enemyObj.enemySprite.name] = enemyObj;
+                this.enemiesObj[enemyObj.enemySprite.name] = enemyObj;
 
-            this.game.debug.body(enemy);
+                this.game.debug.body(enemy);
+            }
         });
 
         this.cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
@@ -99,10 +101,10 @@ export default class Game extends Phaser.State{
     }
 
     update() {
-        console.log('this.thrownCactuses = ', this.thrownCactuses, this.thrownCactuses.length);
+        // console.log('this.thrownCactuses = ', this.thrownCactuses, this.thrownCactuses.length);
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
-        this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person), null, this);
+        this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person, this.enemiesObj), null, this);
         this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collidePersonWithCactus, null, this);
         this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
         this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
@@ -149,7 +151,7 @@ export default class Game extends Phaser.State{
     }
 
     throwCactus(cactus, x, y, velocityX, angularVelocity) {
-        console.log(cactus.parent);
+        // console.log(cactus.parent);
         this.thrownCactuses.push(cactus);
         cactus.body.x = x;
         cactus.body.y = y;
@@ -157,7 +159,6 @@ export default class Game extends Phaser.State{
         cactus.body.velocity.y = 0;
         cactus.body.angularVelocity = angularVelocity;
     }
-
 
     removeKilledCactuses() {
         this.cactuses.forEach((cactus) => {

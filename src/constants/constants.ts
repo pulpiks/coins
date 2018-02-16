@@ -1,4 +1,3 @@
-export const STATE_GAME = 'game';
 export const COINS = {
     startSum: 1000
 };
@@ -22,7 +21,7 @@ export const ENEMY = {
     speed_max: 200,
     speed: 200,
     time_threshold: 2000,
-    time_disabled: 1500
+    time_disabled: 3000
 };
 
 export const CACTUS = {

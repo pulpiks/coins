@@ -17,7 +17,7 @@ export default class Enemy {
         this.enemy = enemy;
         this.person = person;
         this.enemies = enemies;
-        this.enemy.type = 'fsb';
+        this.enemy.type = this.enemy.properties && this.enemy.properties.enemy_type;
         this.enemySprite = this.enemies.create(
             this.enemy.x,
             this.enemy.y,
@@ -26,7 +26,6 @@ export default class Enemy {
         this.enemySprite.width = ENEMY.width;
         this.enemySprite.height = ENEMY.height;
         this.enemySprite.body.gravity.y = 200;
-        console.log(this.enemy.name);
         this.enemySprite.name = 'enemy_'+ generatorId.getId();
         this.enemySprite.anchor.set(0.5, 1);
         // enemySprite.body.gravity.y = 200;
@@ -36,7 +35,10 @@ export default class Enemy {
     }
 
     move(personSprite: Phaser.Sprite) {
-        console.log('----', this.enemySprite.body);
+        if (this.isDisabled) {
+            return true;
+        }
+        this.enemySprite.body.moves = true;
         if (personSprite.left >= this.enemySprite.left) {
             this.enemySprite.body.velocity.x = this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max);
         }
@@ -56,10 +58,14 @@ export default class Enemy {
     }
 
     onCactusCollision() {
+        debugger;
         switch(this.enemy.type) {
             case 'fsb':
+                console.time('1111');
                 this.deactivateForTheTime();
             case 'official':
+                break;
+            case 'prosecutor':
                 break;
             default: break;
         }
@@ -67,6 +73,7 @@ export default class Enemy {
 
     deactivateForTheTime() {
         this.isDisabled = true;
+        this.enemySprite.body.moves = false;
         this.tween = this.game.add.tween(this.enemySprite).to(
             { alpha: 0 },
             300, Phaser.Easing.Linear.None, true, 0, 100, false
@@ -79,9 +86,11 @@ export default class Enemy {
 
     finishCollision() {
         // this.timer.remove();
+        console.timeEnd('1111');
         this.game.time.events.remove(this.timer);
         this.isDisabled = false;
         this.enemySprite.alpha = 1;
         this.tween.stop();
+
     }
 }

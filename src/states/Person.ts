@@ -51,10 +51,11 @@ export default class Person {
         };
     }
 
-    collideWithEnemy(enemy:Phaser.Sprite, person: Phaser.Sprite) {
-        switch(enemy.type) {
-            case 'official':
-                if (!this.isTouchedEnemy && !enemy.isDisabled) {
+    collideWithEnemy(enemies: Array, person: Phaser.Sprite, enemy:Phaser.Sprite) {
+        debugger;
+        switch(enemies[enemy.name].enemy.type) {
+            case 'fsb':
+                if (!this.isTouchedEnemy && !enemies[enemy.name].isDisabled) {
                     this.coins.takeMoney(10);
                     this.addDisabledAnimation();
                 }
@@ -121,7 +122,7 @@ export default class Person {
     }
 
     collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
-        console.log(persionSprite, cactus);
+        // console.log(persionSprite, cactus);
 
     }
 
@@ -156,5 +157,9 @@ export default class Person {
 
     reduceMood() {
         alert('reduce mood');
+    }
+
+    meetCrowd() {
+        alert('next stage');
     }
 }

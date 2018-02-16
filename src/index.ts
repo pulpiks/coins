@@ -5,6 +5,7 @@ import {
 import { rgResizeBody } from './utils/sizes';
 
 import Game from './states/Game';
+import FinalScreen from './states/FinalScreen';
 
 const containerNode = document.querySelector('.js-game-container') as HTMLElement;
 
@@ -19,9 +20,10 @@ function initGame() {
         renderer: Phaser.CANVAS
     });
 
-    game.state.add(STATE_GAME, Game);
+    game.state.add('Game', Game);
+    game.state.add('Finish', FinalScreen);
 
-    game.state.start(STATE_GAME);
+    game.state.start('Game');
 }
 
 
