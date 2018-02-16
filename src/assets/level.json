@@ -123,7 +123,7 @@
                     },
                  "rotation":0,
                  "type":"enemy",
-                 "visible":false,
+                 "visible":true,
                  "width":0,
                  "x":1515.49,
                  "y":238.020995738489
@@ -183,8 +183,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":1475.38800489596,
-                 "y":223.758465932273
+                 "x":1175.39,
+                 "y":123.76
                 }],
          "opacity":1,
          "type":"objectgroup",

@@ -64,6 +64,7 @@ export default class Enemy {
                 console.time('1111');
                 this.deactivateForTheTime();
             case 'official':
+                this.kill();
                 break;
             case 'prosecutor':
                 break;
@@ -92,5 +93,9 @@ export default class Enemy {
         this.enemySprite.alpha = 1;
         this.tween.stop();
 
+    }
+
+    kill() {
+        this.enemySprite.destroy();
     }
 }

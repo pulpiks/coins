@@ -61,13 +61,22 @@ export default class Person {
                 }
                 break;
             case 'gangster':
-                this.coins.takeMoney(10);
+            case 'prosecutor':
+                if (!this.isTouchedEnemy) {
+                    this.coins.takeMoney(10);
+                    this.deactivateForTime();
+                }
                 break;
             case 'official':
                 this.reduceMood();
                 break;
             default: break;
         }
+    }
+
+    deactivateForTime() {
+        this.isTouchedEnemy = true;
+        this.timer = this.game.time.events.loop(2000, this.activate, this);
     }
 
     addDisabledAnimation() {
@@ -115,10 +124,19 @@ export default class Person {
 
     finishCollision() {
         // this.timer.remove();
-        this.game.time.events.remove(this.timer);
-        this.isTouchedEnemy = false;
+       this.endAnimation();
+       this.activate();
+    }
+
+
+    endAnimation() {
         this.sprite.alpha = 1;
         this.tween.stop();
+    }
+
+    activate() {
+        this.game.time.events.remove(this.timer);
+        this.isTouchedEnemy = false;
     }
 
     collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
