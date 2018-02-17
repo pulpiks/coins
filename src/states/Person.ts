@@ -61,13 +61,13 @@ export default class Person {
                 }
                 break;
             case 'gangster':
-            case 'prosecutor':
-                if (!this.isTouchedEnemy) {
+            case 'official':
+                if (!this.isEnabledCollision) {
                     this.coins.takeMoney(10);
                     this.deactivateForTime();
                 }
                 break;
-            case 'official':
+            case 'prosecutor':
                 this.reduceMood();
                 break;
             default: break;
@@ -75,7 +75,7 @@ export default class Person {
     }
 
     deactivateForTime() {
-        this.isTouchedEnemy = true;
+        this.isEnabledCollision = true;
         this.timer = this.game.time.events.loop(2000, this.activate, this);
     }
 
@@ -136,7 +136,7 @@ export default class Person {
 
     activate() {
         this.game.time.events.remove(this.timer);
-        this.isTouchedEnemy = false;
+        this.isEnabledCollision = false;
     }
 
     collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {

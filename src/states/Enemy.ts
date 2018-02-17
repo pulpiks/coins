@@ -63,6 +63,7 @@ export default class Enemy {
             case 'fsb':
                 console.time('1111');
                 this.deactivateForTheTime();
+                break;
             case 'official':
                 this.kill();
                 break;
@@ -96,6 +97,6 @@ export default class Enemy {
     }
 
     kill() {
-        this.enemySprite.destroy();
+        this.enemySprite.kill();
     }
 }
