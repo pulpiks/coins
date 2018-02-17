@@ -1,6 +1,9 @@
-import {PERSON, ENEMY} from '../constants/constants';
 import Coins from './Coins';
-import Score from './Score';
+
+import {
+    PERSON,
+    ENEMY_TYPES
+} from '../constants/constants';
 
 export default class Person {
     isTouchedEnemy: boolean;
@@ -11,9 +14,11 @@ export default class Person {
     time: number;
     private direction: number = 1;
     private cactuses: Phaser.Sprite[] = [];
-    private timer: any;
+    private timer: Phaser.TimerEvent;
     private keys: {[key: string]: Phaser.Key};
     private onThrowCactus: (cactus: Phaser.Sprite, x: number, y: number, velocityX: number, angularVelocity: number) => void;
+    private isEnabledCollision: false;
+    private animationsRunRight, animationsJump, animationsStand: Phaser.Animation;
 
     constructor( { game, coins, onThrowCactus }) {
         this.isTouchedEnemy = false;
@@ -54,20 +59,20 @@ export default class Person {
     collideWithEnemy(enemies: Array, person: Phaser.Sprite, enemy:Phaser.Sprite) {
         debugger;
         switch(enemies[enemy.name].enemy.type) {
-            case 'fsb':
+            case ENEMY_TYPES.fsb:
                 if (!this.isTouchedEnemy && !enemies[enemy.name].isDisabled) {
                     this.coins.takeMoney(10);
                     this.addDisabledAnimation();
                 }
                 break;
-            case 'gangster':
-            case 'official':
+            case ENEMY_TYPES.gangster:
+            case ENEMY_TYPES.official:
                 if (!this.isEnabledCollision) {
                     this.coins.takeMoney(10);
                     this.deactivateForTime();
                 }
                 break;
-            case 'prosecutor':
+            case ENEMY_TYPES.prosecutor:
                 this.reduceMood();
                 break;
             default: break;
@@ -85,9 +90,7 @@ export default class Person {
             { alpha: 0 },
             300, Phaser.Easing.Linear.None, true, 0, 100, false
         );
-        // this.timer = this.game.time.create(false);
-        // this.timer.loop(2000, this.finishCollision, this);
-        // this.timer.start();
+
         this.timer = this.game.time.events.loop(2000, this.finishCollision, this);
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
@@ -103,27 +106,24 @@ export default class Person {
             else if (this.keys.right.isDown) {
                 this.sprite.body.velocity.x = 200;
                 this.direction = 1;
-                // this.sprite.animations.play('runToTheRight', 20);
             }
+
             if (this.keys.up.isDown) {
                 if (this.sprite.body.onFloor()) {
                     this.sprite.animations.play('jump', 20);
                     this.sprite.body.velocity.y = -700;
                 }
             }
+
             if (this.cactuses.length > 0) {
                 if (this.keys.a.justDown) {
                     this.throwCactus(this.cactuses.pop());
                 }
-                // if (this.keys.d.isDown){
-                //     this.hideCactus();
-                // }
             }
         }
     }
 
     finishCollision() {
-        // this.timer.remove();
        this.endAnimation();
        this.activate();
     }
@@ -140,27 +140,13 @@ export default class Person {
     }
 
     collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
-        // console.log(persionSprite, cactus);
 
     }
 
     addCactus(cactus: Phaser.Sprite) {
         cactus.kill();
         this.cactuses.push(cactus);
-        // this.sprite.addChild(cactus);
     }
-
-    // handleCactus(key) {
-    //     switch (key.keyCode) {
-    //         case Phaser.Keyboard.A:
-    //             this.throwCactus();
-    //             break;
-    //         case Phaser.Keyboard.D:
-    //             this.hideCactus();
-    //             break;
-    //         default: break;
-    //     }
-    // }
 
     throwCactus(cactus: Phaser.Sprite) {
         cactus.revive();
@@ -174,6 +160,6 @@ export default class Person {
     }
 
     reduceMood() {
-        alert('reduce mood');
+        console.log('reduce mood');
     }
 }

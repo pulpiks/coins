@@ -6,8 +6,7 @@ const generatorId = generatorRandomString();
 
 
 export default class Cactus {
-    props: any;
-    name: string;
+    private isKilled: boolean = false;
 
     constructor({ cactus, game }: { cactus:Phaser.Sprite, game:Phaser.State }) {
         cactus.width = 20;
@@ -34,7 +33,6 @@ export default class Cactus {
     }
 
     touch(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
-        console.log(persionSprite, cactus);
         cactus.destroy();
     }
 

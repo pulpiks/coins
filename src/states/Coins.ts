@@ -8,7 +8,7 @@ export default class Coins {
     group: Phaser.Group;
     // width: number;
 
-    constructor( { game, x, y, width } ) {
+    constructor( { game } ) {
         this.game = game;
         this.money = COINS.startSum;
 

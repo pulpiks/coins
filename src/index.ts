@@ -1,15 +1,15 @@
-import {
-    STATE_GAME,
-} from './constants/constants';
+import Game from './states/Game';
+// import FinalScreen from './states/FinalScreen';
 
 import { rgResizeBody } from './utils/sizes';
 
-import Game from './states/Game';
-import FinalScreen from './states/FinalScreen';
+import {
+    STATES,
+} from './constants/constants';
 
-const containerNode = document.querySelector('.js-game-container') as HTMLElement;
 
-function initGame() {
+function initGame(): void {
+    const containerNode = document.querySelector('.js-game-container') as HTMLElement;
     const [gameWidth, gameHeight] = rgResizeBody(containerNode);
 
     const game = new Phaser.Game({
@@ -20,11 +20,10 @@ function initGame() {
         renderer: Phaser.CANVAS
     });
 
-    game.state.add('Game', Game);
-    game.state.add('Finish', FinalScreen);
+    game.state.add(STATES.Game, Game);
+    // game.state.add(STATES.Finish, FinalScreen);
 
-    game.state.start('Game');
+    game.state.start(STATES.Game);
 }
-
 
 initGame();

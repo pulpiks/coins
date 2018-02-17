@@ -16,6 +16,7 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "autobind-decorator": "^2.1.0",
     "http-server": "^0.11.1",
     "phaser-ce": "^2.10.0"
   }

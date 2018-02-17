@@ -12,7 +12,12 @@ export const ENEMIES = {
     count: 5
 };
 
-export const ENEMY_TYPES = ['FSB', 'official', 'gangster', 'prosecutor'];
+export const enum ENEMY_TYPES {
+    fsb = 'fsb',
+    official = 'official',
+    gangster = 'gangster',
+    prosecutor = 'prosecutor'
+}
 
 export const ENEMY = {
     width: 30,
@@ -28,3 +33,9 @@ export const CACTUS = {
     width: 16,
     height: 16
 };
+
+
+export const enum STATES {
+    Game = 'Game',
+    Finish = 'Finish'
+}

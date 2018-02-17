@@ -1,8 +1,8 @@
-let abc = 'sdkfjhskdf34234623V4sdfjgh234234JG3eu247y237RKWRG3U2YTGKUW7R234TGqwmjhegmqjrgea,jthlei485y3i4yr';
+const abc = 'sdkfjhskdf34234623V4sdfjgh234234JG3eu247y237RKWRG3U2YTGKUW7R234TGqwmjhegmqjrgea,jthlei485y3i4yr';
 
-const getChar = () => abc[Math.round(Math.random()*(abc.length-1))]ж
+const getChar = () => abc[Math.round(Math.random()*(abc.length-1))];
 
-export function getString(length = 8){
+export function getString(length:number = 8): string {
 
     let result = '';
 
@@ -15,10 +15,12 @@ export function getString(length = 8){
 
 
 export function generatorRandomString() {
-    let idsForEnemies = [];
+    let idsForEnemies: string[] = [];
+
     return {
         getId() {
-            let id = getString();
+            let id: string = getString();
+
             if (idsForEnemies.indexOf(id) >= 0) {
                 this.getId();
             }

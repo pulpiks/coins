@@ -1,4 +1,8 @@
-import { ENEMY } from '../constants/constants';
+import {
+    ENEMY,
+    ENEMY_TYPES
+} from '../constants/constants';
+
 import { generatorRandomString } from '../utils';
 
 const generatorId = generatorRandomString();
@@ -9,8 +13,10 @@ export default class Enemy {
     game: Phaser.State;
     enemy: any;
     person: Phaser.Sprite;
-    timerChangingVelocity: Phaser.number;
-    isDisabled: boolean;
+    private timerChangingVelocity: Phaser.number;
+    private isDisabled: boolean;
+    private tween: Phaser.Tween;
+    private timer: Phaser.TimerEvent;
 
     constructor({ game, enemy, person, enemies }) {
         this.game = game;
@@ -54,20 +60,19 @@ export default class Enemy {
     }
 
     collideWithObstacles(enemy: Phaser.Sprite, obstacles: Phaser.Sprite) {
-            // this.enemiesObj[enemy.name].body.velocity.y = -400;
+        // this.enemiesObj[enemy.name].body.velocity.y = -400;
     }
 
     onCactusCollision() {
-        debugger;
         switch(this.enemy.type) {
-            case 'fsb':
-                console.time('1111');
+            case ENEMY_TYPES.fsb:
                 this.deactivateForTheTime();
                 break;
-            case 'official':
+            case ENEMY_TYPES.gangster:
+            case ENEMY_TYPES.official:
                 this.kill();
                 break;
-            case 'prosecutor':
+            case ENEMY_TYPES.prosecutor:
                 break;
             default: break;
         }
@@ -98,5 +103,6 @@ export default class Enemy {
 
     kill() {
         this.enemySprite.kill();
+        this.enemy = null;
     }
 }

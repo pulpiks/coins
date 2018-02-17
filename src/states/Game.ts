@@ -1,32 +1,31 @@
+// import autobind from 'autobind-decorator';
+
 import Enemy from './Enemy';
 import Coins from './Coins';
 import Person from './Person';
-import Cactus from './Cactus';
 import Score from './Score';
 
-import { generatorRandomString } from '../utils';
-
-const generatorId = generatorRandomString();
+interface enemyObj {
+    [key: string]: Enemy
+}
 
 export default class Game extends Phaser.State{
-    sprite: Phaser.Sprite;
-    group: Phaser.Group;
-    cursors: Phaser.CursorKeys;
-    map: Phaser.Tilemap;
-    backgroundlayer: Phaser.TilemapLayer;
-    obstacles: Phaser.TilemapLayer;
-    enemiesLayer: Phaser.TilemapLayer;
-    enemies: Phaser.Group;
-    enemiesObj: any;
-    coins: Coins;
-    person: Person;
-    tween: Phaser.Tween;
-    cactuses: Phaser.Group;
-    thrownCactuses: Phaser.Sprite[] = [];
-    score: any;
+    private group: Phaser.Group;
+    private cursors: Phaser.CursorKeys;
+    private map: Phaser.Tilemap;
+    private backgroundlayer: Phaser.TilemapLayer;
+    private obstacles: Phaser.TilemapLayer;
+    private enemies: Phaser.Group;
+    // private enemiesObj: { string: Enemy } = {};
+    private enemiesObj: enemyObj;
+    private coins: Coins;
+    private person: Person;
+    private cactuses: Phaser.Group;
+    private thrownCactuses: Phaser.Sprite[] = [];
+    private score: Score;
+    private crowd: Phaser.TilemapLayer;
 
     init() {
-        this.enemiesObj = {};
     }
 
     preload() {
@@ -66,12 +65,12 @@ export default class Game extends Phaser.State{
         this.person = new Person({
             game: this.game,
             coins: this.coins,
-            onThrowCactus: this.throwCactus.bind(this),
+            onThrowCactus: this.throwCactus.bind(this)
         });
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
+
         this.map.objects.enemies.forEach((enemy) => {
-            // let name = 'enemy_'+ generatorId.getIdForEnemy();
             if (enemy.visible) {
                 let enemyObj = new Enemy({
                     game: this.game,
@@ -106,7 +105,6 @@ export default class Game extends Phaser.State{
     }
 
     update() {
-        // console.log('this.thrownCactuses = ', this.thrownCactuses, this.thrownCactuses.length);
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person, this.enemiesObj), null, this);
@@ -120,7 +118,8 @@ export default class Game extends Phaser.State{
         for (let name in this.enemiesObj) {
             this.enemiesObj[name].move(this.person.sprite);
         }
-        this.removeKilledCactuses();
+        this.removeKilledCactuses(); //autocleaning killed entities
+        this.removeKilledEnemies();
     }
 
     render() {
@@ -156,8 +155,8 @@ export default class Game extends Phaser.State{
         cactus.isKilled = true;
     }
 
+    // @autobind
     throwCactus(cactus, x, y, velocityX, angularVelocity) {
-        // console.log(cactus.parent);
         this.thrownCactuses.push(cactus);
         cactus.body.x = x;
         cactus.body.y = y;
@@ -169,14 +168,21 @@ export default class Game extends Phaser.State{
     removeKilledCactuses() {
         this.cactuses.forEach((cactus) => {
             if (cactus.isKilled){
-                debugger;
                 cactus.destroy();
             }
         });
     }
 
-    meetCrowd(person, crowd) {
-        debugger;
+    removeKilledEnemies() {
+        for (let name in this.enemiesObj) {
+            if (this.enemiesObj[name].enemy === null) {
+                this.enemiesObj[name] = null;
+                delete this.enemiesObj[name];
+            }
+        }
+    }
+
+    meetCrowd(person: Phaser.Sprite, crowd: Phaser.Sprite) {
         this.game.state.start('Finish', true, false);
     }
 }
