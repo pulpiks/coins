@@ -54,6 +54,11 @@ export default class Game extends Phaser.State{
         this.physics.arcade.enable(this.obstacles);
         this.map.setCollision([15, 23, 16], true, this.obstacles);
 
+        this.crowd = this.map.createLayer('crowd');
+
+        this.physics.arcade.enable(this.crowd);
+        this.map.setCollision([14], true, this.crowd);
+
         this.coins = new Coins({
             game: this.game
         });
@@ -108,6 +113,7 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collidePersonWithCactus, null, this);
         this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
         this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
+        this.physics.arcade.collide(this.person.sprite, this.crowd, this.meetCrowd, null, this);
 
         this.person.update();
         this.score.update();
@@ -167,5 +173,10 @@ export default class Game extends Phaser.State{
                 cactus.destroy();
             }
         });
+    }
+
+    meetCrowd(person, crowd) {
+        debugger;
+        this.game.state.start('Finish', true, false);
     }
 }

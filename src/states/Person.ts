@@ -176,8 +176,4 @@ export default class Person {
     reduceMood() {
         alert('reduce mood');
     }
-
-    meetCrowd() {
-        alert('next stage');
-    }
 }
