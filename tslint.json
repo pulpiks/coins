@@ -1,0 +1,7 @@
+{
+    "extends": ["tslist:latest"],
+    "rules": {
+        "object-literal-sort-keys": false,
+        "no-used-variable": [true]
+    }
+}
