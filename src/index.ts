@@ -1,5 +1,5 @@
 import Game from './states/Game';
-// import FinalScreen from './states/FinalScreen';
+import FinalScreen from './states/FinalScreen';
 
 import { rgResizeBody } from './utils/sizes';
 
@@ -21,7 +21,7 @@ function initGame(): void {
     });
 
     game.state.add(STATES.Game, Game);
-    // game.state.add(STATES.Finish, FinalScreen);
+    game.state.add(STATES.Finish, FinalScreen);
 
     game.state.start(STATES.Game);
 }

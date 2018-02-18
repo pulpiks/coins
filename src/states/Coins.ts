@@ -4,11 +4,11 @@ export default class Coins {
     coinImage: Phaser.Sprite;
     label: Phaser.Text;
     money: number;
-    game: Phaser.State;
+    game: Phaser.Game;
     group: Phaser.Group;
     // width: number;
 
-    constructor( { game } ) {
+    constructor( { game }: { game: Phaser.Game } ) {
         this.game = game;
         this.money = COINS.startSum;
 

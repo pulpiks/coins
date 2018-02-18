@@ -1,4 +1,7 @@
 class FinalScreen {
+    game: Phaser.Game;
+    back: Phaser.Text;
+
     preload() {
         this.game.stage.backgroundColor = '#000';
     }
@@ -46,7 +49,7 @@ class FinalScreen {
     handleClickBack() {
         if (this.back.getBounds().contains(this.game.input.x, this.game.input.y)) {
             this.game.input.onDown.remove(this.handleClickBack, this);
-            this.state.start('Game', true, false);
+            this.game.state.start('Game', true, false);
             return true;
         }
     }

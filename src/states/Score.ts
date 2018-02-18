@@ -3,12 +3,16 @@ import Person from './Person';
 
 class Score {
     group: Phaser.Group;
-    game: Phaser.State;
+    game: Phaser.Game;
     coins: Coins;
     person: Person;
     cactusesText: Phaser.Text;
 
-    constructor({ game, person, coins }) {
+    constructor({ game, person, coins }: {
+        game: Phaser.Game,
+        person: Person,
+        coins: Coins
+    }) {
         this.game = game;
         this.person = person;
         this.coins = coins;
@@ -22,7 +26,7 @@ class Score {
         this.cactusesText = this.game.add.text(
             0,
             10,
-            this.person.cactuses.length,
+            this.person.cactuses.length.toString(),
             {
                 font: '25px Arial',
                 fill: '#fff'
@@ -39,7 +43,7 @@ class Score {
     }
 
     updateCounterCactus() {
-        this.cactusesText.setText(this.person.cactuses.length);
+        this.cactusesText.setText(this.person.cactuses.length.toString());
     }
 
     kill() {

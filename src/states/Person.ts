@@ -7,20 +7,26 @@ import {
 
 export default class Person {
     isTouchedEnemy: boolean;
-    game: Phaser.State;
+    game: Phaser.Game;
     sprite: Phaser.Sprite;
     coins: Coins;
     tween: Phaser.Tween;
     time: number;
+    cactuses: Phaser.Sprite[] = [];
     private direction: number = 1;
-    private cactuses: Phaser.Sprite[] = [];
     private timer: Phaser.TimerEvent;
     private keys: {[key: string]: Phaser.Key};
     private onThrowCactus: (cactus: Phaser.Sprite, x: number, y: number, velocityX: number, angularVelocity: number) => void;
-    private isEnabledCollision: false;
-    private animationsRunRight, animationsJump, animationsStand: Phaser.Animation;
+    private isEnabledCollision: boolean;
+    private animationsRunRight: Phaser.Animation;
+    private animationsJump: Phaser.Animation;
+    private animationsStand: Phaser.Animation;
 
-    constructor( { game, coins, onThrowCactus }) {
+    constructor( { game, coins, onThrowCactus }: {
+        game: Phaser.Game,
+        coins: Coins,
+        onThrowCactus: (cactus: Phaser.Sprite, x:number, y:number, velocityX: number, angularVelocity: number) => void
+    }) {
         this.isTouchedEnemy = false;
         this.game = game;
         this.coins = coins;
@@ -56,8 +62,7 @@ export default class Person {
         };
     }
 
-    collideWithEnemy(enemies: Array, person: Phaser.Sprite, enemy:Phaser.Sprite) {
-        debugger;
+    collideWithEnemy(enemies: any, person: Phaser.Sprite, enemy:Phaser.Sprite) {
         switch(enemies[enemy.name].enemy.type) {
             case ENEMY_TYPES.fsb:
                 if (!this.isTouchedEnemy && !enemies[enemy.name].isDisabled) {

@@ -3,6 +3,8 @@ import {
     ENEMY_TYPES
 } from '../constants/constants';
 
+import Person from './Person';
+
 import { generatorRandomString } from '../utils';
 
 const generatorId = generatorRandomString();
@@ -10,15 +12,20 @@ const generatorId = generatorRandomString();
 export default class Enemy {
     enemies: Phaser.Group;
     enemySprite: Phaser.Sprite;
-    game: Phaser.State;
+    game: Phaser.Game;
     enemy: any;
-    person: Phaser.Sprite;
-    private timerChangingVelocity: Phaser.number;
+    person: Person;
+    private timerChangingVelocity: number;
     private isDisabled: boolean;
     private tween: Phaser.Tween;
     private timer: Phaser.TimerEvent;
 
-    constructor({ game, enemy, person, enemies }) {
+    constructor({ game, enemy, person, enemies }: {
+        game: Phaser.Game,
+        enemy: Phaser.Sprite,
+        person: Person,
+        enemies: Phaser.Group
+    }) {
         this.game = game;
         this.enemy = enemy;
         this.person = person;

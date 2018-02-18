@@ -6,7 +6,7 @@ const generatorId = generatorRandomString();
 
 
 export default class Cactus {
-    private isKilled: boolean = false;
+    isKilled: boolean = false;
 
     constructor({ cactus, game }: { cactus:Phaser.Sprite, game:Phaser.State }) {
         cactus.width = 20;

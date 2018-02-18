@@ -1,4 +1,4 @@
-// import autobind from 'autobind-decorator';
+import autobind from 'autobind-decorator';
 
 import Enemy from './Enemy';
 import Coins from './Coins';
@@ -16,8 +16,7 @@ export default class Game extends Phaser.State{
     private backgroundlayer: Phaser.TilemapLayer;
     private obstacles: Phaser.TilemapLayer;
     private enemies: Phaser.Group;
-    // private enemiesObj: { string: Enemy } = {};
-    private enemiesObj: enemyObj;
+    private enemiesObj: enemyObj = {};
     private coins: Coins;
     private person: Person;
     private cactuses: Phaser.Group;
@@ -65,12 +64,12 @@ export default class Game extends Phaser.State{
         this.person = new Person({
             game: this.game,
             coins: this.coins,
-            onThrowCactus: this.throwCactus.bind(this)
+            onThrowCactus: this.throwCactus
         });
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
-        this.map.objects.enemies.forEach((enemy) => {
+        this.map.objects.enemies.forEach((enemy: Phaser.Sprite) => {
             if (enemy.visible) {
                 let enemyObj = new Enemy({
                     game: this.game,
@@ -89,7 +88,7 @@ export default class Game extends Phaser.State{
 
         this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
 
-        this.cactuses.forEach((cactus) => {
+        this.cactuses.forEach((cactus: Phaser.Sprite) => {
             cactus.body.allowGravity = false;
             cactus.width = 20;
             cactus.height = 20;
@@ -123,7 +122,7 @@ export default class Game extends Phaser.State{
     }
 
     render() {
-        this.cactuses.forEachAlive((cactus) => {
+        this.cactuses.forEachAlive((cactus: Phaser.Sprite) => {
             this.game.debug.body(cactus);
         }, this);
 
@@ -131,7 +130,7 @@ export default class Game extends Phaser.State{
     }
 
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
-        this.enemiesObj[enemy.name].collideWithObstacles();
+        this.enemiesObj[enemy.name].collideWithObstacles(enemy, obstacle);
     }
 
     collidePersonWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
@@ -142,7 +141,6 @@ export default class Game extends Phaser.State{
     collideEnemyWithCactus(cactus: Phaser.Sprite, enemy: Phaser.Sprite) {
         this.thrownCactuses.pop();
         cactus.kill();
-        cactus.isKilled = true;
 
         // todo enemy harm
 
@@ -152,11 +150,10 @@ export default class Game extends Phaser.State{
     collideObstaclesWithCactus(obstacle: Phaser.Sprite) {
         const cactus = this.thrownCactuses.pop();
         cactus.kill();
-        cactus.isKilled = true;
     }
 
-    // @autobind
-    throwCactus(cactus, x, y, velocityX, angularVelocity) {
+    @autobind
+    throwCactus(cactus: Phaser.Sprite, x:number, y:number, velocityX: number, angularVelocity: number) {
         this.thrownCactuses.push(cactus);
         cactus.body.x = x;
         cactus.body.y = y;
@@ -166,11 +163,11 @@ export default class Game extends Phaser.State{
     }
 
     removeKilledCactuses() {
-        this.cactuses.forEach((cactus) => {
-            if (cactus.isKilled){
+        this.cactuses.forEach((cactus: Phaser.Sprite) => {
+            if (!cactus.alive){
                 cactus.destroy();
             }
-        });
+        }, this);
     }
 
     removeKilledEnemies() {
