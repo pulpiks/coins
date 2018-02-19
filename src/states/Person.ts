@@ -31,7 +31,6 @@ export default class Person {
         this.game = game;
         this.coins = coins;
         this.time = Date.now();
-        this.cactuses = [];
         this.onThrowCactus = onThrowCactus;
 
         this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
@@ -155,6 +154,7 @@ export default class Person {
 
     throwCactus(cactus: Phaser.Sprite) {
         cactus.revive();
+        console.log(cactus.body);
         this.onThrowCactus(
             cactus,
             this.sprite.body.x,

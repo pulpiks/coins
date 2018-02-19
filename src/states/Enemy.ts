@@ -100,7 +100,6 @@ export default class Enemy {
 
     finishCollision() {
         // this.timer.remove();
-        console.timeEnd('1111');
         this.game.time.events.remove(this.timer);
         this.isDisabled = false;
         this.enemySprite.alpha = 1;

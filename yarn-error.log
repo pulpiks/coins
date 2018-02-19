@@ -1,0 +1,49 @@
+Arguments: 
+  /usr/local/bin/iojs /usr/local/bin/yarn
+
+PATH: 
+  /Users/kseniamahorkina/.rvm/gems/ruby-2.2.1/bin:/Users/kseniamahorkina/.rvm/gems/ruby-2.2.1@global/bin:/Users/kseniamahorkina/.rvm/rubies/ruby-2.2.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/texbin:/usr/local/go/bin:/opt/X11/bin:/Users/kseniamahorkina/.rvm/bin
+
+Yarn version: 
+  0.17.10
+
+Node version: 
+  9.3.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "coins",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+      "watch": "webpack --watch",
+      "start": "http-server -c-1"
+    },
+    "author": "lvovsfamily",
+    "license": "UNLICENSED",
+    "devDependencies": {
+      "ts-loader": "^3.3.1",
+      "typescript": "^2.6.2",
+      "typings": "^2.1.1",
+      "webpack": "^3.10.0",
+      "tslint": "^5.9.1"
+    },
+    "dependencies": {
+      "autobind-decorator": "^2.1.0",
+      "http-server": "^0.11.1",
+      "phaser-ce": "^2.10.0" 
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: ENOENT: no such file or directory, open '/Users/kseniamahorkina/Projects/coins/node_modules/typescript/lib/pt-BR/diagnosticMessages.generated.json'

@@ -9,6 +9,10 @@ interface enemyObj {
     [key: string]: Enemy
 }
 
+interface CactusProp extends Phaser.Sprite {
+    isKilled?: boolean
+}
+
 export default class Game extends Phaser.State{
     private group: Phaser.Group;
     private cursors: Phaser.CursorKeys;
@@ -20,7 +24,7 @@ export default class Game extends Phaser.State{
     private coins: Coins;
     private person: Person;
     private cactuses: Phaser.Group;
-    private thrownCactuses: Phaser.Sprite[] = [];
+    private thrownCactuses: CactusProp[] = [];
     private score: Score;
     private crowd: Phaser.TilemapLayer;
 
@@ -133,15 +137,15 @@ export default class Game extends Phaser.State{
         this.enemiesObj[enemy.name].collideWithObstacles(enemy, obstacle);
     }
 
-    collidePersonWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
+    collidePersonWithCactus(person: Phaser.Sprite, cactus: Phaser.Sprite) {
         this.person.addCactus(cactus);
         // this.thrownCactuses.pop();
     }
 
-    collideEnemyWithCactus(cactus: Phaser.Sprite, enemy: Phaser.Sprite) {
+    collideEnemyWithCactus(cactus: CactusProp, enemy: Phaser.Sprite) {
         this.thrownCactuses.pop();
         cactus.kill();
-
+        cactus.isKilled = true;
         // todo enemy harm
 
         this.enemiesObj[enemy.name].onCactusCollision();
@@ -150,6 +154,7 @@ export default class Game extends Phaser.State{
     collideObstaclesWithCactus(obstacle: Phaser.Sprite) {
         const cactus = this.thrownCactuses.pop();
         cactus.kill();
+        cactus.isKilled = true;
     }
 
     @autobind
@@ -163,8 +168,8 @@ export default class Game extends Phaser.State{
     }
 
     removeKilledCactuses() {
-        this.cactuses.forEach((cactus: Phaser.Sprite) => {
-            if (!cactus.alive){
+        this.cactuses.forEach((cactus: CactusProp) => {
+            if (!cactus.alive && cactus.isKilled){
                 cactus.destroy();
             }
         }, this);

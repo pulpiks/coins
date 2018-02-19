@@ -1,7 +1,10 @@
 {
     "extends": ["tslist:latest"],
     "rules": {
-        "object-literal-sort-keys": false,
-        "no-used-variable": [true]
+        "object-shorthand-properties-first": false,
+        "strict-boolean-expressions": false,
+        "import-name": false,
+        "no-unused-variable": true,
+        "quotemark": [true, "single", "avoid-escape"]
     }
 }
