@@ -13,7 +13,7 @@ export default class Person {
     tween: Phaser.Tween;
     time: number;
     cactuses: Phaser.Sprite[] = [];
-    private facing: string = 'left';
+    private facing: string = 'right';
     private direction: number = 1;
     private timer: Phaser.TimerEvent;
     private keys: {[key: string]: Phaser.Key};
