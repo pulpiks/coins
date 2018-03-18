@@ -3,9 +3,9 @@ export const COINS = {
 };
 
 export const PERSON = {
-    width: 40,
-    height: 40,
-    speed: 200
+    width: 64,
+    height: 64,
+    speed: 400
 };
 
 export const ENEMIES = {

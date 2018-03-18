@@ -13,6 +13,7 @@ export default class Person {
     tween: Phaser.Tween;
     time: number;
     cactuses: Phaser.Sprite[] = [];
+    private facing: string = 'left';
     private direction: number = 1;
     private timer: Phaser.TimerEvent;
     private keys: {[key: string]: Phaser.Key};
@@ -34,9 +35,9 @@ export default class Person {
         this.onThrowCactus = onThrowCactus;
 
         this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
-        this.animationsRunRight = this.sprite.animations.add('runToTheRight', [2, 3, 4, 5]);
-        this.animationsJump = this.sprite.animations.add('jump', [1]);
-        this.animationsStand = this.sprite.animations.add('stand', [0]);
+        this.animationsRunRight = this.sprite.animations.add('right', [8, 9, 10, 11], 20, true);
+        this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
+        this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
         this.sprite.anchor.set(0.5, 1);
@@ -99,30 +100,73 @@ export default class Person {
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
 
+    getScale() {
+        return {
+            x: this.sprite.scale.x,
+            y: this.sprite.scale.y
+        }
+    }
+
     update() {
+        let cursors = this.keys;
+        let player = this.sprite;
+        let jumpButton = this.keys.up;
+
         if (!this.isTouchedEnemy) {
-            this.sprite.body.velocity.x = 0;
 
-            if (this.keys.left.isDown) {
-                this.direction = -1;
-                this.sprite.body.velocity.x = -200;
-            }
-            else if (this.keys.right.isDown) {
-                this.sprite.body.velocity.x = 200;
-                this.direction = 1;
-            }
+            player.body.velocity.x = 0;
 
-            if (this.keys.up.isDown) {
-                if (this.sprite.body.onFloor()) {
-                    this.sprite.animations.play('jump', 20);
-                    this.sprite.body.velocity.y = -700;
+            if (cursors.left.isDown)
+            {
+                player.body.velocity.x = -200;
+
+                if (this.facing != 'left')
+                {
+                    this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
+                    player.animations.play('right');
+                    this.facing = 'left';
+                }
+            }
+            else if (cursors.right.isDown)
+            {
+                player.body.velocity.x = 200;
+
+                if (this.facing != 'right')
+                {
+                    this.sprite.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
+                    player.animations.play('right');
+                    this.facing = 'right';
+                }
+            }
+            else
+            {
+                if (this.facing != 'idle')
+                {
+                    player.animations.stop();
+
+                    if (this.facing == 'left')
+                    {
+                        player.frame = 0;
+                        this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
+                    }
+                    else
+                    {
+                        player.frame = 0;
+                        player.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
+                    }
+
+                    this.facing = 'idle';
                 }
             }
 
-            if (this.cactuses.length > 0) {
-                if (this.keys.a.justDown) {
-                    this.throwCactus(this.cactuses.pop());
-                }
+            if (jumpButton.isDown && player.body.onFloor())
+            {
+                player.animations.play('jump');
+                player.body.velocity.y = -700;
+            }
+
+            if (this.cactuses.length > 0 && this.keys.a.justDown) {
+                this.throwCactus(this.cactuses.pop());
             }
         }
     }

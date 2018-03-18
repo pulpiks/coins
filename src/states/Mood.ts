@@ -14,8 +14,8 @@ class Score {
         coins: Coins
     }) {
         this.game = game;
-        this.person = person;
         this.coins = coins;
+        this.person = person;
         this.group = this.game.add.group();
         this.group.fixedToCamera = true;
         this.group.x = this.game.width - 60;
