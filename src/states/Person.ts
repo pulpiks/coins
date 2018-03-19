@@ -147,12 +147,12 @@ export default class Person {
                     if (this.facing == 'left')
                     {
                         player.frame = 0;
-                        this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
+                        // this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
                     }
                     else
                     {
                         player.frame = 0;
-                        player.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
+                        // player.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
                     }
 
                     this.facing = 'idle';
