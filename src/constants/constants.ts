@@ -8,6 +8,11 @@ export const PERSON = {
     speed: 400
 };
 
+export const backgroundColor = 'rgba(85, 154, 198, 30)';
+export const ground = {
+    width: 4000
+};
+
 export const ENEMIES = {
     count: 5
 };
@@ -37,5 +42,60 @@ export const CACTUS = {
 
 export const enum STATES {
     Game = 'Game',
-    Finish = 'Finish'
+    Finish = 'Finish',
+    Boot = 'Boot'
+}
+
+export const typesBuiding = {
+    "school": "big school.png",
+    "house-black-silhouette": "house-black-silhouette.png",
+    "innovation": "innovation house.png",
+    "ministerstvo": "ministerstvo.png",
+    "zakupki_and_tenderi": "zakupki_and_tenderi.png",
+};
+
+export const orderBuidings = ["ministerstvo", "innovation", "zakupki_and_tenderi", "house-black-silhouette", "school"];
+
+
+export const BUIDING_COORDS = {
+    "ministerstvo": {
+        position: {
+            x: 100
+        },
+        scale: {
+            x: 0,
+            y: 1
+        }
+    },
+    "innovation": {
+        position: {
+            x: 1100
+        },
+        scale: {
+            x: 0,
+            y: 1
+        }
+    },
+    "zakupki_and_tenderi": {
+        position: {
+            x: 2000
+        },
+        scale: {
+            x: 0,
+            y: 1
+        }
+    },
+    "house-black-silhouette": {
+        position: {
+            x: 2900
+        },
+        scale: {
+            x: 0,
+            y: 1
+        }
+    }
+};
+
+export const SCHOOL_COORDS = {
+    "school": 2000
 }

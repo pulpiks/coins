@@ -13,6 +13,7 @@ export default class Person {
     tween: Phaser.Tween;
     time: number;
     cactuses: Phaser.Sprite[] = [];
+    private isJumping:boolean = false;
     private facing: string = 'right';
     private direction: number = 1;
     private timer: Phaser.TimerEvent;
@@ -34,7 +35,7 @@ export default class Person {
         this.time = Date.now();
         this.onThrowCactus = onThrowCactus;
 
-        this.sprite = this.game.add.sprite(0, this.game.world.height, 'person');
+        this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
         this.animationsRunRight = this.sprite.animations.add('right', [8, 9, 10, 11], 20, true);
         this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
         this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
@@ -159,10 +160,11 @@ export default class Person {
                 }
             }
 
-            if (jumpButton.isDown && player.body.onFloor())
+            if (jumpButton.isDown && !this.isJumping)
             {
                 player.animations.play('jump');
                 player.body.velocity.y = -700;
+                this.isJumping = true;
             }
 
             if (this.cactuses.length > 0 && this.keys.a.justDown) {
@@ -210,5 +212,9 @@ export default class Person {
 
     reduceMood() {
         console.log('reduce mood');
+    }
+
+    endJumping() {
+        this.isJumping = false;
     }
 }

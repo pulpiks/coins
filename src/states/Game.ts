@@ -5,6 +5,9 @@ import Coins from './Coins';
 import Person from './Person';
 import Score from './Score';
 
+
+import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding} from '../constants/constants';
+
 interface enemyObj {
     [key: string]: Enemy
 }
@@ -27,6 +30,7 @@ export default class Game extends Phaser.State{
     private thrownCactuses: CactusProp[] = [];
     private score: Score;
     private crowd: Phaser.TilemapLayer;
+    private ground: Phaser.Sprite;
 
     init() {
     }
@@ -37,19 +41,53 @@ export default class Game extends Phaser.State{
         this.load.image('tiles', './src/assets/super_mario.png');
         this.load.image('coin', './src/assets/one-coin.png');
         this.load.image('enemy', './src/assets/enemy.png');
+        this.load.image('ground', './src/assets/ground.png');
         this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
+
+    }
+
+    createGround() {
+        // var ground = this.game.platforms.create(0, 200, 'ground');
+        // platforms = this.game.add.physicsGroup();
+        // const platforms = this.game.add.group();
+        // platforms.enableBody = true;
+        console.log(this.game.world.height);
+        this.ground = this.game.add.sprite(0, this.game.world.height-50, 'ground');
+        this.ground.width = ground.width;
+        this.ground.height = 50;
+        this.physics.arcade.enable(this.ground);
+        this.ground.body.immovable = true;
+    }
+
+    createBuidings() {
+        this.listBuidingsSprite = [];
+        for(let type of orderBuidings) {
+            if (typeof(BUIDING_COORDS[type])!== 'undefined') {
+                debugger;
+                let buildingInfo = BUIDING_COORDS[type];
+                let building = this.game.add.sprite(
+                    buildingInfo.position.x, this.game.world.height - 50, 'buildings', typesBuiding[type]
+                );
+                building.anchor.setTo(buildingInfo.scale.x, buildingInfo.scale.y);
+                this.listBuidingsSprite.push(building);
+            }
+        }
     }
 
     create() {
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.stage.backgroundColor = '#2d2d2d';
+        this.stage.backgroundColor = backgroundColor;
+        this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
+
+        // const folder = this.game.add.sprite(camW * 0.27, camH * 1.03, 'buildings');
 
         this.map = this.add.tilemap('tilemap');
         this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
-
-        this.backgroundlayer = this.map.createLayer('background');
-        this.backgroundlayer.resizeWorld();
+        this.createGround();
+        this.createBuidings();
+        // this.backgroundlayer = this.map.createLayer('background');
+        // this.backgroundlayer.resizeWorld();
 
         this.obstacles = this.map.createLayer('obstacles');
 
@@ -115,6 +153,7 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
         this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
         this.physics.arcade.collide(this.person.sprite, this.crowd, this.meetCrowd, null, this);
+        this.physics.arcade.collide(this.person.sprite, this.ground, this.person.endJumping, null, this.person);
 
         this.person.update();
         this.score.update();

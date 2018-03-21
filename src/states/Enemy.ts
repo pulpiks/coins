@@ -33,7 +33,7 @@ export default class Enemy {
         this.enemy.type = this.enemy.properties && this.enemy.properties.enemy_type;
         this.enemySprite = this.enemies.create(
             this.enemy.x,
-            this.enemy.y,
+            this.game.world.height-50,
             'enemy'
         );
         this.enemySprite.width = ENEMY.width;

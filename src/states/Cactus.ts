@@ -13,6 +13,10 @@ export default class Cactus {
         cactus.height = 40;
         cactus.body.immovable = true;
         cactus.name = 'cactus_'+ generatorId.getId();
+        cactus.body.collideWorldBounds = true;
+        cactus.body.onWorldBounds = new Phaser.Signal();
+        cactus.body.onWorldBounds.add(this.hitWorldBounds, this);
+
         // this.game = game;
         // this.enemy = enemy;
         // this.person = person;
@@ -38,5 +42,9 @@ export default class Cactus {
 
     throwOne() {
         console.log('throw');
+    }
+
+    hitWorldBounds() {
+        alert('cactus went out the borders');
     }
 }

@@ -1,3 +1,4 @@
+import Boot from './states/Boot';
 import Game from './states/Game';
 import FinalScreen from './states/FinalScreen';
 
@@ -20,10 +21,11 @@ function initGame(): void {
         renderer: Phaser.CANVAS
     });
 
+    game.state.add(STATES.Boot, Boot)
     game.state.add(STATES.Game, Game);
     game.state.add(STATES.Finish, FinalScreen);
 
-    game.state.start(STATES.Game);
+    game.state.start(STATES.Boot);
 }
 
 initGame();
