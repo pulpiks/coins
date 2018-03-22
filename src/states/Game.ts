@@ -4,6 +4,7 @@ import Enemy from './Enemy';
 import Coins from './Coins';
 import Person from './Person';
 import Score from './Score';
+import Mood from './Mood';
 
 
 import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding} from '../constants/constants';
@@ -31,6 +32,7 @@ export default class Game extends Phaser.State{
     private score: Score;
     private crowd: Phaser.TilemapLayer;
     private ground: Phaser.Sprite;
+    private mood: Mood;
 
     init() {
     }
@@ -86,6 +88,11 @@ export default class Game extends Phaser.State{
         this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
         this.createGround();
         this.createBuidings();
+
+        this.mood = new Mood({
+            game: this.game
+        });
+
         // this.backgroundlayer = this.map.createLayer('background');
         // this.backgroundlayer.resizeWorld();
 

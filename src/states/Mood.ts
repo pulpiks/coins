@@ -1,51 +1,67 @@
-class Mood {
+import MoodRange from './RangeComponent';
+import { MOOD } from '../constants/constants';
+
+export default class Mood {
     group: Phaser.Group;
     game: Phaser.Game;
     coins: Coins;
     person: Person;
     cactusesText: Phaser.Text;
+    mood: MoodRange;
+    moodValue: number = 100;
 
-    constructor({ game, person, coins }: {
-        game: Phaser.Game,
-        person: Person,
-        coins: Coins
+    constructor({ game }: {
+        game: Phaser.Game
     }) {
         this.game = game;
-        this.coins = coins;
-        this.person = person;
-        this.group = this.game.add.group();
-        this.group.fixedToCamera = true;
-        this.group.x = this.game.width - 60;
-        this.group.y = 20;
+        this.mood = new MoodRange(this.game, {
+            width: 250,
+            height: 40,
+            x: 0,
+            y: 0,
+            bg: {
+                color: '#651828'
+            },
+            bar: {
+                color: '#FEFF03'
+            },
+            animationDuration: 200,
+            flipped: false
+        });
 
-        this.group.add(this.coins.group);
 
-        this.cactusesText = this.game.add.text(
-            0,
-            10,
-            this.person.cactuses.length.toString(),
-            {
-                font: '25px Arial',
-                fill: '#fff'
-            }
-        );
-        // this.textTimer.anchor.set(1, 0);
-        // this.textTimer.setShadow(2, 2, 'rgba(0, 0, 0, .8)', 0);
-        this.group.add(this.cactusesText);
+        // this.coins = coins;
+        // this.person = person;
+        // this.group = this.game.add.group();
+        // this.group.fixedToCamera = true;
+        // this.group.x = this.game.width - 60;
+        // this.group.y = 20;
+        //
+        // this.group.add(this.coins.group);
+        //
+        // this.cactusesText = this.game.add.text(
+        //     0,
+        //     10,
+        //     this.person.cactuses.length.toString(),
+        //     {
+        //         font: '25px Arial',
+        //         fill: '#fff'
+        //     }
+        // );
+        // this.group.add(this.cactusesText);
     }
 
-    update() {
-        this.coins.update();
-        this.updateCounterCactus();
+    reduceMood() {
+        this.moodValue = this.moodValue - MOOD.step;
+        if(this.moodValue < 0) this.moodValue = 0;
+        this.mood.setPercent(this.moodValue);
     }
 
-    updateCounterCactus() {
-        this.cactusesText.setText(this.person.cactuses.length.toString());
-    }
-
-    kill() {
-        this.group.killAll();
+    cheerUp() {
+        this.moodValue = this.heamoodValuelthValue + MOOD.step;
+        if(this.moodValue > 100) this.healmoodValuethValue = 100;
+        this.mood.setPercent(this.moodValue);
     }
 }
 
-export default Score;
+export default Mood;

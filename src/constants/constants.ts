@@ -98,4 +98,8 @@ export const BUIDING_COORDS = {
 
 export const SCHOOL_COORDS = {
     "school": 2000
-}
+};
+
+export const MOOD = {
+    step : 5
+};
