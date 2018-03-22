@@ -2,7 +2,7 @@ import autobind from 'autobind-decorator';
 
 import Enemy from './Enemy';
 import Coins from './Coins';
-import Person from './Person';
+import Person from './FBK_person';
 import Score from './Score';
 import Mood from './Mood';
 
@@ -45,6 +45,16 @@ export default class Game extends Phaser.State{
         this.load.image('enemy', './src/assets/enemy.png');
         this.load.image('ground', './src/assets/ground.png');
         this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
+        this.load.image('clouds', './src/assets/clouds/clouds.png');
+
+    }
+
+    createClouds() {
+        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width*3000, 300, 'clouds', 0);
+
+        // this.cloudsSprite.animations.play('clouds', 10, true);
+        // this.cloudsAnimation = this.cloudsSprite.animations.add('cloudsmove', [1,2], 1, true);
+        // this.animationsStand = this.cloudsAnimation.animations.add('move', [2, 3], 1, true);
 
     }
 
@@ -65,7 +75,6 @@ export default class Game extends Phaser.State{
         this.listBuidingsSprite = [];
         for(let type of orderBuidings) {
             if (typeof(BUIDING_COORDS[type])!== 'undefined') {
-                debugger;
                 let buildingInfo = BUIDING_COORDS[type];
                 let building = this.game.add.sprite(
                     buildingInfo.position.x, this.game.world.height - 50, 'buildings', typesBuiding[type]
@@ -86,9 +95,9 @@ export default class Game extends Phaser.State{
 
         this.map = this.add.tilemap('tilemap');
         this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
+        this.createClouds();
         this.createGround();
         this.createBuidings();
-
         this.mood = new Mood({
             game: this.game
         });
@@ -115,6 +124,8 @@ export default class Game extends Phaser.State{
             coins: this.coins,
             onThrowCactus: this.throwCactus
         });
+
+
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
@@ -150,6 +161,25 @@ export default class Game extends Phaser.State{
         });
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.cloudsSprite.smoothed = true;
+        this.cloudsSprite.autoScroll(-5, 0);
+
+        // this.tween = this.game.add.tween(this.cloudsSprite).to(
+        //     {},
+        //     5000,
+        //     Phaser.Easing.Linear.None,
+        //     true,
+        //     0,
+        //     -1,
+        //     false
+        // );
+
+        // let cloudsSpriteAnimation = setTimeout(function tick(ctx) {
+        //     ctx.cloudsSprite.tilePosition.x -= 8;
+        //     clearTimeout(cloudsSpriteAnimation);
+        //     setTimeout(tick, 2000);
+        // }, 2000, this);
     }
 
     update() {
@@ -169,7 +199,11 @@ export default class Game extends Phaser.State{
         }
         this.removeKilledCactuses(); //autocleaning killed entities
         this.removeKilledEnemies();
+
+        // this.cloudsSprite.animations.play('cloudsmove');
+
     }
+
 
     render() {
         this.cactuses.forEachAlive((cactus: Phaser.Sprite) => {
@@ -177,6 +211,7 @@ export default class Game extends Phaser.State{
         }, this);
 
         this.game.debug.geom(this.person.sprite.getBounds());
+
     }
 
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
