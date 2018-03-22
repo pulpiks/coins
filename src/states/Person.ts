@@ -36,7 +36,7 @@ export default class Person {
         this.onThrowCactus = onThrowCactus;
 
         this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
-        this.animationsRunRight = this.sprite.animations.add('right', [8, 9, 10, 11], 20, true);
+        this.animationsRunRight = this.sprite.animations.add('run', [8, 9, 10, 11], 10, true);
         this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
         this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
         this.sprite.width = PERSON.width;
@@ -124,7 +124,7 @@ export default class Person {
                 if (this.facing != 'left')
                 {
                     this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-                    player.animations.play('right');
+                    player.animations.play('run');
                     this.facing = 'left';
                 }
             }
@@ -135,7 +135,7 @@ export default class Person {
                 if (this.facing != 'right')
                 {
                     this.sprite.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-                    player.animations.play('right');
+                    player.animations.play('run');
                     this.facing = 'right';
                 }
             }

@@ -1,7 +1,6 @@
-import Coins from './Coins';
-import Person from './Person';
+import RangeComponent from './RangeComponent';
 
-class Score {
+class Score extends RangeComponent{
     group: Phaser.Group;
     game: Phaser.Game;
     coins: Coins;

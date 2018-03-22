@@ -1,7 +1,4 @@
-import Coins from './Coins';
-import Person from './Person';
-
-class Score {
+class Mood {
     group: Phaser.Group;
     game: Phaser.Game;
     coins: Coins;
