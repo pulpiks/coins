@@ -3,10 +3,20 @@ export const COINS = {
 };
 
 export const PERSON = {
-    width: 64,
+    width: 100,
     height: 64,
     speed: 400
 };
+
+export const POLICEMAN = {
+    width: 100,
+    height: 70,
+    speed: 400,
+    range: [0, 1000],
+    count: Math.floor(Math.random() * (1000 - 100)) + 100
+};
+
+export const RANGE = [0, 1000];
 
 export const backgroundColor = 'rgba(85, 154, 198, 30)';
 export const ground = {

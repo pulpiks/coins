@@ -43,6 +43,7 @@ export default class FBK_person extends Player {
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
         this.sprite.anchor.set(0.5, 1);
+        this.sprite.scale.setTo(0.6, 0.85);
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = 2000;
 

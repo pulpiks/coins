@@ -8,6 +8,7 @@ import Mood from './Mood';
 
 
 import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding} from '../constants/constants';
+import Policeman from "./Policeman";
 
 interface enemyObj {
     [key: string]: Enemy
@@ -46,6 +47,8 @@ export default class Game extends Phaser.State{
         this.load.image('ground', './src/assets/ground.png');
         this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
         this.load.image('clouds', './src/assets/clouds/clouds.png');
+        this.load.spritesheet('policeman', './src/assets/policeman/policeman.png', 274, 756.5, 1);
+
 
     }
 
@@ -125,6 +128,9 @@ export default class Game extends Phaser.State{
             onThrowCactus: this.throwCactus
         });
 
+        this.policeman = new Policeman(
+            this.game
+        );
 
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
