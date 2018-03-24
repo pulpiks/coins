@@ -7,7 +7,7 @@ import Score from './Score';
 import Mood from './Mood';
 
 
-import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding} from '../constants/constants';
+import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding, POLICEMAN} from '../constants/constants';
 import Policeman from "./Policeman";
 
 interface enemyObj {
@@ -36,6 +36,7 @@ export default class Game extends Phaser.State{
     private mood: Mood;
 
     init() {
+        this.policemen = [];
     }
 
     preload() {
@@ -47,7 +48,7 @@ export default class Game extends Phaser.State{
         this.load.image('ground', './src/assets/ground.png');
         this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
         this.load.image('clouds', './src/assets/clouds/clouds.png');
-        this.load.spritesheet('policeman', './src/assets/policeman/policeman.png', 274, 756.5, 1);
+        this.load.spritesheet('policeman', './src/assets/policeman/policeman.png', 274, 756.5, 8);
 
 
     }
@@ -94,7 +95,6 @@ export default class Game extends Phaser.State{
         this.stage.backgroundColor = backgroundColor;
         this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
 
-        // const folder = this.game.add.sprite(camW * 0.27, camH * 1.03, 'buildings');
 
         this.map = this.add.tilemap('tilemap');
         this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
@@ -128,25 +128,28 @@ export default class Game extends Phaser.State{
             onThrowCactus: this.throwCactus
         });
 
-        this.policeman = new Policeman(
-            this.game
-        );
+        for(let i =0; i<POLICEMAN.count; i++) {
+            this.policemen.push(new Policeman(
+                this.game
+            ));
+        }
+
 
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
         this.map.objects.enemies.forEach((enemy: Phaser.Sprite) => {
             if (enemy.visible) {
-                let enemyObj = new Enemy({
-                    game: this.game,
-                    enemy,
-                    person: this.person,
-                    enemies: this.enemies
-                });
-
-                this.enemiesObj[enemyObj.enemySprite.name] = enemyObj;
-
-                this.game.debug.body(enemy);
+                // let enemyObj = new Enemy({
+                //     game: this.game,
+                //     enemy,
+                //     person: this.person,
+                //     enemies: this.enemies
+                // });
+                //
+                // this.enemiesObj[enemyObj.enemySprite.name] = enemyObj;
+                //
+                // this.game.debug.body(enemy);
             }
         });
 
@@ -200,6 +203,9 @@ export default class Game extends Phaser.State{
 
         this.person.update();
         this.score.update();
+        this.policemen.forEach((policeman) => {
+            policeman.update();
+        });
         for (let name in this.enemiesObj) {
             this.enemiesObj[name].move(this.person.sprite);
         }

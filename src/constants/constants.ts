@@ -11,9 +11,13 @@ export const PERSON = {
 export const POLICEMAN = {
     width: 100,
     height: 70,
-    speed: 400,
-    range: [0, 1000],
-    count: Math.floor(Math.random() * (1000 - 100)) + 100
+    rangeX: [10, 1500],
+    count: 5,
+    speed_min: 1,
+    speed_max: 40,
+    speed: 200,
+    time_threshold: 3000,
+    time_disabled: 3000
 };
 
 export const RANGE = [0, 1000];
@@ -43,6 +47,7 @@ export const ENEMY = {
     time_threshold: 2000,
     time_disabled: 3000
 };
+
 
 export const CACTUS = {
     width: 16,

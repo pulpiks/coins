@@ -30,6 +30,7 @@ export default class FBK_person extends Player {
         coins: Coins,
         onThrowCactus: (cactus: Phaser.Sprite, x:number, y:number, velocityX: number, angularVelocity: number) => void
     }) {
+        super(game, {});
         this.isTouchedEnemy = false;
         this.game = game;
         this.coins = coins;
@@ -54,12 +55,8 @@ export default class FBK_person extends Player {
         this.sprite.body.collideWorldBounds = true;
 
         this.game.camera.follow(this.sprite);
-
         this.keys = {
-            up: this.game.input.keyboard.addKey(Phaser.Keyboard.UP),
-            down: this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
-            left: this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
-            right: this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+            ...this.keys,
             a: this.game.input.keyboard.addKey(Phaser.Keyboard.A), //throw
             d: this.game.input.keyboard.addKey(Phaser.Keyboard.D) //delete
         };
@@ -123,7 +120,7 @@ export default class FBK_person extends Player {
             {
                 player.body.velocity.x = -200;
 
-                if (this.facing != 'left')
+                if (this.facing != 'left' || player.body.touching.down || player.body.onFloor())
                 {
                     this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
                     player.animations.play('run');
@@ -133,8 +130,7 @@ export default class FBK_person extends Player {
             else if (cursors.right.isDown)
             {
                 player.body.velocity.x = 200;
-
-                if (this.facing != 'right')
+                if (this.facing != 'right' || player.body.touching.down || player.body.onFloor())
                 {
                     this.sprite.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
                     player.animations.play('run');
@@ -202,7 +198,6 @@ export default class FBK_person extends Player {
 
     throwCactus(cactus: Phaser.Sprite) {
         cactus.revive();
-        console.log(cactus.body);
         this.onThrowCactus(
             cactus,
             this.sprite.body.x,
