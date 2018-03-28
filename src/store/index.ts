@@ -4,9 +4,11 @@ import {
 } from 'redux';
 
 import policeman from '../reducers/policeman';
+import enemy from '../reducers/enemy';
 
 const rootReducer = combineReducers({
-    policeman
+    policeman,
+    enemy
 });
 
 const store = createStore(

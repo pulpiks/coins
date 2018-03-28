@@ -9,6 +9,8 @@ import {
     ENEMY_TYPES
 } from '../constants/constants';
 
+import { reduceMood } from '../actions';
+
 export default class FBK_person extends Player {
     isTouchedEnemy: boolean;
     game: Phaser.Game;
@@ -70,7 +72,8 @@ export default class FBK_person extends Player {
 
     @autobind
     collideWithEnemy(enemies: any, person: Phaser.Sprite, enemy:Phaser.Sprite) {
-        switch(enemies[enemy.name].enemy.type) {
+        const state = store.getState();
+        switch(state.enemy.type) {
             case ENEMY_TYPES.fsb:
                 if (!this.isTouchedEnemy && !enemies[enemy.name].isDisabled) {
                     this.coins.takeMoney(10);
@@ -84,8 +87,8 @@ export default class FBK_person extends Player {
                     this.deactivateForTime();
                 }
                 break;
-            case ENEMY_TYPES.prosecutor:
-                this.reduceMood();
+            case ENEMY_TYPES.policeman:
+                this.reduceMood(ENEMY_TYPES.policeman);
                 break;
             default: break;
         }
@@ -214,8 +217,11 @@ export default class FBK_person extends Player {
         );
     }
 
-    reduceMood() {
-        console.log('reduce mood');
+    @autobind
+    reduceMood(cause) {
+        store.dispatch(reduceMood({
+            cause
+        }))
     }
 
     endJumping() {

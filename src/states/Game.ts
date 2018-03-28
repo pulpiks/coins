@@ -13,7 +13,7 @@ import Policeman from "./Policeman";
 
 import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding, POLICEMAN} from '../constants/constants';
 
-import { collidePersonWithEnemy } from '../actions';
+import { collidePersonWithPoliceman, collidePersonWithEnemy } from '../actions';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -208,7 +208,7 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(
             this.person.sprite,
             this.getSprites(),
-            this.collideWithEnemy,
+            this.collideWithPoliceman,
             null,
             this
         );
@@ -235,9 +235,12 @@ export default class Game extends Phaser.State{
 
     /* collide person with enemy */
 
-    collideWithEnemy(fbk, policeman) {
-        store.dispatch(collidePersonWithEnemy({
+    collideWithPoliceman(fbk, policeman) {
+        store.dispatch(collidePersonWithPoliceman({
             policeman_id: policeman.person_id
+        }));
+        store.dispatch(collidePersonWithEnemy({
+            type: 'POLICEMAN'
         }));
     }
 

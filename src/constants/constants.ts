@@ -35,7 +35,8 @@ export const enum ENEMY_TYPES {
     fsb = 'fsb',
     official = 'official',
     gangster = 'gangster',
-    prosecutor = 'prosecutor'
+    prosecutor = 'prosecutor',
+    policeman = 'POLICEMAN'
 }
 
 export const ENEMY = {
