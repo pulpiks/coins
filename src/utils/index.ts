@@ -31,3 +31,13 @@ export function generatorRandomString() {
         }
     }
 }
+
+
+export function generatorId() {
+    let id = 0;
+    return {
+        get: (name) => {
+            return name+'_'+(++id);
+        }
+    }
+}

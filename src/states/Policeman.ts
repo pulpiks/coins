@@ -1,8 +1,9 @@
 import Player from './Player';
 
 import { POLICEMAN } from '../constants/constants';
+import Person from './Person';
 
-export default class Policeman extends Player {
+export default class Policeman {
     game: Phaser.Game;
     options: any;
     sprite: Phaser.Sprite;
@@ -12,16 +13,20 @@ export default class Policeman extends Player {
     timerChangingVelocity: number;
 
     constructor(game: Phaser.Game, options = {}) {
-        super(game, options);
         this.game = game;
         this.options = options;
-        this.sprite = this.game.add.sprite(
-            this.game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
-            this.game.world.height-50, 'policeman'
-        );
+
+        this.sprite = new Person({
+            game: this.game,
+            x: this.game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
+            y: this.game.world.height-50,
+            key: 'policeman'
+        });
+
         this.sprite.scale.setTo(0.12, 0.12);
         this.sprite.anchor.set(0.5, 1);
         this.game.physics.arcade.enable(this.sprite);
+        this.sprite.body.immovable = true;
         this.animationRun = this.sprite.animations.add('move', [7, 6, 5, 4, 3, 2, 1, 0], 8, true);
         this.sprite.animations.play('stand');
         this.timerChangingVelocity = Date.now();

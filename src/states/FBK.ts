@@ -1,5 +1,8 @@
+import autobind from 'autobind-decorator'
+
 import Player from './Player';
 import Coins from './Coins';
+import store from '../store';
 
 import {
     PERSON,
@@ -47,6 +50,7 @@ export default class FBK_person extends Player {
         this.sprite.scale.setTo(0.6, 0.85);
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = 2000;
+        this.sprite.body.immovable = true;
 
         // this.sprite.body.linearDamping = 1;
         // this.sprite.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -60,8 +64,11 @@ export default class FBK_person extends Player {
             a: this.game.input.keyboard.addKey(Phaser.Keyboard.A), //throw
             d: this.game.input.keyboard.addKey(Phaser.Keyboard.D) //delete
         };
+
+        store.subscribe(this.collideWithEnemy);
     }
 
+    @autobind
     collideWithEnemy(enemies: any, person: Phaser.Sprite, enemy:Phaser.Sprite) {
         switch(enemies[enemy.name].enemy.type) {
             case ENEMY_TYPES.fsb:

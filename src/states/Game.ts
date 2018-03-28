@@ -1,14 +1,19 @@
 import autobind from 'autobind-decorator';
 
+
+import store from '../store';
+
 import Enemy from './Enemy';
 import Coins from './Coins';
-import Person from './FBK_person';
+import Person from './FBK';
 import Score from './Score';
 import Mood from './Mood';
+import Policeman from "./Policeman";
 
 
 import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding, POLICEMAN} from '../constants/constants';
-import Policeman from "./Policeman";
+
+import { collidePersonWithEnemy } from '../actions';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -17,6 +22,7 @@ interface enemyObj {
 interface CactusProp extends Phaser.Sprite {
     isKilled?: boolean
 }
+
 
 export default class Game extends Phaser.State{
     private group: Phaser.Group;
@@ -49,8 +55,6 @@ export default class Game extends Phaser.State{
         this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
         this.load.image('clouds', './src/assets/clouds/clouds.png');
         this.load.spritesheet('policeman', './src/assets/policeman/policeman.png', 274, 756.5, 8);
-
-
     }
 
     createClouds() {
@@ -191,10 +195,23 @@ export default class Game extends Phaser.State{
         // }, 2000, this);
     }
 
+    getSprites() {
+        return this.policemen.map((policeman) => {
+            return policeman.sprite;
+        })
+    }
+
     update() {
+
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
-        this.physics.arcade.collide(this.enemies, this.person.sprite, this.person.collideWithEnemy.bind(this.person, this.enemiesObj), null, this);
+        this.physics.arcade.collide(
+            this.person.sprite,
+            this.getSprites(),
+            this.collideWithEnemy,
+            null,
+            this
+        );
         this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collidePersonWithCactus, null, this);
         this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
         this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
@@ -216,6 +233,13 @@ export default class Game extends Phaser.State{
 
     }
 
+    /* collide person with enemy */
+
+    collideWithEnemy(fbk, policeman) {
+        store.dispatch(collidePersonWithEnemy({
+            policeman_id: policeman.person_id
+        }));
+    }
 
     render() {
         this.cactuses.forEachAlive((cactus: Phaser.Sprite) => {
