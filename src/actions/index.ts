@@ -9,16 +9,16 @@ export function collidePersonWithPoliceman(action) {
 }
 
 
-export function collidePersonWithEnemy(action) {
-    return {
-        type: TYPES.ENEMY_COLLIDE,
-        type: action.type
-    }
-}
+// export function collidePersonWithEnemy(action) {
+//     return {
+//         type: TYPES.ENEMY_COLLIDE,
+//         type: action.type
+//     }
+// }
 
-export function reduceMood(action) {
-    return {
-        type: TYPES.REDUCE_MOOD,
-        cause: action.cause
-    }
-}
+// export function reduceMood(action) {
+//     return {
+//         type: TYPES.REDUCE_MOOD,
+//         cause: action.cause
+//     }
+// }

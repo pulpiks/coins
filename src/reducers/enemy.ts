@@ -1,14 +1,15 @@
-import { ENEMY_COLLIDE } from '../types/types';
+import { PERSON_POLICEMAN_COLLIDE } from '../types/types';
+import { ENEMY_TYPES } from '../constants/constants';
 
 const defaultState = {
-    activeIds: {}
+
 };
 
 export default function (state = defaultState, action) {
     switch(action.type) {
-        case ENEMY_COLLIDE:
+        case PERSON_POLICEMAN_COLLIDE:
             return {
-                type: action.type
+                type: ENEMY_TYPES.policeman
             };
         default:
             return state;

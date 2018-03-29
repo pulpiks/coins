@@ -1,4 +1,5 @@
-import { REDUCE_MOOD } from '../types/types';
+import { PERSON_POLICEMAN_COLLIDE } from '../types/types';
+import { MOOD } from '../constants/constants';
 
 const defaultState = {
     total: 100
@@ -6,9 +7,10 @@ const defaultState = {
 
 export default function (state = defaultState, action) {
     switch(action.type) {
-        case REDUCE_MOOD:
+        case PERSON_POLICEMAN_COLLIDE:
+            let total = state.total - MOOD.step < 0 ? 0 : state.total - 1;
             return {
-                total: (action.cause === 'POLICEMAN') ? state.total - 3 : state.total - 1;
+                total: total < 0 ? 0 : total
             };
         default:
             return state;

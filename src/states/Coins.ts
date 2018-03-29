@@ -1,50 +1,52 @@
+import autobind from 'autobind-decorator';
+
 import { COINS } from '../constants/constants';
+
+import store from '../store';
 
 export default class Coins {
     coinImage: Phaser.Sprite;
     label: Phaser.Text;
-    money: number;
+    money: number = 0;
     game: Phaser.Game;
     group: Phaser.Group;
     // width: number;
 
     constructor( { game }: { game: Phaser.Game } ) {
         this.game = game;
-        this.money = COINS.startSum;
 
         this.group = this.game.add.group();
-        // this.group.x = x;
-        // this.group.y = y;
-        // this.width = width;
+        this.group.x = 20;
+        this.group.y = 50;
 
-        this.coinImage = this.game.add.sprite(200, 100, 'coin');
-        this.coinImage.width = 20;
+        this.coinImage = this.game.add.sprite(0, 0, 'coin');
+        this.coinImage.width = 30;
         this.coinImage.height = 30;
 
         this.label = this.game.add
-            .text(240, 100, String(this.money), {
-                font: "30px Arial",
-                fill: "#ffffff",
-                align: "center"
-            });
+            .text(
+                35,
+                0,
+                String(COINS.startSum),
+                {
+                    font: "25px Arial",
+                    fill: "#ffffff",
+                    align: "center"
+                }
+            );
 
         this.group.add(this.coinImage);
         this.group.add(this.label);
+        store.subscribe(this.update);
     }
 
+    @autobind
     update() {
-        this.label.setText(this.money.toString());
-    }
-
-    takeMoney(amount:number) {
-        this.money -= amount;
-    }
-
-    addMoney(amount:number) {
-        this.money += amount;
-    }
-
-    get amount() {
-        return this.money;
+        const state = store.getState();
+        const { money } = state.score;
+        if (money !== this.money) {
+            this.money = money;
+            this.label.setText(this.money.toString());
+        }
     }
 }

@@ -88,7 +88,7 @@ export default class FBK_person extends Player {
                 }
                 break;
             case ENEMY_TYPES.policeman:
-                this.reduceMood(ENEMY_TYPES.policeman);
+                // this.reduceMood(ENEMY_TYPES.policeman);
                 break;
             default: break;
         }

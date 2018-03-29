@@ -21,7 +21,6 @@ export default class Player {
 
             if (jumpButton.isDown && !this.isJumping)
             {
-                debugger;
                 player.animations.play('jump');
                 player.body.velocity.y = -700;
                 this.isJumping = true;
@@ -44,7 +43,6 @@ export default class Player {
 
                 if (this.facing != 'right')
                 {
-                    debugger;
                     this.sprite.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
                     player.animations.play('run');
                     this.facing = 'right';

@@ -11,7 +11,15 @@ import Mood from './Mood';
 import Policeman from "./Policeman";
 
 
-import {backgroundColor, ground, BUIDING_COORDS, orderBuidings, typesBuiding, POLICEMAN} from '../constants/constants';
+import {
+    backgroundColor,
+    ground,
+    BUIDING_COORDS,
+    orderBuidings,
+    typesBuiding,
+    POLICEMAN,
+    timeOutCollide
+} from '../constants/constants';
 
 import { collidePersonWithPoliceman, collidePersonWithEnemy } from '../actions';
 
@@ -32,14 +40,13 @@ export default class Game extends Phaser.State{
     private obstacles: Phaser.TilemapLayer;
     private enemies: Phaser.Group;
     private enemiesObj: enemyObj = {};
-    private coins: Coins;
     private person: Person;
     private cactuses: Phaser.Group;
     private thrownCactuses: CactusProp[] = [];
     private score: Score;
     private crowd: Phaser.TilemapLayer;
     private ground: Phaser.Sprite;
-    private mood: Mood;
+    private collideEnemiesId = {};
 
     init() {
         this.policemen = [];
@@ -105,9 +112,6 @@ export default class Game extends Phaser.State{
         this.createClouds();
         this.createGround();
         this.createBuidings();
-        this.mood = new Mood({
-            game: this.game
-        });
 
         // this.backgroundlayer = this.map.createLayer('background');
         // this.backgroundlayer.resizeWorld();
@@ -122,13 +126,9 @@ export default class Game extends Phaser.State{
         this.physics.arcade.enable(this.crowd);
         this.map.setCollision([14], true, this.crowd);
 
-        this.coins = new Coins({
-            game: this.game
-        });
 
         this.person = new Person({
             game: this.game,
-            coins: this.coins,
             onThrowCactus: this.throwCactus
         });
 
@@ -137,8 +137,6 @@ export default class Game extends Phaser.State{
                 this.game
             ));
         }
-
-
 
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
@@ -169,8 +167,7 @@ export default class Game extends Phaser.State{
 
         this.score = new Score({
             game: this.game,
-            person: this.person,
-            coins: this.coins
+            person: this.person
         });
 
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -219,7 +216,6 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(this.person.sprite, this.ground, this.person.endJumping, null, this.person);
 
         this.person.update();
-        this.score.update();
         this.policemen.forEach((policeman) => {
             policeman.update();
         });
@@ -236,12 +232,14 @@ export default class Game extends Phaser.State{
     /* collide person with enemy */
 
     collideWithPoliceman(fbk, policeman) {
-        store.dispatch(collidePersonWithPoliceman({
-            policeman_id: policeman.person_id
-        }));
-        store.dispatch(collidePersonWithEnemy({
-            type: 'POLICEMAN'
-        }));
+        let cachedTime = this.collideEnemiesId[policeman.person_id];
+        if (!cachedTime || Date.now() - cachedTime > timeOutCollide){
+            console.log('00000');
+            this.collideEnemiesId[policeman.person_id] = Date.now();
+            store.dispatch(collidePersonWithPoliceman({
+                policeman_id: policeman.person_id
+            }));
+        }
     }
 
     render() {

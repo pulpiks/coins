@@ -1,5 +1,8 @@
+import autobind from 'autobind-decorator';
+
 import MoodRange from './RangeComponent';
-import { MOOD } from '../constants/constants';
+
+import store from '../store';
 
 export default class Mood {
     group: Phaser.Group;
@@ -15,21 +18,22 @@ export default class Mood {
     }) {
         this.game = game;
         this.mood = new MoodRange(this.game, {
-            width: 250,
-            height: 40,
-            x: 0,
-            y: 0,
+            width: 200,
+            height: 30,
+            x: 120,
+            y: 30,
             bg: {
                 color: '#651828'
             },
             bar: {
-                color: '#FEFF03'
+                color: '#10ff80'
             },
             animationDuration: 200,
-            flipped: false
+            flipped: false,
+            isFixedToCamera: true
         });
 
-
+        store.subscribe(this.changeMood);
         // this.coins = coins;
         // this.person = person;
         // this.group = this.game.add.group();
@@ -51,17 +55,16 @@ export default class Mood {
         // this.group.add(this.cactusesText);
     }
 
-    reduceMood() {
-        this.moodValue = this.moodValue - MOOD.step;
-        if(this.moodValue < 0) this.moodValue = 0;
-        this.mood.setPercent(this.moodValue);
+    @autobind
+    changeMood() {
+        const state = store.getState();
+        const { mood: { total } } = state;
+        if (this.total !== total) {
+            this.total = total;
+            this.mood.setPercent(this.total);
+        }
     }
 
-    cheerUp() {
-        this.moodValue = this.heamoodValuelthValue + MOOD.step;
-        if(this.moodValue > 100) this.healmoodValuethValue = 100;
-        this.mood.setPercent(this.moodValue);
-    }
 }
 
 export default Mood;

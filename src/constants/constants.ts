@@ -11,7 +11,7 @@ export const PERSON = {
 export const POLICEMAN = {
     width: 100,
     height: 70,
-    rangeX: [10, 1500],
+    rangeX: [100, 1500],
     count: 5,
     speed_min: 1,
     speed_max: 40,
@@ -119,3 +119,5 @@ export const SCHOOL_COORDS = {
 export const MOOD = {
     step : 5
 };
+
+export const timeOutCollide = 3000;
