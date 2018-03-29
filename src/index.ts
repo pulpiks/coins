@@ -28,4 +28,6 @@ function initGame(): void {
     game.state.start(STATES.Boot);
 }
 
-initGame();
+window.onload = () => {
+    initGame();
+}

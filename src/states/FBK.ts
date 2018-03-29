@@ -1,5 +1,6 @@
 import autobind from 'autobind-decorator'
 
+import Person from './Person';
 import Player from './Player';
 import Coins from './Coins';
 import store from '../store';
@@ -42,7 +43,15 @@ export default class FBK_person extends Player {
         this.time = Date.now();
         this.onThrowCactus = onThrowCactus;
 
-        this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
+        // this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
+
+        this.sprite = new Person({
+            game: this.game,
+            x: 0,
+            y: this.game.world.height-50,
+            key: 'person'
+        });
+
         this.animationsRunRight = this.sprite.animations.add('run', [8, 9, 10, 11], 10, true);
         this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
         this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
@@ -152,19 +161,14 @@ export default class FBK_person extends Player {
                 if (this.facing != 'idle')
                 {
                     player.animations.stop();
-
-                    if (this.facing == 'left')
-                    {
-                        player.frame = 0;
-                        // this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-                    }
-                    else
-                    {
-                        player.frame = 0;
-                        // player.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-                    }
-
+                    player.frame = 0;
                     this.facing = 'idle';
+                }
+                else {
+                    if ( player.body.touching.down || player.body.onFloor() ) {
+                        player.frame = 0;
+                        this.facing = 'idle';
+                    }
                 }
             }
 
