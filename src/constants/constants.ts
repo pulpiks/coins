@@ -118,7 +118,7 @@ export const SCHOOL_COORDS = {
 };
 
 export const MOOD = {
-    step : 5
+    step : 10
 };
 
 export const timeOutCollide = 3000;

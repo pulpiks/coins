@@ -73,7 +73,7 @@ export default class Policeman extends Enemy{
                 this.sprite.animations.currentAnim.name !== 'move' ||
                 !this.sprite.animations.currentAnim.isPlaying
             ) {
-                this.sprite.animations.play('move', (this.velocity < 30) ? 8 : 12);
+                this.sprite.animations.play('move', (this.velocity < 15) ? 5 : 12);
             }
         }
     }

@@ -240,7 +240,8 @@ export default class Game extends Phaser.State{
 
     collideWithPoliceman(fbk, policeman) {
         let cachedTime = this.collideEnemiesId[policeman.person_id];
-        if (!cachedTime || Date.now() - cachedTime > timeOutCollide){
+        if ((!cachedTime || Date.now() - cachedTime > timeOutCollide) &&
+            !this.enemiesObj[policeman.person_id].isTouchedByCactus){
             this.collideEnemiesId[policeman.person_id] = Date.now();
             store.dispatch(collidePersonWithPoliceman({
                 policeman_id: policeman.person_id
