@@ -51,8 +51,9 @@ export const ENEMY = {
 
 
 export const CACTUS = {
-    width: 16,
-    height: 16
+    width: 25,
+    height: 30,
+    count: 10
 };
 
 

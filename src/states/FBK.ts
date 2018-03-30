@@ -10,7 +10,10 @@ import {
     ENEMY_TYPES
 } from '../constants/constants';
 
-import { reduceMood } from '../actions';
+import { reduceMood, throwCactus } from '../actions';
+
+
+import store from '../store';
 
 export default class FBK_person extends Player {
     isTouchedEnemy: boolean;
@@ -63,8 +66,6 @@ export default class FBK_person extends Player {
         this.sprite.body.gravity.y = 2000;
         this.sprite.body.immovable = true;
 
-        // this.sprite.body.linearDamping = 1;
-        // this.sprite.animations.add('right', [5, 6, 7, 8], 10, true);
         this.sprite.animations.play('stand');
         //
         this.sprite.body.collideWorldBounds = true;
@@ -179,8 +180,9 @@ export default class FBK_person extends Player {
                 this.isJumping = true;
             }
 
-            if (this.cactuses.length > 0 && this.keys.a.justDown) {
-                this.throwCactus(this.cactuses.pop());
+            const state = store.getState();
+            if (state.score.cactuses > 0 && this.keys.a.justDown) {
+                this.throwCactus();
             }
         }
     }
@@ -201,19 +203,10 @@ export default class FBK_person extends Player {
         this.isEnabledCollision = false;
     }
 
-    collideWithCactus(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
+    throwCactus() {
+        store.dispatch(throwCactus());
 
-    }
-
-    addCactus(cactus: Phaser.Sprite) {
-        cactus.kill();
-        this.cactuses.push(cactus);
-    }
-
-    throwCactus(cactus: Phaser.Sprite) {
-        cactus.revive();
         this.onThrowCactus(
-            cactus,
             this.sprite.body.x,
             this.sprite.body.y - this.sprite.body.halfHeight,
             this.direction * 200,

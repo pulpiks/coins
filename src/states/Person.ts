@@ -14,5 +14,6 @@ export default class Person extends Phaser.Sprite {
         super(game, x, y, key);
         this.person_id = get(key);
         game.add.existing(this);
+        game.physics.arcade.enable(this);
     }
 }

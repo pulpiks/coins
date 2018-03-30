@@ -1,9 +1,13 @@
+import autobind from 'autobind-decorator';
 import Player from './Player';
 
-import { POLICEMAN } from '../constants/constants';
+import { POLICEMAN, ENEMY_TYPES } from '../constants/constants';
 import Person from './Person';
+import Enemy from './Enemy';
 
-export default class Policeman {
+import store from '../store';
+
+export default class Policeman extends Enemy{
     game: Phaser.Game;
     options: any;
     sprite: Phaser.Sprite;
@@ -14,15 +18,16 @@ export default class Policeman {
 
     constructor(game: Phaser.Game, options = {}) {
         this.game = game;
-        this.options = options;
 
-        this.sprite = new Person({
-            game: this.game,
+        super(game, {
+            type: ENEMY_TYPES.policeman,
             x: this.game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
             y: this.game.world.height-50,
-            key: 'policeman'
+            key: ENEMY_TYPES.policeman
         });
 
+        this.options = options;
+        console.log(this.sprite);
         this.sprite.scale.setTo(0.12, 0.12);
         this.sprite.anchor.set(0.5, 1);
         this.game.physics.arcade.enable(this.sprite);
@@ -32,10 +37,15 @@ export default class Policeman {
         this.timerChangingVelocity = Date.now();
         this.sprite.body.collideWorldBounds=true;
         this.velocity = this.game.rnd.between(POLICEMAN.speed_min, POLICEMAN.speed_max);
-        // this.addListener('move', this.move.bind(this));
+
+        // store.subscribe(this.collideWithCactus)
     }
 
     update() {
+        if (this.isTouchedByCactus) {
+            this.sprite.animations.stop('move', true);
+            return true;
+        }
         if (Date.now() - this.timerChangingVelocity > POLICEMAN.time_threshold) {
             this.sprite.body.moves = true;
             this.timerChangingVelocity = Date.now();
@@ -67,5 +77,17 @@ export default class Policeman {
             }
         }
     }
+
+    // @autobind
+    // collideWithCactus() {
+    //     const state = store.getState();
+    //     if (state.collide_id_with_cactus == this.sprite.person_id) {
+    //
+    //     }
+    // }
+    //
+    // onCactusCollision() {
+    //
+    // }
 
 }

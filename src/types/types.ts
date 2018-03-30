@@ -8,3 +8,9 @@ export const INCREASE_MOOD = 'INCREASE_MOOD';
 
 export const UPDATE_SCORE = 'UPDATE_SCORE';
 export const UPDATE_MONEY = 'UPDATE_MONEY';
+
+
+export const ADD_CACTUS = 'ADD_CACTUS';
+export const THROW_CACTUS = 'THROW_CACTUS';
+
+export const COLLIDE_POLICEMAN_CACTUS = 'COLLIDE_POLICEMAN_CACTUS';

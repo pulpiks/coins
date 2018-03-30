@@ -1,50 +1,33 @@
 import { CACTUS } from '../constants/constants';
 
-import { generatorRandomString } from '../utils';
-
-const generatorId = generatorRandomString();
-
+import Person from './Person';
 
 export default class Cactus {
-    isKilled: boolean = false;
+    cactus: Person;
 
-    constructor({ cactus, game }: { cactus:Phaser.Sprite, game:Phaser.State }) {
-        cactus.width = 20;
-        cactus.height = 40;
-        cactus.body.immovable = true;
-        cactus.name = 'cactus_'+ generatorId.getId();
-        cactus.body.collideWorldBounds = true;
-        cactus.body.onWorldBounds = new Phaser.Signal();
-        cactus.body.onWorldBounds.add(this.hitWorldBounds, this);
-
-        // this.game = game;
-        // this.enemy = enemy;
-        // this.person = person;
-        // this.enemies = enemies;
-        // this.enemySprite = this.enemies.create(
-        //     this.enemy.x,
-        //     this.enemy.y,
-        //     'enemy'
-        // );
-        // this.enemySprite.width = CACTUS.width;
-        // this.enemySprite.height = CACTUS.height;
-        // this.enemySprite.name = 'cactus_'+ generatorId.getIdForEnemy();
-        // this.enemySprite.anchor.set(0.5, 1);
-        // // enemySprite.body.gravity.y = 200;
-        // this.enemySprite.body.collideWorldBounds = true;
-        // this.enemySprite.body.immovable = true;
-        // this.timerChangingVelocity = Date.now();
-    }
-
-    touch(persionSprite: Phaser.Sprite, cactus: Phaser.Sprite) {
-        cactus.destroy();
-    }
-
-    throwOne() {
-        console.log('throw');
+    constructor({
+        game,
+        x,
+        y,
+        key
+    }: { cactus:Phaser.Sprite, game:Phaser.State }) {
+        this.cactus = new Person({
+            game,
+            x,
+            y,
+            key
+        });
+        this.cactus.width = CACTUS.width;
+        this.cactus.height = CACTUS.height;
+        this.cactus.body.immovable = true;
+        this.cactus.allowGravity = false;
+        this.cactus.body.collideWorldBounds = true;
+        this.cactus.body.onWorldBounds = new Phaser.Signal();
+        this.cactus.body.onWorldBounds.add(this.hitWorldBounds, this);
+        return this.cactus;
     }
 
     hitWorldBounds() {
-        alert('cactus went out the borders');
+        this.cactus.destroy();
     }
 }

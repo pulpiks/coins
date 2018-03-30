@@ -8,15 +8,19 @@ import {
     STATES,
 } from './constants/constants';
 
+const game: Phaser.Game;
+
+const getSizes = () => {
+    const containerNode = document.querySelector('.js-game-container') as HTMLElement;
+    return rgResizeBody(containerNode);
+}
 
 function initGame(): void {
-    const containerNode = document.querySelector('.js-game-container') as HTMLElement;
-    const [gameWidth, gameHeight] = rgResizeBody(containerNode);
-
-    const game = new Phaser.Game({
+    const [ gameWidth, gameHeight ] = getSizes();
+    game = new Phaser.Game({
         width: gameWidth,
         height: gameHeight,
-        parent: containerNode,
+        parent: document.querySelector('.js-game-container'),
         antialias: true,
         renderer: Phaser.CANVAS
     });
@@ -28,6 +32,10 @@ function initGame(): void {
     game.state.start(STATES.Boot);
 }
 
-window.onload = () => {
-    initGame();
-}
+window.onload = initGame;
+window.onresize = () => {
+    if (game) {
+        console.log('////');
+        game.scale.setGameSize(...getSizes());
+    }
+};

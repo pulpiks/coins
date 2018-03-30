@@ -18,6 +18,11 @@ export default function (state = defaultState, action) {
             const newState = { ...state };
             delete newState[action.id];
             return newState;
+
+        case TYPES.COLLIDE_POLICEMAN_CACTUS:
+            return {
+                collide_id_with_cactus: action.id
+            };
         default:
             return state;
     }

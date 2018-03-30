@@ -18,6 +18,16 @@ export default function (state = defaultState, action) {
                 ...state,
                 money: state.money + action.money
             }
+        case TYPES.ADD_CACTUS:
+            return {
+                ...state,
+                cactuses: state.cactuses + 1
+            };
+        case TYPES.THROW_CACTUS:
+            return {
+                ...state,
+                cactuses: state.cactuses - 1
+            };
         default:
             return state;
     }

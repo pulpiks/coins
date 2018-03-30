@@ -29,7 +29,7 @@ class Score {
 
 
         let cactusGroup = this.game.add.group();
-        let cactusImg = this.game.add.sprite(20, 85, 'tilescactus');
+        let cactusImg = this.game.add.sprite(20, 85, 'cactus');
         cactusImg.width = 30;
         cactusImg.height = 30;
 
@@ -54,7 +54,7 @@ class Score {
     @autobind
     updateScore() {
         const state = store.getState();
-        const { cactuses } = state;
+        const { score: { cactuses } } = state;
         if (this.cactuses !== cactuses) {
             this.cactuses = cactuses;
             this.cactusesText.setText(cactuses.toString());

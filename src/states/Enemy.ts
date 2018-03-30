@@ -10,60 +10,46 @@ import { generatorRandomString } from '../utils';
 const generatorId = generatorRandomString();
 
 export default class Enemy {
-    enemies: Phaser.Group;
+    sprite: Phaser.Sprite;
     enemySprite: Phaser.Sprite;
     game: Phaser.Game;
     enemy: any;
     person: Person;
     private timerChangingVelocity: number;
-    private isDisabled: boolean;
+    private isTouchedByCactus: boolean = false;
     private tween: Phaser.Tween;
     private timer: Phaser.TimerEvent;
 
-    constructor({ game, enemy, person, enemies }: {
-        game: Phaser.Game,
-        enemy: Phaser.Sprite,
-        person: Person,
-        enemies: Phaser.Group
-    }) {
+    constructor( game: Phaser.Game, enemy) {
         this.game = game;
         this.enemy = enemy;
-        this.person = person;
-        this.enemies = enemies;
-        this.enemy.type = this.enemy.properties && this.enemy.properties.enemy_type;
-        this.enemySprite = this.enemies.create(
-            this.enemy.x,
-            this.game.world.height-50,
-            'enemy'
-        );
-        this.enemySprite.width = ENEMY.width;
-        this.enemySprite.height = ENEMY.height;
-        this.enemySprite.body.gravity.y = 200;
-        this.enemySprite.name = 'enemy_'+ generatorId.getId();
-        this.enemySprite.anchor.set(0.5, 1);
-        // enemySprite.body.gravity.y = 200;
-        this.enemySprite.body.collideWorldBounds = true;
-        this.enemySprite.body.immovable = true;
-        this.timerChangingVelocity = Date.now();
+
+        this.sprite = new Person({
+            game: this.game,
+            x: this.enemy.x,
+            y: this.enemy.y,
+            key: this.enemy.type
+        });
     }
 
     move(personSprite: Phaser.Sprite) {
-        if (this.isDisabled) {
-            return true;
-        }
-        this.enemySprite.body.moves = true;
-        if (personSprite.left >= this.enemySprite.left) {
-            this.enemySprite.body.velocity.x = this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max);
-        }
-        else {
-            if (Date.now() - this.timerChangingVelocity > ENEMY.time_threshold) {
-                this.timerChangingVelocity = Date.now();
-                let dir = Math.round(Math.random());
-                this.enemySprite.body.velocity.x =
-                    this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max) * (dir ? 1 : -1);
-                // ??? this.enemiesObj[this.enemySprite.name]['velocityX'] = this.enemySprite.body.velocity.x;
-            }
-        }
+        console.log('----');
+        // if (this.isTouchedByCactus) {
+        //     return true;
+        // }
+        // this.enemySprite.body.moves = true;
+        // if (personSprite.left >= this.enemySprite.left) {
+        //     this.enemySprite.body.velocity.x = this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max);
+        // }
+        // else {
+        //     if (Date.now() - this.timerChangingVelocity > ENEMY.time_threshold) {
+        //         this.timerChangingVelocity = Date.now();
+        //         let dir = Math.round(Math.random());
+        //         this.enemySprite.body.velocity.x =
+        //             this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max) * (dir ? 1 : -1);
+        //         // ??? this.enemiesObj[this.enemySprite.name]['velocityX'] = this.enemySprite.body.velocity.x;
+        //     }
+        // }
     }
 
     collideWithObstacles(enemy: Phaser.Sprite, obstacles: Phaser.Sprite) {
@@ -71,6 +57,7 @@ export default class Enemy {
     }
 
     onCactusCollision() {
+
         switch(this.enemy.type) {
             case ENEMY_TYPES.fsb:
                 this.deactivateForTheTime();
@@ -81,14 +68,17 @@ export default class Enemy {
                 break;
             case ENEMY_TYPES.prosecutor:
                 break;
+            case ENEMY_TYPES.policeman:
+                this.deactivateForTheTime();
+                break;
             default: break;
         }
     }
 
     deactivateForTheTime() {
-        this.isDisabled = true;
-        this.enemySprite.body.moves = false;
-        this.tween = this.game.add.tween(this.enemySprite).to(
+        this.isTouchedByCactus = true;
+        this.sprite.body.moves = false;
+        this.tween = this.game.add.tween(this.sprite).to(
             { alpha: 0 },
             300, Phaser.Easing.Linear.None, true, 0, 100, false
         );
@@ -101,8 +91,8 @@ export default class Enemy {
     finishCollision() {
         // this.timer.remove();
         this.game.time.events.remove(this.timer);
-        this.isDisabled = false;
-        this.enemySprite.alpha = 1;
+        this.isTouchedByCactus = false;
+        this.sprite.alpha = 1;
         this.tween.stop();
 
     }

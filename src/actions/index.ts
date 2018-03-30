@@ -8,6 +8,18 @@ export function collidePersonWithPoliceman(action) {
     };
 }
 
+export function addCactus() {
+    return {
+        type: TYPES.ADD_CACTUS
+    }
+}
+
+export function throwCactus() {
+    return {
+        type: TYPES.THROW_CACTUS
+    }
+}
+
 
 // export function collidePersonWithEnemy(action) {
 //     return {

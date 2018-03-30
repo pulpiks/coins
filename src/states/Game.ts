@@ -4,11 +4,13 @@ import autobind from 'autobind-decorator';
 import store from '../store';
 
 import Enemy from './Enemy';
+import Person from './Person';
 import Coins from './Coins';
-import Person from './FBK';
+import FBK from './FBK';
 import Score from './Score';
 import Mood from './Mood';
 import Policeman from "./Policeman";
+import Cactus from "./Cactus";
 
 
 import {
@@ -18,10 +20,12 @@ import {
     orderBuidings,
     typesBuiding,
     POLICEMAN,
-    timeOutCollide
+    timeOutCollide,
+    CACTUS,
+    ENEMY_TYPES
 } from '../constants/constants';
 
-import { collidePersonWithPoliceman, collidePersonWithEnemy } from '../actions';
+import {collidePersonWithPoliceman, collidePersonWithEnemy, addCactus} from '../actions';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -59,14 +63,14 @@ export default class Game extends Phaser.State{
         this.load.image('coin', './src/assets/one-coin.png');
         this.load.image('enemy', './src/assets/enemy.png');
         this.load.image('ground', './src/assets/ground.png');
-        this.load.spritesheet('tilescactus', './src/assets/cactuses.png', 48, 64);
+        this.load.image('cactus', './src/assets/cactuses.png');
         this.load.image('clouds', './src/assets/clouds/clouds.png');
-        this.load.spritesheet('policeman', './src/assets/policeman/policeman.png', 274, 756.5, 8);
+        this.load.spritesheet(ENEMY_TYPES.policeman, './src/assets/policeman/policeman.png', 274, 756.5, 8);
     }
 
     createClouds() {
         this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width*3000, 300, 'clouds', 0);
-
+        this.cloudsSprite.scale.setTo(0.7, 0.7);
         // this.cloudsSprite.animations.play('clouds', 10, true);
         // this.cloudsAnimation = this.cloudsSprite.animations.add('cloudsmove', [1,2], 1, true);
         // this.animationsStand = this.cloudsAnimation.animations.add('move', [2, 3], 1, true);
@@ -127,43 +131,36 @@ export default class Game extends Phaser.State{
         this.map.setCollision([14], true, this.crowd);
 
 
-        this.person = new Person({
+        this.person = new FBK({
             game: this.game,
             onThrowCactus: this.throwCactus
         });
 
-        for(let i =0; i<POLICEMAN.count; i++) {
-            this.policemen.push(new Policeman(
-                this.game
-            ));
-        }
-
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
-        this.map.objects.enemies.forEach((enemy: Phaser.Sprite) => {
-            if (enemy.visible) {
-                // let enemyObj = new Enemy({
-                //     game: this.game,
-                //     enemy,
-                //     person: this.person,
-                //     enemies: this.enemies
-                // });
-                //
-                // this.enemiesObj[enemyObj.enemySprite.name] = enemyObj;
-                //
-                // this.game.debug.body(enemy);
-            }
-        });
+        for(let i =0; i<POLICEMAN.count; i++) {
+            let policeman = new Policeman(
+                this.game
+            );
+            this.policemen.push(policeman);
+            this.enemies.add(policeman.sprite);
+            this.enemiesObj[policeman.sprite.person_id] = policeman;
+        }
 
         this.cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
-        this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
+        for(let i = 0; i < CACTUS.count; i++) {
+            let cactus = new Cactus({
+                game: this.game,
+                x: Math.floor(Math.random() * (this.game.world.width - 100)) + 100,
+                y: 120 + Math.random() * 200,
+                key: 'cactus'
+            });
 
-        this.cactuses.forEach((cactus: Phaser.Sprite) => {
-            cactus.body.allowGravity = false;
-            cactus.width = 20;
-            cactus.height = 20;
-        }, this);
+            this.cactuses.add(cactus);
+        }
+
+        // this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
 
         this.score = new Score({
             game: this.game,
@@ -192,7 +189,7 @@ export default class Game extends Phaser.State{
         // }, 2000, this);
     }
 
-    getSprites() {
+    getPolicemen() {
         return this.policemen.map((policeman) => {
             return policeman.sprite;
         })
@@ -204,13 +201,25 @@ export default class Game extends Phaser.State{
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.collide(
             this.person.sprite,
-            this.getSprites(),
+            this.getPolicemen(),
             this.collideWithPoliceman,
             null,
             this
         );
-        this.physics.arcade.collide(this.person.sprite, this.cactuses, this.collidePersonWithCactus, null, this);
-        this.physics.arcade.collide(this.enemies, this.thrownCactuses, this.collideEnemyWithCactus, null, this);
+        this.physics.arcade.collide(
+            this.person.sprite,
+            this.cactuses,
+            this.collidePersonWithCactus,
+            null,
+            this
+        );
+        this.physics.arcade.collide(
+            this.enemies,
+            this.thrownCactuses, 
+            this.collideEnemiesWithCactus,
+            null, 
+            this
+        );
         this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
         this.physics.arcade.collide(this.person.sprite, this.crowd, this.meetCrowd, null, this);
         this.physics.arcade.collide(this.person.sprite, this.ground, this.person.endJumping, null, this.person);
@@ -219,9 +228,7 @@ export default class Game extends Phaser.State{
         this.policemen.forEach((policeman) => {
             policeman.update();
         });
-        for (let name in this.enemiesObj) {
-            this.enemiesObj[name].move(this.person.sprite);
-        }
+
         this.removeKilledCactuses(); //autocleaning killed entities
         this.removeKilledEnemies();
 
@@ -234,7 +241,6 @@ export default class Game extends Phaser.State{
     collideWithPoliceman(fbk, policeman) {
         let cachedTime = this.collideEnemiesId[policeman.person_id];
         if (!cachedTime || Date.now() - cachedTime > timeOutCollide){
-            console.log('00000');
             this.collideEnemiesId[policeman.person_id] = Date.now();
             store.dispatch(collidePersonWithPoliceman({
                 policeman_id: policeman.person_id
@@ -248,7 +254,6 @@ export default class Game extends Phaser.State{
         }, this);
 
         this.game.debug.geom(this.person.sprite.getBounds());
-
     }
 
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
@@ -256,17 +261,16 @@ export default class Game extends Phaser.State{
     }
 
     collidePersonWithCactus(person: Phaser.Sprite, cactus: Phaser.Sprite) {
-        this.person.addCactus(cactus);
-        // this.thrownCactuses.pop();
+        cactus.kill();
+        this.thrownCactuses.push(cactus);
+        store.dispatch(addCactus());
     }
 
-    collideEnemyWithCactus(cactus: CactusProp, enemy: Phaser.Sprite) {
+    collideEnemiesWithCactus(cactus: CactusProp, enemy: Phaser.Sprite) {
         this.thrownCactuses.pop();
         cactus.kill();
         cactus.isKilled = true;
-        // todo enemy harm
-
-        this.enemiesObj[enemy.name].onCactusCollision();
+        this.enemiesObj[enemy.person_id].onCactusCollision();
     }
 
     collideObstaclesWithCactus(obstacle: Phaser.Sprite) {
@@ -276,8 +280,9 @@ export default class Game extends Phaser.State{
     }
 
     @autobind
-    throwCactus(cactus: Phaser.Sprite, x:number, y:number, velocityX: number, angularVelocity: number) {
-        this.thrownCactuses.push(cactus);
+    throwCactus(x:number, y:number, velocityX: number, angularVelocity: number) {
+        const cactus = this.thrownCactuses[this.thrownCactuses.length-1];
+        cactus.revive();
         cactus.body.x = x;
         cactus.body.y = y;
         cactus.body.velocity.x = velocityX;
