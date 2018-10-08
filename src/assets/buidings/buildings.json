@@ -2,23 +2,15 @@
 
 {
 	"filename": "big school.png",
-	"frame": {"x":0,"y":886,"w":1156,"h":599},
+	"frame": {"x":0,"y":886,"w":1156,"h":559},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":1156,"h":599},
 	"sourceSize": {"w":1156,"h":599}
 },
 {
-	"filename": "house-black-silhouette.png",
-	"frame": {"x":689,"y":0,"w":721,"h":387},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":721,"h":387},
-	"sourceSize": {"w":721,"h":387}
-},
-{
 	"filename": "innovation house.png",
-	"frame": {"x":0,"y":0,"w":689,"h":386},
+	"frame": {"x":0,"y":0,"w":689,"h":381},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":689,"h":386},
@@ -34,7 +26,7 @@
 },
 {
 	"filename": "zakupki_and_tenderi.png",
-	"frame": {"x":0,"y":387,"w":795,"h":499},
+	"frame": {"x":0,"y":387,"w":795,"h":455},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":795,"h":499},

@@ -9,7 +9,7 @@ import { generatorRandomString } from '../utils';
 
 const generatorId = generatorRandomString();
 
-export default class Enemy {
+export default class Enemy extends Person{
     sprite: Phaser.Sprite;
     enemySprite: Phaser.Sprite;
     game: Phaser.Game;
@@ -21,19 +21,15 @@ export default class Enemy {
     private timer: Phaser.TimerEvent;
 
     constructor( game: Phaser.Game, enemy) {
-        this.game = game;
-        this.enemy = enemy;
-
-        this.sprite = new Person({
-            game: this.game,
-            x: this.enemy.x,
-            y: this.enemy.y,
-            key: this.enemy.type
-        });
+        super({
+            game: game,
+            x: enemy.x,
+            y: enemy.y,
+            key: enemy.type
+        })
     }
 
     move(personSprite: Phaser.Sprite) {
-        console.log('----');
         // if (this.isTouchedByCactus) {
         //     return true;
         // }
@@ -94,7 +90,6 @@ export default class Enemy {
         this.isTouchedByCactus = false;
         this.sprite.alpha = 1;
         this.tween.stop();
-
     }
 
     kill() {

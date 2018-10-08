@@ -1,12 +1,14 @@
+import { strEnumHelper } from "../utils/helpers"
+
 export const COINS = {
     startSum: 1000
-};
+}
 
 export const PERSON = {
     width: 100,
     height: 64,
-    speed: 400
-};
+    speed: 400,
+}
 
 export const POLICEMAN = {
     width: 100,
@@ -17,26 +19,26 @@ export const POLICEMAN = {
     speed_max: 40,
     speed: 200,
     time_threshold: 3000,
-    time_disabled: 3000
-};
+    time_disabled: 3000,
+}
 
-export const RANGE = [0, 1000];
+export const RANGE = [0, 1000]
 
-export const backgroundColor = 'rgba(85, 154, 198, 30)';
+export const backgroundColor = 'rgba(85, 154, 198, 30)'
 export const ground = {
-    width: 4000
-};
+    width: 4000,
+}
 
 export const ENEMIES = {
-    count: 5
-};
+    count: 10,
+}
 
 export const enum ENEMY_TYPES {
     fsb = 'fsb',
     official = 'official',
     gangster = 'gangster',
     prosecutor = 'prosecutor',
-    policeman = 'POLICEMAN'
+    policeman = 'policeman',
 }
 
 export const ENEMY = {
@@ -46,79 +48,94 @@ export const ENEMY = {
     speed_max: 200,
     speed: 200,
     time_threshold: 2000,
-    time_disabled: 3000
-};
+    time_disabled: 3000,
+}
 
 
 export const CACTUS = {
     width: 25,
     height: 30,
-    count: 10
-};
+    count: 10,
+}
 
 
 export const enum STATES {
     Game = 'Game',
     Finish = 'Finish',
-    Boot = 'Boot'
+    Boot = 'Boot',
 }
 
+
+export const buildingIdsType = strEnumHelper(['school', 'innovation', 'ministerstvo', 'zakupki_and_tenderi'])
+
+export type buildingIdsType = keyof typeof buildingIdsType
+export const buildingIdsKeys = Object.keys(buildingIdsType).map((key: buildingIdsType) => buildingIdsType[key]).join(',')
+
+export type buildingIdsInterface = {readonly [key in buildingIdsType]: any}
+
 export const typesBuiding = {
-    "school": "big school.png",
-    "house-black-silhouette": "house-black-silhouette.png",
-    "innovation": "innovation house.png",
-    "ministerstvo": "ministerstvo.png",
-    "zakupki_and_tenderi": "zakupki_and_tenderi.png",
-};
+    'school': 'big school.png',
+    'innovation': 'innovation house.png',
+    'ministerstvo': 'ministerstvo.png',
+    'zakupki_and_tenderi': 'zakupki_and_tenderi.png',
+}
 
-export const orderBuidings = ["ministerstvo", "innovation", "zakupki_and_tenderi", "house-black-silhouette", "school"];
+export const orderBuidings: buildingIdsType[] = ["ministerstvo", "innovation", "zakupki_and_tenderi", "school"]
 
-
-export const BUIDING_COORDS = {
-    "ministerstvo": {
+export const BUIDING_COORDS: buildingIdsInterface = {
+    'ministerstvo': {
         position: {
-            x: 100
+            x: 100,
         },
         scale: {
             x: 0,
-            y: 1
+            y: 1,
         }
     },
-    "innovation": {
+    'innovation': {
         position: {
-            x: 1100
+            x: 1100,
         },
         scale: {
             x: 0,
-            y: 1
+            y: 1,
         }
     },
-    "zakupki_and_tenderi": {
+    'zakupki_and_tenderi': {
         position: {
             x: 2000
         },
         scale: {
             x: 0,
-            y: 1
+            y: 1,
         }
     },
-    "house-black-silhouette": {
+    'school': {
         position: {
-            x: 2900
+            x: 3000,
         },
         scale: {
             x: 0,
-            y: 1
+            y: 1,
         }
     }
-};
-
-export const SCHOOL_COORDS = {
-    "school": 2000
-};
+}
 
 export const MOOD = {
-    step : 10
-};
+    step : 10,
+}
 
-export const timeOutCollide = 3000;
+export const timeOutCollide = 3000
+
+
+export const enum LayersIds {
+    person = 'person',
+    tilemap = 'tilemap',
+    tiles = 'tiles',
+    coin = 'coin',
+    enemy = 'enemy',
+    ground = 'ground',
+    cactus = 'cactus',
+    clouds = 'clouds',
+    policeman = 'policeman',
+}

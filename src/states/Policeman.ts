@@ -18,7 +18,7 @@ export default class Policeman extends Enemy{
 
     constructor(game: Phaser.Game, options = {}) {
         this.game = game;
-
+        
         super(game, {
             type: ENEMY_TYPES.policeman,
             x: this.game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
@@ -27,13 +27,13 @@ export default class Policeman extends Enemy{
         });
 
         this.options = options;
-        console.log(this.sprite);
         this.sprite.scale.setTo(0.12, 0.12);
         this.sprite.anchor.set(0.5, 1);
         this.game.physics.arcade.enable(this.sprite);
-        this.sprite.body.immovable = true;
+        // this.sprite.body.immovable = true;
         this.animationRun = this.sprite.animations.add('move', [7, 6, 5, 4, 3, 2, 1, 0], 8, true);
         this.sprite.animations.play('stand');
+        this.sprite.body.gravity.y = 300;
         this.timerChangingVelocity = Date.now();
         this.sprite.body.collideWorldBounds=true;
         this.velocity = this.game.rnd.between(POLICEMAN.speed_min, POLICEMAN.speed_max);
@@ -81,7 +81,7 @@ export default class Policeman extends Enemy{
     // @autobind
     // collideWithCactus() {
     //     const state = store.getState();
-    //     if (state.collide_id_with_cactus == this.sprite.person_id) {
+    //     if (state.collide_id_with_cactus == this.sprite.playerId) {
     //
     //     }
     // }

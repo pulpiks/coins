@@ -5,8 +5,6 @@ function rgResizeBody(containerNode: HTMLElement) {
         document.documentElement.style.height = windowInnerHeight + 'px';
     }
 
-    console.log(containerNode.clientWidth, containerNode.clientHeight);
-
     return [containerNode.clientWidth, containerNode.clientHeight];
 };
 

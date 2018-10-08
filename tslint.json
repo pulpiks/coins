@@ -1,5 +1,5 @@
 {
-    "extends": ["tslist:latest"],
+    "extends": ["tslist:latest", "tslint-config-airbnb"],
     "rules": {
         "object-shorthand-properties-first": false,
         "strict-boolean-expressions": false,

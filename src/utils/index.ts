@@ -33,10 +33,10 @@ export function generatorRandomString() {
 }
 
 
-export function generatorId() {
+export const generatorId = () => {
     let id = 0;
     return {
-        get: (name) => {
+        get: (name: string) => {
             return name+'_'+(++id);
         }
     }

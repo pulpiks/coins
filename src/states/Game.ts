@@ -1,17 +1,13 @@
 import autobind from 'autobind-decorator';
 
-
 import store from '../store';
 
 import Enemy from './Enemy';
 import Person from './Person';
-import Coins from './Coins';
 import FBK from './FBK';
 import Score from './Score';
-import Mood from './Mood';
 import Policeman from "./Policeman";
 import Cactus from "./Cactus";
-
 
 import {
     backgroundColor,
@@ -22,10 +18,11 @@ import {
     POLICEMAN,
     timeOutCollide,
     CACTUS,
-    ENEMY_TYPES
+    ENEMY_TYPES,
+    LayersIds
 } from '../constants/constants';
 
-import {collidePersonWithPoliceman, collidePersonWithEnemy, addCactus} from '../actions';
+import {collidePersonWithPoliceman, addCactus} from '../actions';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -35,71 +32,63 @@ interface CactusProp extends Phaser.Sprite {
     isKilled?: boolean
 }
 
-
 export default class Game extends Phaser.State{
-    private group: Phaser.Group;
-    private cursors: Phaser.CursorKeys;
-    private map: Phaser.Tilemap;
-    private backgroundlayer: Phaser.TilemapLayer;
-    private obstacles: Phaser.TilemapLayer;
-    private enemies: Phaser.Group;
-    private enemiesObj: enemyObj = {};
-    private person: Person;
-    private cactuses: Phaser.Group;
-    private thrownCactuses: CactusProp[] = [];
-    private score: Score;
-    private crowd: Phaser.TilemapLayer;
-    private ground: Phaser.Sprite;
-    private collideEnemiesId = {};
+    private map: Phaser.Tilemap
+    private obstacles: Phaser.TilemapLayer
+    private enemies: Phaser.Group
+    private enemiesObj: enemyObj = {}
+    private person: Person
+    private cactuses: Phaser.Group
+    private thrownCactuses: CactusProp[] = []
+    private crowd: Phaser.TilemapLayer
+    private ground: Phaser.Sprite
+    private cloudsSprite: Phaser.TileSprite
+    private collideEnemiesId = {}
+    private listBuidingsSprite: Phaser.Sprite[] = []
 
     init() {
         this.policemen = [];
     }
 
     preload() {
-        this.load.spritesheet('person', './src/assets/player.png', 128, 128, 12);
-        this.load.tilemap('tilemap', './src/assets/level.json', null, Phaser.Tilemap.TILED_JSON);
-        this.load.image('tiles', './src/assets/super_mario.png');
-        this.load.image('coin', './src/assets/one-coin.png');
-        this.load.image('enemy', './src/assets/enemy.png');
-        this.load.image('ground', './src/assets/ground.png');
-        this.load.image('cactus', './src/assets/cactuses.png');
-        this.load.image('clouds', './src/assets/clouds/clouds.png');
-        this.load.spritesheet(ENEMY_TYPES.policeman, './src/assets/policeman/policeman.png', 274, 756.5, 8);
+        const assetsPath = './src/assets/'
+        
+        this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
+        this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
+        this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
+        this.load.image(LayersIds.coin, `${assetsPath}one-coin.png`)
+        this.load.image(LayersIds.enemy, `${assetsPath}enemy.png`)
+        this.load.image(LayersIds.ground, `${assetsPath}ground.png`)
+        this.load.image(LayersIds.cactus, `${assetsPath}cactuses.png`)
+        this.load.image(LayersIds.clouds, `${assetsPath}clouds/clouds.png`)
+        this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman/policeman.png`, 274, 756.5, 8)
     }
 
     createClouds() {
-        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width*3000, 300, 'clouds', 0);
-        this.cloudsSprite.scale.setTo(0.7, 0.7);
-        // this.cloudsSprite.animations.play('clouds', 10, true);
-        // this.cloudsAnimation = this.cloudsSprite.animations.add('cloudsmove', [1,2], 1, true);
-        // this.animationsStand = this.cloudsAnimation.animations.add('move', [2, 3], 1, true);
-
+        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width*3000, 300, 'clouds', 0)
+        this.cloudsSprite.scale.set(1.1, 0.8)
     }
 
     createGround() {
-        // var ground = this.game.platforms.create(0, 200, 'ground');
-        // platforms = this.game.add.physicsGroup();
-        // const platforms = this.game.add.group();
-        // platforms.enableBody = true;
-        console.log(this.game.world.height);
-        this.ground = this.game.add.sprite(0, this.game.world.height-50, 'ground');
-        this.ground.width = ground.width;
-        this.ground.height = 50;
-        this.physics.arcade.enable(this.ground);
-        this.ground.body.immovable = true;
+        this.ground = this.game.add.sprite(0, this.game.world.height-50, 'ground')
+        this.ground.width = ground.width
+        this.ground.height = 50
+        this.physics.arcade.enable(this.ground)
+        this.ground.body.immovable = true
     }
 
     createBuidings() {
-        this.listBuidingsSprite = [];
         for(let type of orderBuidings) {
-            if (typeof(BUIDING_COORDS[type])!== 'undefined') {
-                let buildingInfo = BUIDING_COORDS[type];
+            if (typeof(BUIDING_COORDS[type]) !== 'undefined') {
+                let buildingInfo = BUIDING_COORDS[type]
                 let building = this.game.add.sprite(
-                    buildingInfo.position.x, this.game.world.height - 50, 'buildings', typesBuiding[type]
-                );
-                building.anchor.setTo(buildingInfo.scale.x, buildingInfo.scale.y);
-                this.listBuidingsSprite.push(building);
+                    buildingInfo.position.x, 
+                    this.game.world.height - 50, 
+                    'buildings', 
+                    typesBuiding[type]
+                )
+                building.anchor.setTo(buildingInfo.scale.x, buildingInfo.scale.y)
+                this.listBuidingsSprite.push(building)
             }
         }
     }
@@ -116,9 +105,6 @@ export default class Game extends Phaser.State{
         this.createClouds();
         this.createGround();
         this.createBuidings();
-
-        // this.backgroundlayer = this.map.createLayer('background');
-        // this.backgroundlayer.resizeWorld();
 
         this.obstacles = this.map.createLayer('obstacles');
 
@@ -144,7 +130,7 @@ export default class Game extends Phaser.State{
             );
             this.policemen.push(policeman);
             this.enemies.add(policeman.sprite);
-            this.enemiesObj[policeman.sprite.person_id] = policeman;
+            this.enemiesObj[policeman.sprite.playerId] = policeman;
         }
 
         this.cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
@@ -196,16 +182,17 @@ export default class Game extends Phaser.State{
     }
 
     update() {
-
+        
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
-        this.physics.arcade.collide(
+        this.physics.arcade.overlap(
             this.person.sprite,
             this.getPolicemen(),
             this.collideWithPoliceman,
             null,
             this
         );
+        this.physics.arcade.collide(this.ground, this.getPolicemen());
         this.physics.arcade.collide(
             this.person.sprite,
             this.cactuses,
@@ -220,31 +207,49 @@ export default class Game extends Phaser.State{
             null, 
             this
         );
-        this.physics.arcade.collide(this.obstacles, this.thrownCactuses, this.collideObstaclesWithCactus, null, this);
-        this.physics.arcade.collide(this.person.sprite, this.crowd, this.meetCrowd, null, this);
-        this.physics.arcade.collide(this.person.sprite, this.ground, this.person.endJumping, null, this.person);
+        this.physics.arcade.collide(
+            this.obstacles, 
+            this.thrownCactuses, 
+            this.collideObstaclesWithCactus, 
+            null, 
+            this
+        );
+        this.physics.arcade.collide(
+            this.person.sprite, 
+            this.crowd, 
+            this.meetCrowd, 
+            null, 
+            this
+        );
+        this.physics.arcade.collide(
+            this.person.sprite, 
+            this.ground, 
+            () => {
+                this.person.endJumping();
+            }, 
+            null, 
+            this.person
+        );
 
         this.person.update();
+        
         this.policemen.forEach((policeman) => {
             policeman.update();
         });
 
         this.removeKilledCactuses(); //autocleaning killed entities
         this.removeKilledEnemies();
-
-        // this.cloudsSprite.animations.play('cloudsmove');
-
     }
 
     /* collide person with enemy */
 
     collideWithPoliceman(fbk, policeman) {
-        let cachedTime = this.collideEnemiesId[policeman.person_id];
+        let cachedTime = this.collideEnemiesId[policeman.playerId];
         if ((!cachedTime || Date.now() - cachedTime > timeOutCollide) &&
-            !this.enemiesObj[policeman.person_id].isTouchedByCactus){
-            this.collideEnemiesId[policeman.person_id] = Date.now();
+            !this.enemiesObj[policeman.playerId].isTouchedByCactus){
+            this.collideEnemiesId[policeman.playerId] = Date.now();
             store.dispatch(collidePersonWithPoliceman({
-                policeman_id: policeman.person_id
+                policeman_id: policeman.playerId
             }));
         }
     }
@@ -271,7 +276,7 @@ export default class Game extends Phaser.State{
         this.thrownCactuses.pop();
         cactus.kill();
         cactus.isKilled = true;
-        this.enemiesObj[enemy.person_id].onCactusCollision();
+        this.enemiesObj[enemy.playerId].onCactusCollision();
     }
 
     collideObstaclesWithCactus(obstacle: Phaser.Sprite) {

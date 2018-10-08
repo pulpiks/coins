@@ -8,34 +8,35 @@ import {
     STATES,
 } from './constants/constants';
 
-const game: Phaser.Game;
 
-const getSizes = () => {
-    const containerNode = document.querySelector('.js-game-container') as HTMLElement;
+const getSizes = (className: string) => {
+    const containerNode = <HTMLElement>document.querySelector(className);
     return rgResizeBody(containerNode);
 }
 
-function initGame(): void {
-    const [ gameWidth, gameHeight ] = getSizes();
-    game = new Phaser.Game({
+const initGame = () => {
+    const className: string = '.js-game-container'
+    const [ gameWidth, gameHeight ] = getSizes(className)
+
+    this.game = new Phaser.Game({
         width: gameWidth,
         height: gameHeight,
-        parent: document.querySelector('.js-game-container'),
+        parent: <HTMLScriptElement>document.querySelector(className),
         antialias: true,
         renderer: Phaser.CANVAS
-    });
+    })
 
-    game.state.add(STATES.Boot, Boot)
-    game.state.add(STATES.Game, Game);
-    game.state.add(STATES.Finish, FinalScreen);
+    this.game.state.add(STATES.Boot, Boot)
+    this.game.state.add(STATES.Game, Game)
+    this.game.state.add(STATES.Finish, FinalScreen)
 
-    game.state.start(STATES.Boot);
+    this.game.state.start(STATES.Boot)
 }
 
 window.onload = initGame;
+
 window.onresize = () => {
-    if (game) {
-        console.log('////');
-        game.scale.setGameSize(...getSizes());
+    if (this.game) {
+        this.game.scale.setGameSize(...getSizes('.js-game-container'))
     }
-};
+}
