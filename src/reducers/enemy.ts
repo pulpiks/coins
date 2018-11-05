@@ -5,7 +5,9 @@ const defaultState = {
 
 };
 
-export default function (state = defaultState, action) {
+// XXX maybe this file need to be removed
+
+export default function (state = defaultState, action: any) {
     switch(action.type) {
         case PERSON_POLICEMAN_COLLIDE:
             return {

@@ -9,18 +9,24 @@ import { generatorRandomString } from '../utils';
 
 const generatorId = generatorRandomString();
 
-export default class Enemy extends Person{
-    sprite: Phaser.Sprite;
-    enemySprite: Phaser.Sprite;
-    game: Phaser.Game;
-    enemy: any;
-    person: Person;
-    private timerChangingVelocity: number;
-    private isTouchedByCactus: boolean = false;
-    private tween: Phaser.Tween;
-    private timer: Phaser.TimerEvent;
+interface EnemyProps {
+    readonly x: number,
+    readonly y: number,
+    readonly type: string,
+}
 
-    constructor( game: Phaser.Game, enemy) {
+export default class Enemy extends Person{
+    sprite: Phaser.Sprite
+    enemySprite: Phaser.Sprite
+    game: Phaser.Game
+    enemy: any
+    person: Person
+    public timerChangingVelocity: number
+    public isTouchedByCactus: boolean = false
+    private tween: Phaser.Tween
+    private timer: Phaser.TimerEvent
+
+    constructor( game: Phaser.Game, enemy: EnemyProps) {
         super({
             game: game,
             x: enemy.x,
@@ -56,44 +62,44 @@ export default class Enemy extends Person{
 
         switch(this.enemy.type) {
             case ENEMY_TYPES.fsb:
-                this.deactivateForTheTime();
-                break;
+                this.deactivateForTheTime()
+                break
             case ENEMY_TYPES.gangster:
             case ENEMY_TYPES.official:
-                this.kill();
-                break;
+                this.kill()
+                break
             case ENEMY_TYPES.prosecutor:
-                break;
+                break
             case ENEMY_TYPES.policeman:
-                this.deactivateForTheTime();
-                break;
-            default: break;
+                this.deactivateForTheTime()
+                break
+            default: break
         }
     }
 
     deactivateForTheTime() {
-        this.isTouchedByCactus = true;
-        this.sprite.body.moves = false;
+        this.isTouchedByCactus = true
+        this.sprite.body.moves = false
         this.tween = this.game.add.tween(this.sprite).to(
             { alpha: 0 },
             300, Phaser.Easing.Linear.None, true, 0, 100, false
-        );
-        // this.timer = this.game.time.create(false);
-        // this.timer.loop(2000, this.finishCollision, this);
-        // this.timer.start();
-        this.timer = this.game.time.events.loop(ENEMY.time_disabled, this.finishCollision, this);
+        )
+        // this.timer = this.game.time.create(false)
+        // this.timer.loop(2000, this.finishCollision, this)
+        // this.timer.start()
+        this.timer = this.game.time.events.loop(ENEMY.time_disabled, this.finishCollision, this)
     }
 
     finishCollision() {
         // this.timer.remove();
-        this.game.time.events.remove(this.timer);
-        this.isTouchedByCactus = false;
-        this.sprite.alpha = 1;
-        this.tween.stop();
+        this.game.time.events.remove(this.timer)
+        this.isTouchedByCactus = false
+        this.sprite.alpha = 1
+        this.tween.stop()
     }
 
     kill() {
-        this.enemySprite.kill();
-        this.enemy = null;
+        this.enemySprite.kill()
+        this.enemy = null
     }
 }

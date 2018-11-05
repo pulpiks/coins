@@ -19,6 +19,7 @@
     "removeComments": false,
     "preserveConstEnums": true,
     "allowJs": true,
+    "esModuleInterop": true,
   },
   "files": [
     "node_modules/phaser-ce/typescript/phaser.d.ts",

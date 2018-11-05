@@ -1,5 +1,4 @@
 import autobind from 'autobind-decorator';
-import Player from './Player';
 
 import { POLICEMAN, ENEMY_TYPES } from '../constants/constants';
 import Person from './Person';
@@ -8,25 +7,22 @@ import Enemy from './Enemy';
 import store from '../store';
 
 export default class Policeman extends Enemy{
-    game: Phaser.Game;
-    options: any;
-    sprite: Phaser.Sprite;
-    dir: number = Math.round(Math.random()) ? 1 : -1;
-    velocity: number;
-    animationRun: Phaser.Animation;
-    timerChangingVelocity: number;
+    game: Phaser.Game
+    sprite: Phaser.Sprite
+    dir: number = Math.round(Math.random()) ? 1 : -1
+    velocity: number
+    animationRun: Phaser.Animation
+    timerChangingVelocity: number
 
-    constructor(game: Phaser.Game, options = {}) {
-        this.game = game;
-        
+    constructor(game: Phaser.Game) {
         super(game, {
-            type: ENEMY_TYPES.policeman,
-            x: this.game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
-            y: this.game.world.height-50,
-            key: ENEMY_TYPES.policeman
+            x: game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
+            y: game.world.height - 50,
+            type: ENEMY_TYPES.policeman
         });
+        
+        this.game = game;
 
-        this.options = options;
         this.sprite.scale.setTo(0.12, 0.12);
         this.sprite.anchor.set(0.5, 1);
         this.game.physics.arcade.enable(this.sprite);

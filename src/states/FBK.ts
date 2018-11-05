@@ -1,24 +1,29 @@
 import autobind from 'autobind-decorator'
 
-import Person from './Person';
-import Coins from './Coins';
-import store from '../store';
+import Person from './Person'
+import store from '../store'
 
 import {
     PERSON,
     ENEMY_TYPES
-} from '../constants/constants';
+} from '../constants/constants'
 
-import { reduceMood, throwCactus } from '../actions';
+import { throwCactus, changeMoney, reduceMood } from '../actions'
 
+interface FBKProps {
+    readonly game: Phaser.Game,
+    readonly onThrowCactus: (
+        x:number, 
+        y:number, 
+        velocityX: number, 
+        angularVelocity: number
+    ) => void
+}
 
-import store from '../store';
-
-export default class FBKPerson extends Person {
+export default class FBK extends Person {
     isTouchedEnemy: boolean
     game: Phaser.Game
     sprite: Phaser.Sprite
-    coins: Coins
     tween: Phaser.Tween
     time: number
     cactuses: Phaser.Sprite[] = []
@@ -27,35 +32,27 @@ export default class FBKPerson extends Person {
     private direction: number = 1
     private timer: Phaser.TimerEvent
     private keys: {[key: string]: Phaser.Key}
-    private onThrowCactus: (cactus: Phaser.Sprite, x: number, y: number, velocityX: number, angularVelocity: number) => void
+    private onThrowCactus: (x: number, y: number, velocityX: number, angularVelocity: number) => void
     private isEnabledCollision: boolean
     private animationsRunRight: Phaser.Animation
     private animationsJump: Phaser.Animation
     private animationsStand: Phaser.Animation
+    // private collideWithEnemy: (enemies: any, person: Phaser.Sprite, enemy:Phaser.Sprite) => void
 
-    constructor( { game, coins, onThrowCactus }: {
-        game: Phaser.Game,
-        coins: Coins,
-        onThrowCactus: (
-            cactus: Phaser.Sprite, 
-            x:number, 
-            y:number, 
-            velocityX: number, 
-            angularVelocity: number
-        ) => void
-    }) {
-        
-        this.game = game;
+    constructor( {
+        game, 
+        onThrowCactus 
+    }: FBKProps) {
         
         super({
-            game: this.game,
+            game: game,
             x: 0,
-            y: this.game.world.height-50,
+            y: game.world.height-50,
             key: 'person'
         });
-
+        
+        this.game = game;
         this.isTouchedEnemy = false;
-        this.coins = coins;
         this.time = Date.now();
         this.onThrowCactus = onThrowCactus;
 
@@ -91,7 +88,6 @@ export default class FBKPerson extends Person {
             d: this.game.input.keyboard.addKey(Phaser.Keyboard.D) //delete
         };
 
-        store.subscribe(this.collideWithEnemy);
     }
 
     move() {
@@ -152,30 +148,35 @@ export default class FBKPerson extends Person {
             }
 
             if (this.cactuses.length > 0 && this.keys.a.justDown) {
-                this.throwCactus(this.cactuses.pop());
+                this.cactuses.pop();
+                this.throwCactus();
             }
         }
     }
 
     @autobind
-    collideWithEnemy(enemies: any, person: Phaser.Sprite, enemy:Phaser.Sprite) {
+    collideWithEnemy(
+        enemies: any, 
+        person: Phaser.Sprite, 
+        enemy:Phaser.Sprite
+    ) {
         const state = store.getState();
         switch(state.enemy.type) {
             case ENEMY_TYPES.fsb:
                 if (!this.isTouchedEnemy && !enemies[enemy.name].isDisabled) {
-                    this.coins.takeMoney(10);
+                    state.dispatch(changeMoney(10))
                     this.addDisabledAnimation();
                 }
                 break;
             case ENEMY_TYPES.gangster:
             case ENEMY_TYPES.official:
                 if (!this.isEnabledCollision) {
-                    this.coins.takeMoney(10);
+                    state.dispatch(changeMoney(-10))
                     this.deactivateForTime();
                 }
                 break;
             case ENEMY_TYPES.policeman:
-                // this.reduceMood(ENEMY_TYPES.policeman);
+                this.reduceMood(ENEMY_TYPES.policeman);
                 break;
             default: break;
         }
@@ -291,13 +292,13 @@ export default class FBKPerson extends Person {
     }
 
     @autobind
-    reduceMood(cause) {
+    reduceMood(cause: string) {
         store.dispatch(reduceMood({
             cause
         }))
     }
 
-    endJumping() {
+    public endJumping() {
         this.isJumping = false;
         // if (this.sprite.body.checkCollision.down) {
         //     this.sprite.body.gravity.y = 0;

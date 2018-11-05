@@ -5,13 +5,12 @@ import MoodRange from './RangeComponent';
 import store from '../store';
 
 export default class Mood {
-    group: Phaser.Group;
-    game: Phaser.Game;
-    coins: Coins;
-    person: Person;
-    cactusesText: Phaser.Text;
-    mood: MoodRange;
-    moodValue: number = 100;
+    group: Phaser.Group
+    game: Phaser.Game
+    cactusesText: Phaser.Text
+    mood: any
+    moodValue: number = 100
+    total: number
 
     constructor({ game }: {
         game: Phaser.Game
@@ -57,14 +56,10 @@ export default class Mood {
 
     @autobind
     changeMood() {
-        const state = store.getState();
-        const { mood: { total } } = state;
+        const total: number = store.getState().mood.total;
         if (this.total !== total) {
             this.total = total;
             this.mood.setPercent(this.total);
         }
     }
-
 }
-
-export default Mood;

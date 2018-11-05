@@ -11,8 +11,8 @@ interface PersonProps {
 }
  
 export default class Person {
-    readonly sprite: Phaser.Sprite
-    readonly playerId: string
+    public sprite: Phaser.Sprite
+    public playerId: string
 
     constructor ({
         game,
@@ -20,9 +20,9 @@ export default class Person {
         y,
         key
     }: PersonProps) {
-        this.sprite =  new Phaser.Sprite(game, x, y, key)
-        this.playerId = get(key);
-        game.add.existing(this);
-        game.physics.arcade.enable(this);
+        this.sprite = game.add.sprite(x, y, key)
+        this.playerId = get(key)
+        game.add.existing(this)
+        game.physics.arcade.enable(this.sprite)
     }
 }

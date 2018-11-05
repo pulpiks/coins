@@ -1,10 +1,33 @@
-import * as TYPES from '../types/types';
+import omit from 'lodash.omit'
+import * as TYPES from '../types/types'
+
+interface PolicemanStore {
+    readonly activeIds: {[k: string]: boolean}
+}
 
 const defaultState = {
     activeIds: {}
 };
 
-export default function (state = defaultState, action) {
+type CollideWithPersonAction = {
+    type: typeof TYPES.PERSON_POLICEMAN_COLLIDE,
+    id: string
+}
+
+
+type PolicemanRemoveAction = {
+    type: typeof TYPES.PERSON_POLICEMAN_REMOVE,
+    id: string
+}
+
+type CollideCactusAction = {
+    type: typeof TYPES.COLLIDE_POLICEMAN_CACTUS,
+    id: string    
+}
+
+type PolicemanAction = CollideWithPersonAction | PolicemanRemoveAction | CollideCactusAction
+
+export default function (state: PolicemanStore = defaultState, action: PolicemanAction) {
     switch(action.type) {
         case TYPES.PERSON_POLICEMAN_COLLIDE:
             return {
@@ -15,9 +38,7 @@ export default function (state = defaultState, action) {
                 }
             };
         case TYPES.PERSON_POLICEMAN_REMOVE:
-            const newState = { ...state };
-            delete newState[action.id];
-            return newState;
+            return omit(state, [action.id]);
 
         case TYPES.COLLIDE_POLICEMAN_CACTUS:
             return {

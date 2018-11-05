@@ -1,4 +1,4 @@
-import { STATES } from "../constants/constants";
+import { STATES } from "../constants/constants"
 
 export default class extends Phaser.State {
     init () {

@@ -1,30 +1,29 @@
-import { CACTUS } from '../constants/constants';
+import {CACTUS} from '../constants/constants'
 
-import Person from './Person';
+interface CactusProps {
+    readonly game: Phaser.Game
+    readonly x: number
+    readonly y: number
+    readonly key: string
+}
 
 export default class Cactus {
-    cactus: Person;
+    cactus: Phaser.Sprite
 
-    constructor({
-        game,
-        x,
-        y,
-        key
-    }: { cactus:Phaser.Sprite, game:Phaser.State }) {
-        this.cactus = new Person({
-            game,
+    constructor({game, x, y, key}: CactusProps) {
+        this.cactus = game.add.sprite(
             x,
             y,
-            key
-        });
+            key 
+        );
+        game.physics.arcade.enable(this.cactus);
         this.cactus.width = CACTUS.width;
         this.cactus.height = CACTUS.height;
         this.cactus.body.immovable = true;
-        this.cactus.allowGravity = false;
+        this.cactus.body.allowGravity = false;
         this.cactus.body.collideWorldBounds = true;
         this.cactus.body.onWorldBounds = new Phaser.Signal();
         this.cactus.body.onWorldBounds.add(this.hitWorldBounds, this);
-        return this.cactus;
     }
 
     hitWorldBounds() {

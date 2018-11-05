@@ -1,10 +1,14 @@
 // Actions
 import * as TYPES from '../types/types';
 
-export function collidePersonWithPoliceman(action) {
+type CollidePersonWithPolicemanAction = {
+    id: string
+}
+
+export function collidePersonWithPoliceman(action: CollidePersonWithPolicemanAction) {
     return {
         type: TYPES.PERSON_POLICEMAN_COLLIDE,
-        id: action.policeman_id
+        id: action.id
     };
 }
 
@@ -20,6 +24,12 @@ export function throwCactus() {
     }
 }
 
+export function changeMoney(amount: number) {
+    return {
+        type: TYPES.UPDATE_MONEY,
+        amount
+    }        
+}
 
 // export function collidePersonWithEnemy(action) {
 //     return {
@@ -28,9 +38,13 @@ export function throwCactus() {
 //     }
 // }
 
-// export function reduceMood(action) {
-//     return {
-//         type: TYPES.REDUCE_MOOD,
-//         cause: action.cause
-//     }
-// }
+interface ReduceModeAction {
+    readonly cause: string
+}
+
+export function reduceMood(action: ReduceModeAction) {
+    return {
+        type: TYPES.REDUCE_MOOD,
+        cause: action.cause
+    }
+}

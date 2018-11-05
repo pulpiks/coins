@@ -32,19 +32,25 @@ interface CactusProp extends Phaser.Sprite {
     isKilled?: boolean
 }
 
+interface CollideEnemiesIdProps {
+    [k: string]: number
+}
+
 export default class Game extends Phaser.State{
     private map: Phaser.Tilemap
     private obstacles: Phaser.TilemapLayer
     private enemies: Phaser.Group
     private enemiesObj: enemyObj = {}
-    private person: Person
+    private person: FBK
     private cactuses: Phaser.Group
     private thrownCactuses: CactusProp[] = []
     private crowd: Phaser.TilemapLayer
     private ground: Phaser.Sprite
     private cloudsSprite: Phaser.TileSprite
-    private collideEnemiesId = {}
+    private collideEnemiesId: CollideEnemiesIdProps = {}
     private listBuidingsSprite: Phaser.Sprite[] = []
+    private policemen: Policeman[]
+    private score: Score
 
     init() {
         this.policemen = [];
@@ -52,7 +58,6 @@ export default class Game extends Phaser.State{
 
     preload() {
         const assetsPath = './src/assets/'
-        
         this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
         this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
         this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
@@ -116,21 +121,20 @@ export default class Game extends Phaser.State{
         this.physics.arcade.enable(this.crowd);
         this.map.setCollision([14], true, this.crowd);
 
-
         this.person = new FBK({
             game: this.game,
             onThrowCactus: this.throwCactus
         });
-
+        
         this.enemies = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
 
-        for(let i =0; i<POLICEMAN.count; i++) {
+        for(let i =0; i < POLICEMAN.count; i++) {
             let policeman = new Policeman(
                 this.game
-            );
-            this.policemen.push(policeman);
-            this.enemies.add(policeman.sprite);
-            this.enemiesObj[policeman.sprite.playerId] = policeman;
+            )
+            this.policemen.push(policeman)
+            this.enemies.add(policeman.sprite)
+            this.enemiesObj[policeman.playerId] = policeman
         }
 
         this.cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
@@ -143,17 +147,14 @@ export default class Game extends Phaser.State{
                 key: 'cactus'
             });
 
-            this.cactuses.add(cactus);
+            this.cactuses.add(cactus.cactus);
         }
 
         // this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
 
         this.score = new Score({
             game: this.game,
-            person: this.person
         });
-
-        this.cursors = this.input.keyboard.createCursorKeys();
 
         this.cloudsSprite.smoothed = true;
         this.cloudsSprite.autoScroll(-5, 0);
@@ -182,7 +183,6 @@ export default class Game extends Phaser.State{
     }
 
     update() {
-        
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.overlap(
@@ -231,10 +231,10 @@ export default class Game extends Phaser.State{
             this.person
         );
 
-        this.person.update();
+        this.person.sprite.update();
         
         this.policemen.forEach((policeman) => {
-            policeman.update();
+            policeman.sprite.update();
         });
 
         this.removeKilledCactuses(); //autocleaning killed entities
@@ -242,14 +242,19 @@ export default class Game extends Phaser.State{
     }
 
     /* collide person with enemy */
+    getPolicemanPlayerId(sprite: Phaser.Sprite) {
+        return Object.keys(this.enemiesObj)
+            .find((playedId: string) => this.enemiesObj[playedId].sprite === sprite)
+    }
 
-    collideWithPoliceman(fbk, policeman) {
-        let cachedTime = this.collideEnemiesId[policeman.playerId];
+    collideWithPoliceman(fbk: Phaser.Sprite, policeman: Phaser.Sprite) {
+        const policemanId = this.getPolicemanPlayerId(policeman)
+        let cachedTime = this.collideEnemiesId[policemanId];
         if ((!cachedTime || Date.now() - cachedTime > timeOutCollide) &&
-            !this.enemiesObj[policeman.playerId].isTouchedByCactus){
-            this.collideEnemiesId[policeman.playerId] = Date.now();
+            !this.enemiesObj[policemanId].isTouchedByCactus){
+            this.collideEnemiesId[policemanId] = Date.now();
             store.dispatch(collidePersonWithPoliceman({
-                policeman_id: policeman.playerId
+                id: policemanId
             }));
         }
     }
@@ -276,7 +281,9 @@ export default class Game extends Phaser.State{
         this.thrownCactuses.pop();
         cactus.kill();
         cactus.isKilled = true;
-        this.enemiesObj[enemy.playerId].onCactusCollision();
+
+        const playerId = this.getPolicemanPlayerId(enemy)
+        this.enemiesObj[playerId].onCactusCollision();
     }
 
     collideObstaclesWithCactus(obstacle: Phaser.Sprite) {

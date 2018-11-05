@@ -1,12 +1,12 @@
 import {
     createStore,
     combineReducers
-} from 'redux';
+} from 'redux'
 
-import policeman from '../reducers/policeman';
-import enemy from '../reducers/enemy';
-import mood from '../reducers/mood';
-import score from '../reducers/score';
+import policeman from '../reducers/policeman'
+import enemy from '../reducers/enemy'
+import mood from '../reducers/mood'
+import score from '../reducers/score'
 
 const rootReducer = combineReducers({
     policeman,
@@ -20,4 +20,4 @@ const store = createStore(
     (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-export default store;
+export default store
