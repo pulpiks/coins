@@ -1,9 +1,13 @@
 import { GAME_OVER } from '../types/types'
-import { GameOverAction } from '../actions';
 
 interface FinalState {}
 
 const defaultState = {}
+
+type GameOverAction = {
+    readonly type: typeof GAME_OVER,
+    readonly msg: string,
+}
 
 type Action = GameOverAction
 
