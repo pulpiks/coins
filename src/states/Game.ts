@@ -59,8 +59,8 @@ export default class Game extends Phaser.State{
     preload() {
         const assetsPath = './src/assets/'
         this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
-        this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
-        this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
+        // this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
+        // this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
         this.load.image(LayersIds.coin, `${assetsPath}one-coin.png`)
         this.load.image(LayersIds.enemy, `${assetsPath}enemy.png`)
         this.load.image(LayersIds.ground, `${assetsPath}ground.png`)
@@ -105,21 +105,21 @@ export default class Game extends Phaser.State{
         this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
 
 
-        this.map = this.add.tilemap('tilemap');
-        this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
+        // this.map = this.add.tilemap('tilemap');
+        // this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
         this.createClouds();
         this.createGround();
         this.createBuidings();
 
-        this.obstacles = this.map.createLayer('obstacles');
+        // this.obstacles = this.map.createLayer('obstacles');
 
-        this.physics.arcade.enable(this.obstacles);
-        this.map.setCollision([15, 23, 16], true, this.obstacles);
+        // this.physics.arcade.enable(this.obstacles);
+        // this.map.setCollision([15, 23, 16], true, this.obstacles);
 
-        this.crowd = this.map.createLayer('crowd');
+        // this.crowd = this.map.createLayer('crowd');
 
-        this.physics.arcade.enable(this.crowd);
-        this.map.setCollision([14], true, this.crowd);
+        // this.physics.arcade.enable(this.crowd);
+        // this.map.setCollision([14], true, this.crowd);
 
         this.person = new FBK({
             game: this.game,
@@ -183,8 +183,8 @@ export default class Game extends Phaser.State{
     }
 
     update() {
-        this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
-        this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
+        // this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
+        // this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.overlap(
             this.person.sprite,
             this.getPolicemen(),
@@ -207,13 +207,13 @@ export default class Game extends Phaser.State{
             null, 
             this
         );
-        this.physics.arcade.collide(
-            this.obstacles, 
-            this.thrownCactuses, 
-            this.collideObstaclesWithCactus, 
-            null, 
-            this
-        );
+        // this.physics.arcade.collide(
+        //     this.obstacles, 
+        //     this.thrownCactuses, 
+        //     this.collideObstaclesWithCactus, 
+        //     null, 
+        //     this
+        // );
         this.physics.arcade.collide(
             this.person.sprite, 
             this.crowd, 
@@ -230,11 +230,10 @@ export default class Game extends Phaser.State{
             null, 
             this.person
         );
-
-        this.person.sprite.update();
+        this.person.update();
         
         this.policemen.forEach((policeman) => {
-            policeman.sprite.update();
+            policeman.update();
         });
 
         this.removeKilledCactuses(); //autocleaning killed entities
@@ -264,7 +263,7 @@ export default class Game extends Phaser.State{
             this.game.debug.body(cactus);
         }, this);
 
-        this.game.debug.geom(this.person.sprite.getBounds());
+        this.person.render()
     }
 
     collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {

@@ -22,7 +22,7 @@ export default class Person {
     }: PersonProps) {
         this.sprite = game.add.sprite(x, y, key)
         this.playerId = get(key)
-        game.add.existing(this)
+        game.add.existing(this.sprite)
         game.physics.arcade.enable(this.sprite)
     }
 }

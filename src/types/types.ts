@@ -14,3 +14,5 @@ export const ADD_CACTUS = 'ADD_CACTUS';
 export const THROW_CACTUS = 'THROW_CACTUS';
 
 export const COLLIDE_POLICEMAN_CACTUS = 'COLLIDE_POLICEMAN_CACTUS';
+
+export const GAME_OVER = 'GAME_OVER'

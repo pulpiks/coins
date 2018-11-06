@@ -21,7 +21,7 @@ interface FBKProps {
 }
 
 export default class FBK extends Person {
-    isTouchedEnemy: boolean
+    isTouchedEnemy: boolean = false
     game: Phaser.Game
     sprite: Phaser.Sprite
     tween: Phaser.Tween
@@ -47,12 +47,11 @@ export default class FBK extends Person {
         super({
             game: game,
             x: 0,
-            y: game.world.height-50,
+            y: game.world.height - 50,
             key: 'person'
         });
         
         this.game = game;
-        this.isTouchedEnemy = false;
         this.time = Date.now();
         this.onThrowCactus = onThrowCactus;
 
@@ -63,7 +62,7 @@ export default class FBK extends Person {
         this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
-        this.sprite.scale.setTo(0.6, 0.85);
+        this.sprite.scale.setTo(0.7, 0.85);
         this.sprite.anchor.set(0.5, 1);
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = 3000;
@@ -88,6 +87,10 @@ export default class FBK extends Person {
             d: this.game.input.keyboard.addKey(Phaser.Keyboard.D) //delete
         };
 
+    }
+
+    render() {
+        this.game.debug.spriteBounds(this.sprite);
     }
 
     move() {
@@ -210,11 +213,8 @@ export default class FBK extends Person {
         let player = this.sprite;
         let jumpButton = this.keys.up;
         if (!this.isTouchedEnemy) {
-
             player.body.velocity.x = 0;
-
-            if (cursors.left.isDown)
-            {
+            if (cursors.left.isDown){
                 player.body.velocity.x = -200;
 
                 if (this.facing != 'left' || player.body.touching.down || player.body.onFloor())

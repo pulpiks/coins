@@ -48,3 +48,14 @@ export function reduceMood(action: ReduceModeAction) {
         cause: action.cause
     }
 }
+
+export interface GameOverAction {
+    readonly msg: string
+}
+
+export function gameOver(action: GameOverAction) {
+    return {
+        type: TYPES.GAME_OVER,
+        msg: action.msg
+    }
+}

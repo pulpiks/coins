@@ -5,7 +5,7 @@ export const COINS = {
 }
 
 export const PERSON = {
-    width: 100,
+    width: 40,
     height: 64,
     speed: 400,
 }
@@ -138,4 +138,8 @@ export const enum LayersIds {
     cactus = 'cactus',
     clouds = 'clouds',
     policeman = 'policeman',
+}
+
+export const FAIL_MSG = {
+    mood: 'Терпеть и не сдаваться! Попробуйте еще раз!'
 }
