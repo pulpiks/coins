@@ -23,7 +23,7 @@ class Score {
         this.group.y = 0
         this.mood = new Mood({ game })
         this.coins = new Coins({ game })
-        this.group.add(this.coins.group)
+        this.group.add(this.coins.group) 
         let cactusGroup = this.game.add.group()
         let cactusImg = this.game.add.sprite(20, 85, 'cactus')
         cactusImg.width = 30
