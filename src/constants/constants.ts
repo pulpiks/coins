@@ -138,8 +138,16 @@ export const enum LayersIds {
     cactus = 'cactus',
     clouds = 'clouds',
     policeman = 'policeman',
+    hands = 'hands',
 }
 
 export const FAIL_MSG = {
     mood: 'Терпеть и не сдаваться! Попробуйте еще раз!'
 }
+
+export const HANDS = {
+    width: 60,
+    height: 80
+} 
+
+export const HANDS_COORDS = [[629, 200]]

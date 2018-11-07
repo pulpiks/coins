@@ -1,13 +1,14 @@
-import autobind from 'autobind-decorator';
+import autobind from 'autobind-decorator'
 
-import store from '../store';
+import store from '../store'
 
-import Enemy from './Enemy';
-import Person from './Person';
-import FBK from './FBK';
-import Score from './Score';
-import Policeman from "./Policeman";
-import Cactus from "./Cactus";
+import Enemy from './Enemy'
+import Person from './Person'
+import FBK from './FBK'
+import Score from './Score'
+import Policeman from "./Policeman"
+import Cactus from "./Cactus"
+import {HandsHandler} from './Hands'
 
 import {
     backgroundColor,
@@ -51,6 +52,7 @@ export default class Game extends Phaser.State{
     private listBuidingsSprite: Phaser.Sprite[] = []
     private policemen: Policeman[]
     private score: Score
+    private handsHandler: HandsHandler
 
     init() {
         this.policemen = [];
@@ -59,6 +61,8 @@ export default class Game extends Phaser.State{
     preload() {
         const assetsPath = './src/assets/'
         this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
+        this.load.image(LayersIds.hands, `${assetsPath}hands/raised_hands.png`)
+        // need to change with of person here
         // this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
         // this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
         this.load.image(LayersIds.coin, `${assetsPath}one-coin.png`)
@@ -120,6 +124,9 @@ export default class Game extends Phaser.State{
 
         // this.physics.arcade.enable(this.crowd);
         // this.map.setCollision([14], true, this.crowd);
+        this.handsHandler = new HandsHandler(
+            this.game
+        )
 
         this.person = new FBK({
             game: this.game,
@@ -236,8 +243,9 @@ export default class Game extends Phaser.State{
             policeman.update();
         });
 
-        this.removeKilledCactuses(); //autocleaning killed entities
-        this.removeKilledEnemies();
+        this.removeKilledCactuses() //autocleaning killed entities
+        this.removeKilledEnemies()
+        this.handsHandler.update(this.person.sprite.centerX)
     }
 
     /* collide person with enemy */

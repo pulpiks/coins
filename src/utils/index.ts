@@ -41,3 +41,5 @@ export const generatorId = () => {
         }
     }
 }
+
+export const getRandom = () => Boolean(Math.round(Math.random()))
