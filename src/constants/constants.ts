@@ -17,10 +17,10 @@ export const POLICEMAN = {
     count: 5,
     speed_min: 1,
     speed_max: 40,
-    speed: 200,
     time_threshold: 3000,
     time_disabled: 3000,
 }
+
 
 export const RANGE = [0, 1000]
 
@@ -139,6 +139,7 @@ export const enum LayersIds {
     clouds = 'clouds',
     policeman = 'policeman',
     hands = 'hands',
+    clerk = 'clerk',
 }
 
 export const FAIL_MSG = {

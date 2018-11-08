@@ -57,6 +57,15 @@ module.exports = {
                     }
                 ] 
             },
+            {
+                test: /\.ts?$/,
+                loader: 'babel',
+                query: {
+                    cacheDirectory: true,
+                    plugins: ['transform-decorators-legacy' ],
+                    presets: ['es2015', 'stage-0', 'react']
+                }
+            }
         ],
     },
     optimization: {
