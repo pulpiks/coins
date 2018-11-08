@@ -39,6 +39,8 @@ interface CollideEnemiesIdProps {
     [k: string]: number
 }
 
+import '../assets/player.png'
+
 export default class Game extends Phaser.State{
     private map: Phaser.Tilemap
     private obstacles: Phaser.TilemapLayer
@@ -61,8 +63,8 @@ export default class Game extends Phaser.State{
     }
 
     preload() {
-        const assetsPath = './src/assets/'
-        this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
+        const assetsPath = './'
+        this.load.spritesheet(LayersIds.person, './assets/player.png', 128, 128, 12)
         this.load.image(LayersIds.hands, `${assetsPath}hands/raised_hands.png`)
         // need to change with of person here
         // this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)

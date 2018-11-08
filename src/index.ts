@@ -1,16 +1,24 @@
+// import * as Phaser from 'phaser-ce'
+
+// (window as WindowPhaser).Phaser = Phaser
+
+// import PIXI from 'phaser-ce/build/custom/pixi.js'
+// import p2 from 'expose-loader?p2!phaser-ce/build/custom/p2.js';
+// import Phaser from 'expose-loader?Phaser!/node_modules/phaser-ce/build/phaser.js'
+//  import Phaser from 'phaser-ce'
+
+// interface WindowPhaser extends Window {
+//     Phaser: any,
+//     PIXI: any,
+// }
+
+// (window as WindowPhaser).Phaser = Phaser
+
 import Boot from './states/Boot'
 import Game from './states/Game'
 import FinalScreen from './states/FinalScreen'
 
 import { rgResizeBody } from './utils/sizes'
-
-import * as Phaser from 'phaser-ce'
-
-interface WindowPhaser extends Window {
-    Phaser: Phaser
-}
-
-(window as WindowPhaser).Phaser = Phaser
 
 import {
     STATES,

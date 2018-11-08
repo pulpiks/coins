@@ -1,18 +1,20 @@
 const path = require('path')
 const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const CleanWebpackPlugin = require("clean-webpack-plugin")
+// const CleanWebpackPlugin = require("clean-webpack-plugin")
 
 const IS_PRODUCTION = (process.env.NODE_ENV === 'production')
 
-const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
-const phaser = path.join(phaserModule, 'build/phaser.js')
+// const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
+// const phaser = path.join(phaserModule, 'build/phaser.js')
 
+// const pathPhaser = /node_modules\/phaser-ce\/build/
 
 module.exports = {
     context: path.resolve(__dirname),
     entry: {
-        index: './src/index.ts'
+        index: './src/index.ts',
+        // phaser: './node_modules/phaser-ce/build/phaser.js',
     },
     output: {
         // publicPath: path.resolve(__dirname),
@@ -20,7 +22,7 @@ module.exports = {
         // publicPath: '/',
         // path: path.resolve(__dirname, 'dist'),
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
+        publicPath: '/',
     },
     resolve: {
         extensions: ['.ts', '.js'],
@@ -29,14 +31,15 @@ module.exports = {
             path.resolve(__dirname, "src"),
         ],
         alias: {
-            'phaser-ce': phaser
+            // 'phaser-ce': phaser
         },
     },
     plugins: [
-        new CleanWebpackPlugin("dist"),
+        // new CleanWebpackPlugin("dist"),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, "index.html"),
             chunks: [
+                // "phaser",
                 "vendor",
                 "runtime",
                 "index",
@@ -57,6 +60,46 @@ module.exports = {
                     }
                 ] 
             },
+            {
+                test: /\.(png|jpg)$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            name: "[name].[ext]",
+                            outputPath: "assets/",
+                        },
+                    },
+                ],
+            },
+            // {
+            //     test: /node_modules\/phaser-ce\/build\/custom\/pixi.js/,
+            //     use: [
+            //       {
+            //         loader: 'expose-loader',
+            //         options: 'PIXI'
+            //       }
+            //     ]
+            // },
+            // {
+            //     test: /node_modules\/phaser-ce\/build\/custom\/p2.js/,
+            //     use: [
+            //       {
+            //         loader: 'expose-loader',
+            //         options: 'p2'
+            //       }
+            //     ]
+            // },
+            // {
+            //     // test: /node_modules\/phaser-ce\/build\/custom\/phaser-split.js/,
+            //     test: require.resolve('phaser-ce'),
+            //     use: [
+            //       {
+            //         loader: 'expose-loader',
+            //         options: 'Phaser'
+            //       }
+            //     ]
+            // }
         ],
     },
     optimization: {
@@ -66,6 +109,9 @@ module.exports = {
         splitChunks: {
             cacheGroups: {
                 commons: {
+                    // test: (module, chunks) => {
+                        //     return module.context.includes('node_modules') && !module.context.includes('phaser-ce')
+                        // },
                     test: /[\\/]node_modules[\\/]/,
                     name: "vendor",
                     chunks: "all",
@@ -81,7 +127,7 @@ module.exports = {
         port: 9090,
         clientLogLevel: 'error',
         watchContentBase: true,
-        publicPath: '/',
+        // publicPath: '/',
     },
     devtool: "hidden-source-map",
 };
