@@ -23,16 +23,15 @@ export default class Policeman extends Enemy{
         
         this.game = game;
 
-        this.sprite.scale.setTo(0.12, 0.12);
-        this.sprite.anchor.set(0.5, 1);
-        this.game.physics.arcade.enable(this.sprite);
-        // this.sprite.body.immovable = true;
-        this.animationRun = this.sprite.animations.add('move', [7, 6, 5, 4, 3, 2, 1, 0], 8, true);
-        this.sprite.animations.play('stand');
-        this.sprite.body.gravity.y = 300;
-        this.timerChangingVelocity = Date.now();
-        this.sprite.body.collideWorldBounds=true;
-        this.velocity = this.game.rnd.between(POLICEMAN.speed_min, POLICEMAN.speed_max);
+        this.sprite.scale.setTo(0.12, 0.12)
+        this.sprite.anchor.set(0.5, 1)
+        // this.sprite.body.immovable = true
+        this.animationRun = this.sprite.animations.add('move', [7, 6, 5, 4, 3, 2, 1, 0], 8, true)
+        this.sprite.animations.play('stand')
+        this.sprite.body.gravity.y = 300
+        this.timerChangingVelocity = Date.now()
+        this.sprite.body.collideWorldBounds = true
+        this.velocity = this.game.rnd.between(POLICEMAN.speed_min, POLICEMAN.speed_max)
 
         // store.subscribe(this.collideWithCactus)
     }

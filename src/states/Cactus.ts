@@ -4,17 +4,17 @@ interface CactusProps {
     readonly game: Phaser.Game
     readonly x: number
     readonly y: number
-    readonly key: string
+    readonly key?: string
 }
 
 export default class Cactus {
     cactus: Phaser.Sprite
 
-    constructor({game, x, y, key}: CactusProps) {
+    constructor({game, x, y, key = 'cactus'}: CactusProps) {
         this.cactus = game.add.sprite(
             x,
             y,
-            key 
+            key
         );
         game.physics.arcade.enable(this.cactus);
         this.cactus.width = CACTUS.width;

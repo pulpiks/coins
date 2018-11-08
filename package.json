@@ -2,28 +2,32 @@
   "name": "coins",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
   "scripts": {
     "watch": "webpack --watch",
-    "start": "http-server -c-1"
+    "start": "webpack-dev-server --hot --host 0.0.0.0"
   },
   "author": "kseniia lvova",
   "license": "MIT",
   "devDependencies": {
-    "ts-loader": "^3.3.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "html-webpack-plugin": "^3.2.0",
+    "ts-loader": "^5.3.0",
     "tslint": "^5.9.1",
     "tslint-config-airbnb": "^5.11.0",
     "typescript": "^2.6.2",
-    "typings": "^2.1.1"
+    "typings": "^2.1.1",
+    "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@types/lodash.debounce": "^4.0.4",
     "@types/lodash.omit": "^4.5.4",
     "autobind-decorator": "^2.1.0",
-    "http-server": "^2.2.0",
+    "lodash.debounce": "^4.0.8",
     "lodash.omit": "^4.5.0",
     "phaser-ce": "^2.10.0",
     "redux": "^3.7.2",
     "uuid": "^3.2.1",
-    "webpack": "^3.10.0"
+    "webpack": "^4.19.0",
+    "webpack-dev-server": "^3.1.10"
   }
 }

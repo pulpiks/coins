@@ -1,17 +1,25 @@
-import Boot from './states/Boot';
-import Game from './states/Game';
-import FinalScreen from './states/FinalScreen';
+import Boot from './states/Boot'
+import Game from './states/Game'
+import FinalScreen from './states/FinalScreen'
 
-import { rgResizeBody } from './utils/sizes';
+import { rgResizeBody } from './utils/sizes'
+
+import * as Phaser from 'phaser-ce'
+
+interface WindowPhaser extends Window {
+    Phaser: Phaser
+}
+
+(window as WindowPhaser).Phaser = Phaser
 
 import {
     STATES,
-} from './constants/constants';
+} from './constants/constants'
 
 
 const getSizes = (className: string) => {
-    const containerNode = <HTMLElement>document.querySelector(className);
-    return rgResizeBody(containerNode);
+    const containerNode = <HTMLElement>document.querySelector(className)
+    return rgResizeBody(containerNode)
 }
 
 const initGame = () => {
@@ -33,7 +41,7 @@ const initGame = () => {
     this.game.state.start(STATES.Boot)
 }
 
-window.onload = initGame;
+window.onload = initGame
 
 window.onresize = () => {
     if (this.game) {

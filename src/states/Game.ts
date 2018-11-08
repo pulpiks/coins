@@ -1,4 +1,6 @@
 import autobind from 'autobind-decorator'
+import debounce from 'lodash.debounce'
+import Phaser from 'phaser-ce'
 
 import store from '../store'
 
@@ -21,9 +23,9 @@ import {
     CACTUS,
     ENEMY_TYPES,
     LayersIds
-} from '../constants/constants';
+} from '../constants/constants'
 
-import {collidePersonWithPoliceman, addCactus} from '../actions';
+import {collidePersonWithPoliceman, addCactus, changeMoney} from '../actions'
 
 interface enemyObj {
     [key: string]: Enemy
@@ -151,7 +153,6 @@ export default class Game extends Phaser.State{
                 game: this.game,
                 x: Math.floor(Math.random() * (this.game.world.width - 100)) + 100,
                 y: 120 + Math.random() * 200,
-                key: 'cactus'
             });
 
             this.cactuses.add(cactus.cactus);
@@ -237,6 +238,17 @@ export default class Game extends Phaser.State{
             null, 
             this.person
         );
+
+        this.physics.arcade.overlap(
+            this.person.sprite,
+            this.handsHandler.getHandsSprite(),
+            (_: any, handSprite: Phaser.Sprite) => {
+                if (+handSprite.alpha > 0) {
+                    store.dispatch(changeMoney(-5))
+                }    
+            }
+        )
+
         this.person.update();
         
         this.policemen.forEach((policeman) => {

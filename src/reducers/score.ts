@@ -18,7 +18,7 @@ type UpdateScore = {
 
 type UpdateMoney = {
     type: typeof TYPES.UPDATE_MONEY,
-    money: number,
+    amount: number,
 }
 
 type AddCactus = {
@@ -41,7 +41,7 @@ export default function (state: ScoreStore = defaultState, action: Action) {
         case TYPES.UPDATE_MONEY:
             return {
                 ...state,
-                money: state.money + action.money
+                money: state.money + action.amount
             }
         case TYPES.ADD_CACTUS:
             return {
