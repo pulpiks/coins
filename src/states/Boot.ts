@@ -1,5 +1,12 @@
 import { STATES } from "../constants/constants"
 
+import '../assets/buildings/big_school.png'
+import '../assets/buildings/innovation_house.png'
+import '../assets/buildings/ministerstvo.png'
+import '../assets/buildings/zakupki_and_tenderi.png'
+import '../assets/buildings/buildings.png'
+import '../assets/buildings/buildings.json'
+
 export default class extends Phaser.State {
     init () {
     }
@@ -7,9 +14,9 @@ export default class extends Phaser.State {
     preload () {
         this.game.load.atlasJSONHash(
             'buildings', 
-            './src/assets/buidings/buildings.png', 
-            './src/assets/buidings/buildings.json'
-        );
+            './assets/buildings.png', 
+            './assets/buildings.json'
+        )
     }
 
     render () {

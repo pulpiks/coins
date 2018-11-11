@@ -50,6 +50,18 @@ module.exports = {
     ],
     module: {
         rules: [
+            {
+                type: 'javascript/auto',
+                test: /\.(json)/,
+                exclude: /(node_modules)/,
+                use: [{
+                    loader: 'file-loader',
+                    options: { 
+                        name: '[name].[ext]', 
+                        outputPath: "assets/",
+                    },
+                }],
+            },
             { 
                 exclude: /node_modules/,
                 test: /\.([tj])s$/, 

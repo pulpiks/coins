@@ -1,7 +1,6 @@
 {"frames": [
-
 {
-	"filename": "big school.png",
+	"filename": "big_school.png",
 	"frame": {"x":0,"y":886,"w":1156,"h":559},
 	"rotated": false,
 	"trimmed": false,
@@ -9,7 +8,7 @@
 	"sourceSize": {"w":1156,"h":599}
 },
 {
-	"filename": "innovation house.png",
+	"filename": "innovation_house.png",
 	"frame": {"x":0,"y":0,"w":689,"h":381},
 	"rotated": false,
 	"trimmed": false,
