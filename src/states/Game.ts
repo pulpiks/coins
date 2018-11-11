@@ -2,6 +2,15 @@ import autobind from 'autobind-decorator'
 import debounce from 'lodash.debounce'
 import Phaser from 'phaser-ce'
 
+import '../assets/player.png'
+import '../assets/hands/raised_hands.png'
+import '../assets/one-coin.png'
+import '../assets/enemy.png'
+import '../assets/ground.png'
+import '../assets/cactuses.png'
+import '../assets/clouds/clouds.png'
+import '../assets/policeman/policeman.png'
+
 import store from '../store'
 
 import Enemy from './Enemy'
@@ -67,9 +76,9 @@ export default class Game extends Phaser.State{
     }
 
     preload() {
-        const assetsPath = './src/assets/'
+        const assetsPath = './assets/'
         this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
-        this.load.image(LayersIds.hands, `${assetsPath}hands/raised_hands.png`)
+        this.load.image(LayersIds.hands, `${assetsPath}raised_hands.png`)
         // need to change with of person here
         // this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
         // this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
@@ -77,9 +86,9 @@ export default class Game extends Phaser.State{
         this.load.image(LayersIds.enemy, `${assetsPath}enemy.png`)
         this.load.image(LayersIds.ground, `${assetsPath}ground.png`)
         this.load.image(LayersIds.cactus, `${assetsPath}cactuses.png`)
-        this.load.image(LayersIds.clouds, `${assetsPath}clouds/clouds.png`)
-        this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman/policeman.png`, 274, 756.5, 8)
-        this.load.spritesheet(LayersIds.clerk, `${assetsPath}clerk/clerk.png`, 274, 756.5, 8)
+        this.load.image(LayersIds.clouds, `${assetsPath}clouds.png`)
+        this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman.png`, 274, 756.5, 8)
+        this.load.spritesheet(LayersIds.clerk, `${assetsPath}/clerk.png`, 274, 756.5, 8)
     }
 
     createClouds() {
@@ -103,7 +112,7 @@ export default class Game extends Phaser.State{
                     buildingInfo.position.x, 
                     this.game.world.height - 50, 
                     'buildings', 
-                    typesBuiding[type]
+                    `${typesBuiding[type]}`
                 )
                 building.anchor.setTo(buildingInfo.scale.x, buildingInfo.scale.y)
                 this.listBuidingsSprite.push(building)

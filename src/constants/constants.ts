@@ -74,8 +74,8 @@ export const buildingIdsKeys = Object.keys(buildingIdsType).map((key: buildingId
 export type buildingIdsInterface = {readonly [key in buildingIdsType]: any}
 
 export const typesBuiding = {
-    'school': 'big school.png',
-    'innovation': 'innovation house.png',
+    'school': 'big_school.png',
+    'innovation': 'innovation_house.png',
     'ministerstvo': 'ministerstvo.png',
     'zakupki_and_tenderi': 'zakupki_and_tenderi.png',
 }
