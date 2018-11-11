@@ -35,6 +35,7 @@ import {
 } from '../constants/constants'
 
 import {collidePersonWithPoliceman, addCactus, changeMoney} from '../actions'
+import { renderPassers, Passer } from './Passer';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -64,6 +65,11 @@ export default class Game extends Phaser.State{
     private policemen: Policeman[]
     private score: Score
     private handsHandler: HandsHandler
+    private passers: {
+        sprites: Phaser.Sprite[],
+        instances: Passer[],
+        update: () => void
+    }
 
     init() {
         this.policemen = [];
@@ -82,6 +88,7 @@ export default class Game extends Phaser.State{
         this.load.image(LayersIds.cactus, `${assetsPath}cactuses.png`)
         this.load.image(LayersIds.clouds, `${assetsPath}clouds.png`)
         this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman.png`, 274, 756.5, 8)
+        this.load.spritesheet(LayersIds.clerk, `${assetsPath}/clerk.png`, 274, 756.5, 8)
     }
 
     createClouds() {
@@ -176,6 +183,8 @@ export default class Game extends Phaser.State{
         this.cloudsSprite.smoothed = true;
         this.cloudsSprite.autoScroll(-5, 0);
 
+        this.passers = renderPassers(this.game)
+
         // this.tween = this.game.add.tween(this.cloudsSprite).to(
         //     {},
         //     5000,
@@ -267,6 +276,7 @@ export default class Game extends Phaser.State{
         this.removeKilledCactuses() //autocleaning killed entities
         this.removeKilledEnemies()
         this.handsHandler.update(this.person.sprite.centerX)
+        this.passers.update()
     }
 
     /* collide person with enemy */
