@@ -6,6 +6,9 @@ import { connect } from '../utils/connect';
 import PersonBase from './PersonBase';
 import { LayersIds } from '../constants/constants';
 
+
+import '../assets/clerk/clerk.png'
+
 type COORD = {
     readonly x: number
 }
@@ -62,7 +65,10 @@ export class Passer extends PersonBase {
         // custom logic for sprite
         this.sprite.scale.setTo(0.12, 0.12)
         this.sprite.anchor.set(0.5, 1)
-        this.animationRun = this.sprite.animations.add('move', [7, 6, 5, 4], 8, true)
+        this.sprite.animations.add('stand', [0], 20, true);
+        this.animationRun = this.sprite.animations.add('move', [0, 1, 2, 3], 8, true)
+        this.sprite.animations.play('stand')
+        this.game.debug.body(this.sprite)
     }
 
     render() {
@@ -74,13 +80,13 @@ export class Passer extends PersonBase {
 export const renderPassers = (game: Phaser.Game) => {
 
     const passers = PASSER_COORDS.map((PASSER_COORD) => {
-        return new Passer(game, PASSER_COORD, PASSER_SPEED, 'passer')
+        return new Passer(game, PASSER_COORD, PASSER_SPEED, LayersIds.clerk)
     })
 
     return {
         sprites: passers.map((p) => p.sprite),
         instances: passers,
-        update: this.instances.map((inst: Passer) => inst.update())
+        update: () => passers.forEach((inst: Passer) => inst.update())
     }
 } 
 

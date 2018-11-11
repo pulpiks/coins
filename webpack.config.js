@@ -73,12 +73,17 @@ module.exports = {
                 ] 
             },
             {
-                test: /\.ts?$/,
-                loader: 'babel',
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /(node_modules)/,
                 query: {
                     cacheDirectory: true,
-                    plugins: ['transform-decorators-legacy' ],
-                    presets: ['es2015', 'stage-0', 'react']
+                    "plugins": [
+                        ["@babel/plugin-proposal-function-bind"],
+                        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                        ["@babel/plugin-proposal-class-properties", { "loose" : true }]
+                    ],
+                    presets: ['@babel/preset-env']
                 }
             },
             {

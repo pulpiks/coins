@@ -68,7 +68,7 @@ export default class Game extends Phaser.State{
     private passers: {
         sprites: Phaser.Sprite[],
         instances: Passer[],
-        update: () => void
+        update: any
     }
 
     init() {
@@ -88,7 +88,7 @@ export default class Game extends Phaser.State{
         this.load.image(LayersIds.cactus, `${assetsPath}cactuses.png`)
         this.load.image(LayersIds.clouds, `${assetsPath}clouds.png`)
         this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman.png`, 274, 756.5, 8)
-        this.load.spritesheet(LayersIds.clerk, `${assetsPath}/clerk.png`, 274, 756.5, 8)
+        this.load.spritesheet(LayersIds.clerk, `${assetsPath}clerk.png`, 721, 1110, 1)
     }
 
     createClouds() {
@@ -256,6 +256,11 @@ export default class Game extends Phaser.State{
             null, 
             this.person
         );
+
+        this.physics.arcade.collide(
+            this.ground,
+            this.passers.sprites
+        )
 
         this.physics.arcade.overlap(
             this.person.sprite,

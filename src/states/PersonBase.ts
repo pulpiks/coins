@@ -36,7 +36,6 @@ export default class PersonBase extends Person{
             y: props.game.world.height - 50,
             key: props.key,
         })
-        
         this.game = props.game
         this.props = {...props}
         this.sprite.body.collideWorldBounds = true
@@ -45,7 +44,7 @@ export default class PersonBase extends Person{
         this.timerChangingVelocity = Date.now()
     }
 
-    update() {
+    public update() {
         if (Date.now() - this.timerChangingVelocity > this.props.time_threshold) {
             this.sprite.body.moves = true
             this.timerChangingVelocity = Date.now()
