@@ -10,6 +10,8 @@ import {
 
 import { throwCactus, changeMoney, reduceMood } from '../actions'
 
+
+
 interface FBKProps {
     readonly game: Phaser.Game,
     readonly onThrowCactus: (

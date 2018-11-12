@@ -35,7 +35,7 @@ import {
 } from '../constants/constants'
 
 import {collidePersonWithPoliceman, addCactus, changeMoney} from '../actions'
-import { renderPassers, Passer } from './Passer';
+import { renderPassers, Passer, PassersProps } from './Passer';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -65,11 +65,7 @@ export default class Game extends Phaser.State{
     private policemen: Policeman[]
     private score: Score
     private handsHandler: HandsHandler
-    private passers: {
-        sprites: Phaser.Sprite[],
-        instances: Passer[],
-        update: any
-    }
+    private passers: PassersProps
 
     init() {
         this.policemen = [];
@@ -88,7 +84,7 @@ export default class Game extends Phaser.State{
         this.load.image(LayersIds.cactus, `${assetsPath}cactuses.png`)
         this.load.image(LayersIds.clouds, `${assetsPath}clouds.png`)
         this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman.png`, 274, 756.5, 8)
-        this.load.spritesheet(LayersIds.clerk, `${assetsPath}clerk.png`, 721, 1110, 1)
+        this.load.spritesheet(LayersIds.clerk, `${assetsPath}clerk.png`, 721.5, 1105, 8)
     }
 
     createClouds() {
@@ -217,7 +213,7 @@ export default class Game extends Phaser.State{
             this.collideWithPoliceman,
             null,
             this
-        );
+        )
         this.physics.arcade.collide(this.ground, this.getPolicemen());
         this.physics.arcade.collide(
             this.person.sprite,
@@ -225,7 +221,7 @@ export default class Game extends Phaser.State{
             this.collidePersonWithCactus,
             null,
             this
-        );
+        )
         this.physics.arcade.collide(
             this.enemies,
             this.thrownCactuses, 
@@ -272,6 +268,14 @@ export default class Game extends Phaser.State{
             }
         )
 
+        this.physics.arcade.overlap(
+            this.person.sprite,
+            this.passers.sprites,
+            this.collideWithOfficials,
+            null,
+            this
+        )
+
         this.person.update();
         
         this.policemen.forEach((policeman) => {
@@ -300,6 +304,10 @@ export default class Game extends Phaser.State{
                 id: policemanId
             }));
         }
+    }
+
+    collideWithOfficials(person: Phaser.Sprite, official: Phaser.Sprite) {
+        this.passers.collisionWithPerson(official)
     }
 
     render() {

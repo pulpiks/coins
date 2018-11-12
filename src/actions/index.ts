@@ -59,3 +59,10 @@ export function gameOver(action: GameOverAction) {
         msg: action.msg
     }
 }
+
+export function collideOfficial(id: number) {
+   return {
+       type: TYPES.COLLIDE_OFFICIAL,
+       id
+   }     
+}

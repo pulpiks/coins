@@ -18,6 +18,10 @@ interface PersonBaseProps {
     readonly key: string
     readonly speed: SPEED
     readonly time_threshold: number
+    readonly velocity: {
+        readonly min: number,
+        readonly max: number,
+    }
 }
 
 export default class PersonBase extends Person{
@@ -72,7 +76,7 @@ export default class PersonBase extends Person{
                 this.sprite.animations.currentAnim.name !== 'move' ||
                 !this.sprite.animations.currentAnim.isPlaying
             ) {
-                this.sprite.animations.play('move', (this.velocity < 15) ? 5 : 12)
+                this.sprite.animations.play('move', (this.velocity < 15) ? this.props.velocity.min : this.props.velocity.max)
             }
         }
     }
