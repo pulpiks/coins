@@ -1,5 +1,6 @@
 // Actions
 import * as TYPES from '../types/types';
+import { passersIdsTypes } from '../constants/constants';
 
 type CollidePersonWithPolicemanAction = {
     id: string
@@ -65,4 +66,11 @@ export function collideOfficial(id: number) {
        type: TYPES.COLLIDE_OFFICIAL,
        id
    }     
+}
+
+export function collidePasser(id: passersIdsTypes) {
+    return {
+        type: TYPES.COLLIDE_PASSER,
+        id
+    }
 }

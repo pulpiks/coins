@@ -140,7 +140,85 @@ export const enum LayersIds {
     policeman = 'policeman',
     hands = 'hands',
     clerk = 'clerk',
+    passer = 'passer'
 }
+
+type PassersKeys = {
+    [k in string]: string[] | string
+}
+
+export const passers:PassersKeys = {
+    usual: ['usual-1', /*'usual-2'*/],
+    // sentsov: 'sentsov',
+    // pupil: 'pupil',
+}
+
+export interface PasserConstantOptions {
+    setTo: number[]
+    stand: {
+        frames: number[],
+        frameRate: number
+    },
+    move: {
+        frames: number[],
+        frameRate: number
+    }
+}
+
+export type PasserConstantType = {
+    [k in string]: PasserConstantOptions
+} 
+
+export const passersConstants: PasserConstantType = {
+   'usual-1': {
+       setTo: [0.1, 0.1],
+       stand: {
+           frames: [8],
+           frameRate: 1,
+       }, 
+       move: {
+           frames: [0, 1, 2, 3, 4, 5, 6].reverse(),
+           frameRate: 8
+       }
+   },
+//    'passer-2': {
+//         setTo: [0.09, 0.085],
+//         stand: {
+//             frames: [2],
+//             frameRate: 8,
+//         }, 
+//         move: {
+//             frames: [3, 2, 1, 0],
+//             frameRate: 8
+//         }  
+//    },
+//    'sentsov': {
+//         setTo: [0.09, 0.085],
+//         stand: {
+//             frames: [2],
+//             frameRate: 8,
+//         }, 
+//         move: {
+//             frames: [3, 2, 1, 0],
+//             frameRate: 8
+//         } 
+//    },
+//    'pupil': {
+//         setTo: [0.09, 0.085],
+//         stand: {
+//             frames: [2],
+//             frameRate: 8,
+//         }, 
+//         move: {
+//             frames: [3, 2, 1, 0],
+//             frameRate: 8
+//         } 
+//    }
+}
+
+export const passersTypes = strEnumHelper(Object.keys(passersConstants))
+
+export type passersIdsTypes = keyof typeof passersTypes
 
 export const FAIL_MSG = {
     mood: 'Терпеть и не сдаваться! Попробуйте еще раз!'

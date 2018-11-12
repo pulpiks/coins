@@ -10,6 +10,11 @@ import '../assets/ground.png'
 import '../assets/cactuses.png'
 import '../assets/clouds/clouds.png'
 import '../assets/policeman/policeman.png'
+import '../assets/passers/kindpasser.png'
+import '../assets/passers/kindpasser_green.png'
+import '../assets/passers/passer-baby.png'
+import '../assets/passers/passer_sentsov.png'
+
 
 import store from '../store'
 
@@ -31,11 +36,13 @@ import {
     timeOutCollide,
     CACTUS,
     ENEMY_TYPES,
-    LayersIds
+    LayersIds,
+    passers
 } from '../constants/constants'
 
 import {collidePersonWithPoliceman, addCactus, changeMoney} from '../actions'
-import { renderPassers, Passer, PassersProps } from './Passer';
+import { OfficialProps, renderOfficials } from './Official'
+import { renderPassers, PassersProps } from './Passer';
 
 interface enemyObj {
     [key: string]: Enemy
@@ -65,26 +72,35 @@ export default class Game extends Phaser.State{
     private policemen: Policeman[]
     private score: Score
     private handsHandler: HandsHandler
+    private officials: OfficialProps
     private passers: PassersProps
+    assetsPath: string = './assets/'
 
     init() {
         this.policemen = [];
+        
     }
 
     preload() {
-        const assetsPath = './assets/'
-        this.load.spritesheet(LayersIds.person, `${assetsPath}player.png`, 128, 128, 12)
-        this.load.image(LayersIds.hands, `${assetsPath}raised_hands.png`)
+        this.load.spritesheet(LayersIds.person, `${this.assetsPath}player.png`, 128, 128, 12)
+        this.load.image(LayersIds.hands, `${this.assetsPath}raised_hands.png`)
         // need to change with of person here
         // this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
-        // this.load.image(LayersIds.tiles, `${assetsPath}super_mario.png`)
-        this.load.image(LayersIds.coin, `${assetsPath}one-coin.png`)
-        this.load.image(LayersIds.enemy, `${assetsPath}enemy.png`)
-        this.load.image(LayersIds.ground, `${assetsPath}ground.png`)
-        this.load.image(LayersIds.cactus, `${assetsPath}cactuses.png`)
-        this.load.image(LayersIds.clouds, `${assetsPath}clouds.png`)
-        this.load.spritesheet(LayersIds.policeman, `${assetsPath}policeman.png`, 274, 756.5, 8)
-        this.load.spritesheet(LayersIds.clerk, `${assetsPath}clerk.png`, 721.5, 1105, 8)
+        this.load.image(LayersIds.coin, `${this.assetsPath}one-coin.png`)
+        this.load.image(LayersIds.enemy, `${this.assetsPath}enemy.png`)
+        this.load.image(LayersIds.ground, `${this.assetsPath}ground.png`)
+        this.load.image(LayersIds.cactus, `${this.assetsPath}cactuses.png`)
+        this.load.image(LayersIds.clouds, `${this.assetsPath}clouds.png`)
+        this.load.spritesheet(LayersIds.policeman, `${this.assetsPath}policeman.png`, 274, 756.5, 8)
+        this.load.spritesheet(LayersIds.clerk, `${this.assetsPath}clerk.png`, 721.5, 1105, 8)
+        this.loadSpritesPassers()
+    }
+
+    loadSpritesPassers = () => {
+        this.load.spritesheet(`${LayersIds.passer}-${passers.usual[0]}`, `${this.assetsPath}kindpasser_green.png`, 329, 894, 9)
+        this.load.spritesheet(`${LayersIds.passer}-${passers.usual[1]}`, `${this.assetsPath}kindpasser.png`, 429.75, 944.5, 8)
+        this.load.spritesheet(`${LayersIds.passer}-${passers.sentsov}`, `${this.assetsPath}passer_sentsov.png`, 451.5, 944.5, 8)
+        this.load.spritesheet(`${LayersIds.passer}-${passers.pupil}`, `${this.assetsPath}passer-baby.png`, 632.75, 1118.5, 8)
     }
 
     createClouds() {
@@ -179,6 +195,7 @@ export default class Game extends Phaser.State{
         this.cloudsSprite.smoothed = true;
         this.cloudsSprite.autoScroll(-5, 0);
 
+        this.officials = renderOfficials(this.game)
         this.passers = renderPassers(this.game)
 
         // this.tween = this.game.add.tween(this.cloudsSprite).to(

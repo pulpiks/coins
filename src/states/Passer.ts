@@ -4,11 +4,12 @@ import Person from './Person'
 import store from '../store'
 import { connect } from '../utils/connect';
 import PersonBase from './PersonBase';
-import { LayersIds } from '../constants/constants';
+import { LayersIds, passers, PasserConstantType, passersConstants, PasserConstantOptions } from '../constants/constants';
 
 
 import '../assets/clerk/clerk.png'
-import { collideOfficial, changeMoney } from '../actions';
+import { collideOfficial, changeMoney, collidePasser } from '../actions';
+import { deepFlatten } from '../utils';
 
 type COORD = {
     readonly x: number
@@ -19,21 +20,14 @@ type SPEED = {
     readonly max: number,
 }
 
-const PASSER_COORDS: COORD[] = [{
-    x: 100,
-}, {
-    x: 200,
-}, {
-    x: 300
-}]
+const AMOUNT_FUNDRISING = 10
 
 const PASSER_SPEED = {
-    min: 10,
+    min: 15,
     max: 30
 }
 
 const TIME_THRESHOLD = 2000
-const PENALTY_IN_COLLISION_WITH_OFFICIAL = -1
 
 const mapStateToProps = (state = store.getState()) => {
     return {
@@ -46,16 +40,18 @@ const mapStateToProps = (state = store.getState()) => {
 export class Passer extends PersonBase {
     game: Phaser.Game
     sprite: Phaser.Sprite
+    key: string
 
     constructor( 
         game: Phaser.Game, 
         coord: COORD,
         speed: SPEED,
-        key: string
+        key: string,
+        passerConfig: PasserConstantOptions
     ) {
         super({
             game: game,
-            x: game.rnd.between(100, coord.x),
+            x: game.rnd.between(100, 200),
             y: game.world.height - 50,
             key: key,
             speed: speed,
@@ -67,19 +63,18 @@ export class Passer extends PersonBase {
         });
         
         this.game = game;
-
+        this.key = key
         // custom logic for sprite
-        this.sprite.scale.setTo(0.09, 0.085)
+        // this.sprite.body.setSize(326)
+        this.sprite.scale.setTo(passerConfig.setTo[0], passerConfig.setTo[1])
         this.sprite.anchor.set(0.5, 1)
-        this.sprite.animations.add('stand', [2], 8, true);
-        this.animationRun = this.sprite.animations.add('move', [3, 2, 1, 0], 8, true)
+        this.sprite.animations.add('stand', passerConfig.stand.frames, passerConfig.stand.frameRate, true);
+        this.animationRun = this.sprite.animations.add('move', passerConfig.move.frames, passerConfig.move.frameRate, true)
         this.sprite.animations.play('stand')
         this.game.debug.body(this.sprite)
     }
 
-    render() {
-
-    }
+    render() {}
 }
 
 
@@ -91,21 +86,48 @@ export interface PassersProps {
 }
 
 export const renderPassers = (game: Phaser.Game): PassersProps => {
-
-    const passers = PASSER_COORDS.map((PASSER_COORD) => {
-        return new Passer(game, PASSER_COORD, PASSER_SPEED, LayersIds.clerk)
+    // const passerInstances: Passer[] = []
+    const passerInstances = Object.keys(passers).map((k) => {
+        if (Array.isArray(passers[k])) {
+            const arr = passers[k] as string[]
+            const instances = arr.map((key) => {
+                return new Passer(
+                    game, 
+                    {
+                        x: game.rnd.between(100, game.world.width - 300)
+                    }, 
+                    PASSER_SPEED, 
+                    `${LayersIds.passer}-${key}`,
+                    passersConstants[key]
+                )
+            })
+            return instances
+        }
+        else {
+            return new Passer(
+                game, 
+                {
+                    x: game.rnd.between(100, game.world.width - 300)
+                }, 
+                PASSER_SPEED, 
+                `${LayersIds.passer}-${passers[k]}`,
+                passersConstants[k]
+            )
+        }
     })
 
+    const instances = deepFlatten<any>(passerInstances)
+
     return {
-        sprites: passers.map((p) => p.sprite),
-        instances: passers,
-        update: () => passers.forEach((inst: Passer) => inst.update()),
+        sprites: instances.map((p) => p.sprite),
+        instances,
+        update: () => instances.forEach((inst: Passer) => inst.update()),
         collisionWithPerson: (sprite) => {
-            const id = passers.findIndex(p => p.sprite === sprite)
+            const instance = instances.find(p => p.sprite === sprite)
             const state = store.getState()
-            if (state.official.collided.indexOf(id) < 0) {
-                store.dispatch(collideOfficial(id))
-                store.dispatch(changeMoney(PENALTY_IN_COLLISION_WITH_OFFICIAL))
+            if (state.passers.collided.indexOf(instance.key) < 0) {
+                store.dispatch(collidePasser(instance.key))
+                store.dispatch(changeMoney(AMOUNT_FUNDRISING))
             }
         }
     }
