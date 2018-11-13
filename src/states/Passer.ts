@@ -51,7 +51,7 @@ export class Passer extends PersonBase {
     ) {
         super({
             game: game,
-            x: game.rnd.between(100, 200),
+            x: game.rnd.between(100, coord.x),
             y: game.world.height - 50,
             key: key,
             speed: speed,
@@ -87,33 +87,22 @@ export interface PassersProps {
 
 export const renderPassers = (game: Phaser.Game): PassersProps => {
     // const passerInstances: Passer[] = []
-    const passerInstances = Object.keys(passers).map((k) => {
-        if (Array.isArray(passers[k])) {
-            const arr = passers[k] as string[]
-            const instances = arr.map((key) => {
-                return new Passer(
+    const passerInstances: Passer[][] = passers.map((passer) => {
+        const arr = []
+        if (passer.count > 0) {
+            for(let i=0; i<passer.count; i++) {
+                arr.push(new Passer(
                     game, 
                     {
                         x: game.rnd.between(100, game.world.width - 300)
                     }, 
                     PASSER_SPEED, 
-                    `${LayersIds.passer}-${key}`,
-                    passersConstants[key]
-                )
-            })
-            return instances
+                    `${LayersIds.passer}-${passer.key}`,
+                    passersConstants[passer.key]
+                ))
+            }
         }
-        else {
-            return new Passer(
-                game, 
-                {
-                    x: game.rnd.between(100, game.world.width - 300)
-                }, 
-                PASSER_SPEED, 
-                `${LayersIds.passer}-${passers[k]}`,
-                passersConstants[k]
-            )
-        }
+        return arr
     })
 
     const instances = deepFlatten<any>(passerInstances)

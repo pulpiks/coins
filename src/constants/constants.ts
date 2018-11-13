@@ -1,4 +1,5 @@
 import { strEnumHelper } from "../utils/helpers"
+import { getRandomValueFromArray } from "../utils";
 
 export const COINS = {
     startSum: 1000
@@ -143,15 +144,6 @@ export const enum LayersIds {
     passer = 'passer'
 }
 
-type PassersKeys = {
-    [k in string]: string[] | string
-}
-
-export const passers:PassersKeys = {
-    usual: ['usual-1', /*'usual-2'*/],
-    // sentsov: 'sentsov',
-    // pupil: 'pupil',
-}
 
 export interface PasserConstantOptions {
     setTo: number[]
@@ -169,9 +161,11 @@ export type PasserConstantType = {
     [k in string]: PasserConstantOptions
 } 
 
+const passerHeights = [0.1, 0.11, 0.101, 0.115]
+
 export const passersConstants: PasserConstantType = {
    'usual-1': {
-       setTo: [0.1, 0.1],
+       setTo: [0.11, passerHeights[getRandomValueFromArray(passerHeights)]],
        stand: {
            frames: [8],
            frameRate: 1,
@@ -181,44 +175,58 @@ export const passersConstants: PasserConstantType = {
            frameRate: 8
        }
    },
-//    'passer-2': {
-//         setTo: [0.09, 0.085],
-//         stand: {
-//             frames: [2],
-//             frameRate: 8,
-//         }, 
-//         move: {
-//             frames: [3, 2, 1, 0],
-//             frameRate: 8
-//         }  
-//    },
-//    'sentsov': {
-//         setTo: [0.09, 0.085],
-//         stand: {
-//             frames: [2],
-//             frameRate: 8,
-//         }, 
-//         move: {
-//             frames: [3, 2, 1, 0],
-//             frameRate: 8
-//         } 
-//    },
-//    'pupil': {
-//         setTo: [0.09, 0.085],
-//         stand: {
-//             frames: [2],
-//             frameRate: 8,
-//         }, 
-//         move: {
-//             frames: [3, 2, 1, 0],
-//             frameRate: 8
-//         } 
-//    }
+   'usual-2': {
+        setTo: [0.1, 0.1],
+        stand: {
+            frames: [1],
+            frameRate: 1,
+        }, 
+        move: {
+            frames: [0, 1, 2, 3, 4, 5, 6, 7].reverse(),
+            frameRate: 8
+        }  
+   },
+   'sentsov': {
+        setTo: [0.1, 0.1],
+        stand: {
+            frames: [1],
+            frameRate: 1,
+        }, 
+        move: {
+            frames: [0,1,2,3,4,5,6,7].reverse(),
+            frameRate: 8
+        } 
+   },
+   'pupil': {
+        setTo: [0.09, 0.085],
+        stand: {
+            frames: [2],
+            frameRate: 1,
+        }, 
+        move: {
+            frames: [4,5,6,7, 0, 1, 2, 3].reverse(),
+            frameRate: 8
+        } 
+   }
 }
 
 export const passersTypes = strEnumHelper(Object.keys(passersConstants))
 
 export type passersIdsTypes = keyof typeof passersTypes
+
+
+
+type PassersKeys = {
+    readonly key: passersIdsTypes,
+    readonly count: number,
+}[]
+
+export const passers: PassersKeys = [
+    {key: 'usual-1', count: 3}, 
+    {key: 'usual-2', count: 2}, 
+    {key: 'sentsov', count: 5}, 
+    {key: 'pupil', count: 10}
+]
 
 export const FAIL_MSG = {
     mood: 'Терпеть и не сдаваться! Попробуйте еще раз!'

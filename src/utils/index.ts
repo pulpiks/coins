@@ -45,3 +45,5 @@ export const generatorId = () => {
 export const getRandom = () => Boolean(Math.round(Math.random()))
 
 export function deepFlatten<T>(arr: T[]): T[] { return [].concat(...arr.map(v => (Array.isArray(v) ? deepFlatten(v) : v)))}
+
+export const getRandomValueFromArray = (arr: any[]) => Math.floor(Math.random() * arr.length)

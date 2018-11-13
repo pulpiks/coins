@@ -12,8 +12,8 @@ import '../assets/clouds/clouds.png'
 import '../assets/policeman/policeman.png'
 import '../assets/passers/kindpasser.png'
 import '../assets/passers/kindpasser_green.png'
-import '../assets/passers/passer-baby.png'
-import '../assets/passers/passer_sentsov.png'
+import '../assets/passers/pupil.png'
+import '../assets/passers/sentsov.png'
 
 
 import store from '../store'
@@ -37,7 +37,8 @@ import {
     CACTUS,
     ENEMY_TYPES,
     LayersIds,
-    passers
+    passers,
+    passersTypes
 } from '../constants/constants'
 
 import {collidePersonWithPoliceman, addCactus, changeMoney} from '../actions'
@@ -97,10 +98,10 @@ export default class Game extends Phaser.State{
     }
 
     loadSpritesPassers = () => {
-        this.load.spritesheet(`${LayersIds.passer}-${passers.usual[0]}`, `${this.assetsPath}kindpasser_green.png`, 329, 894, 9)
-        this.load.spritesheet(`${LayersIds.passer}-${passers.usual[1]}`, `${this.assetsPath}kindpasser.png`, 429.75, 944.5, 8)
-        this.load.spritesheet(`${LayersIds.passer}-${passers.sentsov}`, `${this.assetsPath}passer_sentsov.png`, 451.5, 944.5, 8)
-        this.load.spritesheet(`${LayersIds.passer}-${passers.pupil}`, `${this.assetsPath}passer-baby.png`, 632.75, 1118.5, 8)
+        this.load.spritesheet(`${LayersIds.passer}-${passersTypes['usual-1']}`, `${this.assetsPath}kindpasser_green.png`, 329, 894, 9)
+        this.load.spritesheet(`${LayersIds.passer}-${passersTypes['usual-2']}`, `${this.assetsPath}kindpasser.png`, 329.25, 896.5, 8)
+        this.load.spritesheet(`${LayersIds.passer}-${passersTypes['sentsov']}`, `${this.assetsPath}sentsov.png`, 451.5, 894, 8)
+        this.load.spritesheet(`${LayersIds.passer}-${passersTypes['pupil']}`, `${this.assetsPath}pupil.png`, 445.25, 986.5, 8)
     }
 
     createClouds() {
