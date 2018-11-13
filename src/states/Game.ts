@@ -284,9 +284,8 @@ export default class Game extends Phaser.State{
         this.physics.arcade.overlap(
             this.person.sprite,
             this.handsHandler.getHandsSprite(),
-            (sprite: Phaser.Sprite, _: Phaser.Sprite) => {
-                console.log(123)
-                this.handsHandler.update(sprite.centerX)        
+            (_: Phaser.Sprite, handSprite: Phaser.Sprite) => {
+                this.handsHandler.collidePerson(handSprite)        
             }
         )
 

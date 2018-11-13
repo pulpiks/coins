@@ -46,6 +46,7 @@ export class Hands extends Person {
         this.sprite.body.immovable = true
         this.sprite.body.moves = true
         this.sprite.body.enable = true
+        this.update = throttle(this.update, 5000)
         
         this.tweenVisible = this.game.add.tween(this.sprite).to(
             { alpha: 1,
@@ -73,7 +74,6 @@ export class Hands extends Person {
     }
 
     show() {
-        // this.sprite.alpha = 1
         if (this.isVisible) {
             return ;
         }
@@ -85,7 +85,6 @@ export class Hands extends Person {
         } else {
             this.tweenVisible.resume()
         }
-        // }
     }
 
     hide() {
@@ -100,7 +99,6 @@ export class Hands extends Person {
         } else {
             this.tweenHidden.resume()
         }
-        // }
     }
 
     touchPerson() {
@@ -117,10 +115,8 @@ export class Hands extends Person {
 export class HandsHandler {
     readonly hands: Hands[]
     readonly handsX: number[]
-    // readonly handsGroup: Phaser.Group
     constructor(game: Phaser.Game) {
         this.handsX = HANDS_COORDS.map(coord => coord[0])
-        // this.handsGroup = game.add.physicsGroup(Phaser.Physics.ARCADE);
         this.hands = HANDS_COORDS.map((handCoord) => {
             return new Hands({
                 game,
@@ -129,18 +125,15 @@ export class HandsHandler {
             })
         })
         this.update = throttle(this.update, 5000)
-
-        // this.hands.forEach((handGroup) => {
-        //     this.handsGroup.add(handGroup.sprite)
-        // })
     }
 
     getHandsSprite() {
         return this.hands.map((hand) => hand.sprite)
     }
 
-    collidePerson() {
-
+    collidePerson(sprite: Phaser.Sprite) {
+        const hand = this.hands.find(hand => hand.sprite === sprite)
+        hand.update()
     }
 
     update(x: number) {
@@ -158,7 +151,6 @@ export class HandsHandler {
                 const showHands = getRandom()
                 if (showHands) {
                     this.hands[index].show()
-                    this.hands[index].update()
                 }
             } else {
                 this.hands[i].hide()
