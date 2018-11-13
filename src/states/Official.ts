@@ -64,8 +64,7 @@ export class Official extends PersonBase {
                 min: 5,
                 max: 8,
             }
-        });
-        
+        })
         this.game = game;
 
         // custom logic for sprite

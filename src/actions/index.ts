@@ -50,6 +50,17 @@ export function reduceMood(action: ReduceModeAction) {
     }
 }
 
+interface ChangeMoodAction {
+    readonly incr: number
+}
+
+export function changeMood(action: ChangeMoodAction) {
+    return {
+        type: TYPES.CHANGE_MOOD,
+        incr: action.incr
+    }
+}
+
 export interface GameOverAction {
     readonly msg: string
 }

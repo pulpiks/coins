@@ -5,6 +5,7 @@
         "strict-boolean-expressions": false,
         "import-name": false,
         "no-unused-variable": true,
-        "quotemark": [true, "single", "avoid-escape"]
+        "quotemark": [true, "single", "avoid-escape"],
+        "semicolon": [true, "never"]
     }
 }

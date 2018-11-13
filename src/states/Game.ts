@@ -276,20 +276,32 @@ export default class Game extends Phaser.State{
             this.passers.sprites
         )
 
+        this.physics.arcade.collide(
+            this.ground,
+            this.officials.sprites
+        )
+
         this.physics.arcade.overlap(
             this.person.sprite,
             this.handsHandler.getHandsSprite(),
-            (_: any, handSprite: Phaser.Sprite) => {
-                if (+handSprite.alpha > 0) {
-                    store.dispatch(changeMoney(-5))
-                }    
+            (sprite: Phaser.Sprite, _: Phaser.Sprite) => {
+                console.log(123)
+                this.handsHandler.update(sprite.centerX)        
             }
         )
 
         this.physics.arcade.overlap(
             this.person.sprite,
-            this.passers.sprites,
+            this.officials.sprites,
             this.collideWithOfficials,
+            null,
+            this
+        )
+
+        this.physics.arcade.overlap(
+            this.person.sprite,
+            this.passers.sprites,
+            this.collideWithPassers,
             null,
             this
         )
@@ -304,6 +316,7 @@ export default class Game extends Phaser.State{
         this.removeKilledEnemies()
         this.handsHandler.update(this.person.sprite.centerX)
         this.passers.update()
+        this.officials.update()
     }
 
     /* collide person with enemy */
@@ -325,7 +338,11 @@ export default class Game extends Phaser.State{
     }
 
     collideWithOfficials(person: Phaser.Sprite, official: Phaser.Sprite) {
-        this.passers.collisionWithPerson(official)
+        this.officials.collisionWithPerson(official)
+    }
+
+    collideWithPassers(person: Phaser.Sprite, passer: Phaser.Sprite) {
+        this.passers.collisionWithPerson(passer)
     }
 
     render() {

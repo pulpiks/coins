@@ -1,4 +1,5 @@
 import autobind from 'autobind-decorator'
+import throttle from 'lodash.throttle'
 
 import store from '../store'
 
@@ -45,6 +46,7 @@ export class Hands extends Person {
         this.sprite.body.immovable = true
         this.sprite.body.moves = true
         this.sprite.body.enable = true
+        
         this.tweenVisible = this.game.add.tween(this.sprite).to(
             { alpha: 1,
               y: this.sprite.y + 10,
@@ -57,7 +59,6 @@ export class Hands extends Person {
             true
         )
 
-
         this.tweenHidden = this.game.add.tween(this.sprite).to(
             { alpha: 0,
               y: this.sprite.y - 10,
@@ -69,9 +70,6 @@ export class Hands extends Person {
             0, 
             true
         )
-
-
-
     }
 
     show() {
@@ -108,6 +106,12 @@ export class Hands extends Person {
     touchPerson() {
 
     }
+
+    update() {
+        if (+this.sprite.alpha > 0) {
+            store.dispatch(changeMoney(-5))
+        } 
+    }
 }
 
 export class HandsHandler {
@@ -124,6 +128,7 @@ export class HandsHandler {
                 y: handCoord[1]
             })
         })
+        this.update = throttle(this.update, 5000)
 
         // this.hands.forEach((handGroup) => {
         //     this.handsGroup.add(handGroup.sprite)
@@ -134,14 +139,18 @@ export class HandsHandler {
         return this.hands.map((hand) => hand.sprite)
     }
 
+    collidePerson() {
+
+    }
+
     update(x: number) {
         // const {personCoords} = state
+        console.log('call udpate')
         const handIndexes = HANDS_COORDS.reduce((res, coord, i) => {
             if (Math.abs(this.hands[i].sprite.centerX - x) < MIN_DISTANCE_TO_APROACH) 
                 res.push(i)
             return res    
         }, []) 
-
 
         this.hands.forEach((_, i) => {
             const index = handIndexes.find(handIndex => handIndex === i)
@@ -149,6 +158,7 @@ export class HandsHandler {
                 const showHands = getRandom()
                 if (showHands) {
                     this.hands[index].show()
+                    this.hands[index].update()
                 }
             } else {
                 this.hands[i].hide()

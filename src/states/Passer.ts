@@ -8,7 +8,7 @@ import { LayersIds, passers, PasserConstantType, passersConstants, PasserConstan
 
 
 import '../assets/clerk/clerk.png'
-import { collideOfficial, changeMoney, collidePasser } from '../actions';
+import { collideOfficial, changeMoney, collidePasser, reduceMood, changeMood } from '../actions';
 import { deepFlatten } from '../utils';
 
 type COORD = {
@@ -21,6 +21,8 @@ type SPEED = {
 }
 
 const AMOUNT_FUNDRISING = 10
+const MOOD_DEVIDER_COLLIDED_PASSERS = 5
+const MOOD_INCREMENT = 10
 
 const PASSER_SPEED = {
     min: 15,
@@ -68,7 +70,7 @@ export class Passer extends PersonBase {
         // this.sprite.body.setSize(326)
         this.sprite.scale.setTo(passerConfig.setTo[0], passerConfig.setTo[1])
         this.sprite.anchor.set(0.5, 1)
-        this.sprite.animations.add('stand', passerConfig.stand.frames, passerConfig.stand.frameRate, true);
+        this.sprite.animations.add('stand', passerConfig.stand.frames, passerConfig.stand.frameRate, true)
         this.animationRun = this.sprite.animations.add('move', passerConfig.move.frames, passerConfig.move.frameRate, true)
         this.sprite.animations.play('stand')
         this.game.debug.body(this.sprite)
@@ -117,7 +119,15 @@ export const renderPassers = (game: Phaser.Game): PassersProps => {
             if (state.passers.collided.indexOf(instance.key) < 0) {
                 store.dispatch(collidePasser(instance.key))
                 store.dispatch(changeMoney(AMOUNT_FUNDRISING))
+
+                const numberCollided = state.passers.collided.length
+                if (numberCollided % MOOD_DEVIDER_COLLIDED_PASSERS === 0) {
+                    store.dispatch(changeMood({
+                        incr: MOOD_INCREMENT
+                    }))
+                }
             }
+            
         }
     }
 } 

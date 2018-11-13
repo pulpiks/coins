@@ -237,4 +237,4 @@ export const HANDS = {
     height: 80
 } 
 
-export const HANDS_COORDS = [[629, 200]]
+export const HANDS_COORDS = [[629, 200], [300, 200], [750, 200]]
