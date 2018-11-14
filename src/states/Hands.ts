@@ -12,7 +12,8 @@ import Person from './Person';
 import { getRandom } from '../utils';
 
 const MIN_DISTANCE_TO_APROACH = 50
-const PENALTY_AMOUNT = 10
+const PENALTY_AMOUNT = 50
+const THROTTLE_TIME = 3000
 
 interface HandsProps {
     readonly game: Phaser.Game,
@@ -44,7 +45,7 @@ export class Hands extends Person {
         this.sprite.body.immovable = true
         this.sprite.body.moves = true
         this.sprite.body.enable = true
-        this.update = throttle(this.update, 5000)
+        this.update = throttle(this.update, THROTTLE_TIME)
 
         this.tween = this.game.add.tween(this.sprite).to(
             this.getTweenProps(true),
