@@ -12,6 +12,7 @@ import Person from './Person';
 import { getRandom } from '../utils';
 
 const MIN_DISTANCE_TO_APROACH = 50
+const PENALTY_AMOUNT = 10
 
 interface HandsProps {
     readonly game: Phaser.Game,
@@ -21,11 +22,8 @@ interface HandsProps {
 
 export class Hands extends Person {
     readonly game: Phaser.Game
-    readonly tweenVisible: Phaser.Tween
-    readonly tweenHidden: Phaser.Tween
-    isVisible: boolean = false
-    isFirstCall: boolean = true
-    isFirstCallHidden: boolean = true
+    tween: Phaser.Tween
+    tween2: Phaser.Tween
     constructor( {
         game, 
         x,
@@ -47,68 +45,51 @@ export class Hands extends Person {
         this.sprite.body.moves = true
         this.sprite.body.enable = true
         this.update = throttle(this.update, 5000)
-        
-        this.tweenVisible = this.game.add.tween(this.sprite).to(
-            { alpha: 1,
-              y: this.sprite.y + 10,
-             },
+
+        this.tween = this.game.add.tween(this.sprite).to(
+            this.getTweenProps(true),
             0, 
             Phaser.Easing.Linear.None, 
-            false, 
+            true, 
             0, 
             -1, 
             true
         )
-
-        this.tweenHidden = this.game.add.tween(this.sprite).to(
-            { alpha: 0,
-              y: this.sprite.y - 10,
-             },
+        
+        this.tween2 = this.game.add.tween(this.sprite).to(
+            this.getTweenProps(false),
             0, 
             Phaser.Easing.Linear.None, 
-            false, 
+            true, 
             0, 
-            0, 
+            -1, 
             true
-        )
+        ) 
+    
     }
 
-    show() {
-        if (this.isVisible) {
-            return ;
+    getTweenProps(isVisible: boolean) {
+        return (isVisible) ? { 
+            alpha: 1,
+            y: this.sprite.y + 10,
+        } : { 
+            alpha: 0,
+            y: this.sprite.y - 10,
         }
-        this.isVisible = true
-        this.tweenHidden.stop()
-        if (this.isFirstCall) {
-            this.isFirstCall = false
-            this.tweenVisible.start()
+    }
+
+    changeVisibility(isVisible: boolean) {
+        if (isVisible) {
+            this.tween.resume()
+            this.tween2.pause()
         } else {
-            this.tweenVisible.resume()
+            this.tween.pause()
+            this.tween2.resume()
         }
-    }
-
-    hide() {
-        if (!this.isVisible) {
-            return ;
-        }
-        this.isVisible = false
-        this.tweenVisible.stop()
-        if (this.isFirstCallHidden) {
-            this.isFirstCallHidden = false
-            this.tweenHidden.start()
-        } else {
-            this.tweenHidden.resume()
-        }
-    }
-
-    touchPerson() {
-
     }
 
     update() {
-        if (+this.sprite.alpha > 0) {
-            store.dispatch(changeMoney(-5))
-        } 
+        store.dispatch(changeMoney(-PENALTY_AMOUNT))
     }
 }
 
@@ -124,7 +105,7 @@ export class HandsHandler {
                 y: handCoord[1]
             })
         })
-        this.update = throttle(this.update, 5000)
+        // this.update = throttle(this.update, 5000)
     }
 
     getHandsSprite() {
@@ -138,7 +119,6 @@ export class HandsHandler {
 
     update(x: number) {
         // const {personCoords} = state
-        console.log('call udpate')
         const handIndexes = HANDS_COORDS.reduce((res, coord, i) => {
             if (Math.abs(this.hands[i].sprite.centerX - x) < MIN_DISTANCE_TO_APROACH) 
                 res.push(i)
@@ -147,14 +127,8 @@ export class HandsHandler {
 
         this.hands.forEach((_, i) => {
             const index = handIndexes.find(handIndex => handIndex === i)
-            if (index >=0 ) {
-                const showHands = getRandom()
-                if (showHands) {
-                    this.hands[index].show()
-                }
-            } else {
-                this.hands[i].hide()
-            }
+            console.log(index)
+            typeof(index)!=='undefined' && index >= 0 ? this.hands[i].changeVisibility(true): this.hands[i].changeVisibility(false)
         })
     }
 }

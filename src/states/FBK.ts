@@ -10,8 +10,6 @@ import {
 
 import { throwCactus, changeMoney, reduceMood } from '../actions'
 
-
-
 interface FBKProps {
     readonly game: Phaser.Game,
     readonly onThrowCactus: (
@@ -59,13 +57,13 @@ export default class FBK extends Person {
 
         // this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
 
-        this.animationsRunRight = this.sprite.animations.add('run', [8, 9, 10, 11], 10, true);
-        this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
-        this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
         this.sprite.scale.setTo(0.7, 0.85);
         this.sprite.anchor.set(0.5, 1);
+        this.animationsRunRight = this.sprite.animations.add('run', [8, 9, 10, 11], 10, true);
+        this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
+        this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = 3000;
         // this.sprite.body.immovable = true;
