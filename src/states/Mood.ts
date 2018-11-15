@@ -54,10 +54,6 @@ export default class Mood {
             isFixedToCamera: true
         });
 
-        /*
-        { alpha: 0 },
-            300, Phaser.Easing.Linear.None, true, 0, 100, false
-        */
         store.subscribe(this.changeMood);
 
         this.barSpriteTween = this.game.add.tween(this.mood.barSprite).to( 

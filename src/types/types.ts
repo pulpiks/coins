@@ -19,3 +19,5 @@ export const GAME_OVER = 'GAME_OVER'
 
 export const COLLIDE_OFFICIAL = 'COLLIDE_OFFICIAL'
 export const COLLIDE_PASSER = 'COLLIDE_PASSER'
+
+export const ADD_ENEMY = 'ADD_ENEMY';

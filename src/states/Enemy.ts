@@ -1,57 +1,77 @@
 import {
-    ENEMY,
-    ENEMY_TYPES
+    ENEMY_TYPES,
+    PasserConstantOptions
 } from '../constants/constants';
 
 import Person from './Person';
 
 import { generatorRandomString } from '../utils';
+import { Passer, COORD, SPEED } from './Passer';
+import store from '../store';
+import { addEnemy } from '../actions';
 
 const generatorId = generatorRandomString();
 
 interface EnemyProps {
-    readonly x: number,
-    readonly y: number,
-    readonly type: string,
+    readonly game: Phaser.Game,
+    readonly coord: COORD,
+    readonly speed: SPEED,
+    readonly key: string,
+    readonly type: ENEMY_TYPES,
+    readonly spriteOptions: PasserConstantOptions
+    readonly time_threshold?: number
+    readonly time_disabled: number
 }
 
-export default class Enemy extends Person{
-    sprite: Phaser.Sprite
-    enemySprite: Phaser.Sprite
-    game: Phaser.Game
-    enemy: any
-    person: Person
-    public timerChangingVelocity: number
-    public isTouchedByCactus: boolean = false
-    private tween: Phaser.Tween
-    private timer: Phaser.TimerEvent
+// function EnemiesGlobal(game: Phaser.Game) {
+//     return function decorator(Class: any) {
+//         return (...args: any[]) => {
+//             console.log(`Arguments for ${name}: args`); 
+//             const enemiesGroup = game.add.physicsGroup(Phaser.Physics.ARCADE)
+//             return new Class(...args, enemiesGroup)
+//         }
+//     }
+// }
 
-    constructor( game: Phaser.Game, enemy: EnemyProps) {
-        super({
-            game: game,
-            x: enemy.x,
-            y: enemy.y,
-            key: enemy.type
-        })
+
+export default class Enemy extends Passer{
+    sprite: Phaser.Sprite
+    game: Phaser.Game
+    time_disabled: number
+    public isTouchedByCactus: boolean = false
+    tween: Phaser.Tween
+    timer: Phaser.TimerEvent
+    type: ENEMY_TYPES
+
+    constructor(props: EnemyProps) {
+        super(
+            props.game, 
+            props.coord,
+            props.speed,
+            props.key,
+            props.spriteOptions,
+            props.time_threshold
+        )
+
+        this.game = props.game
+        this.type = props.type    
+        this.time_disabled = props.time_disabled
+        this.addEnemy()
     }
 
-    move(personSprite: Phaser.Sprite) {
-        // if (this.isTouchedByCactus) {
-        //     return true;
-        // }
-        // this.enemySprite.body.moves = true;
-        // if (personSprite.left >= this.enemySprite.left) {
-        //     this.enemySprite.body.velocity.x = this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max);
-        // }
-        // else {
-        //     if (Date.now() - this.timerChangingVelocity > ENEMY.time_threshold) {
-        //         this.timerChangingVelocity = Date.now();
-        //         let dir = Math.round(Math.random());
-        //         this.enemySprite.body.velocity.x =
-        //             this.game.rnd.integerInRange(ENEMY.speed_min, ENEMY.speed_max) * (dir ? 1 : -1);
-        //         // ??? this.enemiesObj[this.enemySprite.name]['velocityX'] = this.enemySprite.body.velocity.x;
-        //     }
-        // }
+    addEnemy() {
+        store.dispatch(addEnemy({
+            playerId: this.playerId,
+            type: this.type,
+        }))
+    }
+
+    update() {
+        if (this.isTouchedByCactus) {
+            this.sprite.animations.stop('move', true);
+            return true;
+        }
+        super.update()
     }
 
     collideWithObstacles(enemy: Phaser.Sprite, obstacles: Phaser.Sprite) {
@@ -59,17 +79,7 @@ export default class Enemy extends Person{
     }
 
     onCactusCollision() {
-
-        switch(this.enemy.type) {
-            case ENEMY_TYPES.fsb:
-                this.deactivateForTheTime()
-                break
-            case ENEMY_TYPES.gangster:
-            case ENEMY_TYPES.official:
-                this.kill()
-                break
-            case ENEMY_TYPES.prosecutor:
-                break
+        switch(this.type) {
             case ENEMY_TYPES.policeman:
                 this.deactivateForTheTime()
                 break
@@ -87,7 +97,7 @@ export default class Enemy extends Person{
         // this.timer = this.game.time.create(false)
         // this.timer.loop(2000, this.finishCollision, this)
         // this.timer.start()
-        this.timer = this.game.time.events.loop(ENEMY.time_disabled, this.finishCollision, this)
+        this.timer = this.game.time.events.loop(this.time_disabled, this.finishCollision, this)
     }
 
     finishCollision() {
@@ -99,7 +109,6 @@ export default class Enemy extends Person{
     }
 
     kill() {
-        this.enemySprite.kill()
-        this.enemy = null
+        this.sprite.kill()
     }
 }

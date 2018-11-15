@@ -11,17 +11,6 @@ export const PERSON = {
     speed: 400,
 }
 
-export const POLICEMAN = {
-    width: 100,
-    height: 70,
-    rangeX: [100, 1500],
-    count: 5,
-    speed_min: 1,
-    speed_max: 40,
-    time_threshold: 3000,
-    time_disabled: 3000,
-}
-
 
 export const RANGE = [0, 1000]
 
@@ -42,22 +31,15 @@ export const enum ENEMY_TYPES {
     policeman = 'policeman',
 }
 
-export const ENEMY = {
-    width: 30,
-    height: 90,
-    speed_min: 0,
-    speed_max: 200,
-    speed: 200,
-    time_threshold: 2000,
-    time_disabled: 3000,
-}
-
-
-export const CACTUS = {
-    width: 25,
-    height: 30,
-    count: 10,
-}
+// export const ENEMY = {
+//     width: 30,
+//     height: 90,
+//     speed_min: 0,
+//     speed_max: 200,
+//     speed: 200,
+//     time_threshold: 2000,
+//     time_disabled: 3000,
+// }
 
 
 export const enum STATES {
@@ -126,7 +108,7 @@ export const MOOD = {
     step : 10,
 }
 
-export const timeOutCollide = 3000
+export const TIMEOUT_COLLIDE_POLIMEN_CACTUS = 3000
 
 
 export const enum LayersIds {

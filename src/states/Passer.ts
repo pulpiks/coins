@@ -11,11 +11,11 @@ import '../assets/clerk/clerk.png'
 import { collideOfficial, changeMoney, collidePasser, reduceMood, changeMood } from '../actions';
 import { deepFlatten } from '../utils';
 
-type COORD = {
+export type COORD = {
     readonly x: number
 }
 
-type SPEED = {
+export type SPEED = {
     readonly min: number,
     readonly max: number,
 }
@@ -49,7 +49,8 @@ export class Passer extends PersonBase {
         coord: COORD,
         speed: SPEED,
         key: string,
-        passerConfig: PasserConstantOptions
+        passerConfig: PasserConstantOptions,
+        time_threshold?: number
     ) {
         super({
             game: game,
@@ -57,7 +58,7 @@ export class Passer extends PersonBase {
             y: game.world.height - 50,
             key: key,
             speed: speed,
-            time_threshold: TIME_THRESHOLD,
+            time_threshold: time_threshold ? time_threshold : TIME_THRESHOLD,
             velocity: {
                 min: 5,
                 max: 8,

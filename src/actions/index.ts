@@ -1,6 +1,6 @@
 // Actions
 import * as TYPES from '../types/types';
-import { passersIdsTypes } from '../constants/constants';
+import { passersIdsTypes, ENEMY_TYPES } from '../constants/constants';
 
 type CollidePersonWithPolicemanAction = {
     id: string
@@ -16,6 +16,23 @@ export function collidePersonWithPoliceman(action: CollidePersonWithPolicemanAct
 export function addCactus() {
     return {
         type: TYPES.ADD_CACTUS
+    }
+}
+
+
+
+
+type AddEnemyAction = {
+    readonly playerId: string,
+    readonly type: ENEMY_TYPES
+}
+
+
+export function addEnemy(action: AddEnemyAction) {
+    return {
+        type: TYPES.ADD_ENEMY,
+        enemyType: action.type,
+        playerId: action.playerId
     }
 }
 

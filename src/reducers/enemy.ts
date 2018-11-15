@@ -1,17 +1,39 @@
-import { PERSON_POLICEMAN_COLLIDE } from '../types/types';
+import { ADD_ENEMY } from '../types/types';
 import { ENEMY_TYPES } from '../constants/constants';
 
-const defaultState = {
+interface State {
+    enemies: {
+        [k in string]: string[]
+    }
+}
 
+const defaultState = {
+    enemies: {
+
+    }
 };
+
+type AddActionType = {
+    type: typeof ADD_ENEMY,
+    enemyType: ENEMY_TYPES,
+    playerId: string
+}
+
+type Action = AddActionType
 
 // XXX maybe this file need to be removed
 
-export default function (state = defaultState, action: any) {
+export default function (state: State = defaultState, action: Action) {
     switch(action.type) {
-        case PERSON_POLICEMAN_COLLIDE:
+        case ADD_ENEMY:
+            const enemies = {...state.enemies}
+            if (typeof(enemies[action.enemyType]) === 'undefined') {
+                enemies[action.enemyType] = []
+            }
+            enemies[action.enemyType].push(action.playerId)
             return {
-                type: ENEMY_TYPES.policeman
+                ...state,
+                enemies
             };
         default:
             return state;

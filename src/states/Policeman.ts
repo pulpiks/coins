@@ -1,12 +1,36 @@
 import autobind from 'autobind-decorator';
 
-import { POLICEMAN, ENEMY_TYPES } from '../constants/constants';
-import Person from './Person';
+import { ENEMY_TYPES, TIMEOUT_COLLIDE_POLIMEN_CACTUS, passersConstants, LayersIds } from '../constants/constants';
 import Enemy from './Enemy';
 
 import store from '../store';
+import { collidePersonWithPoliceman } from '../actions';
+import { generatorId } from '../utils';
 
-export default class Policeman extends Enemy{
+export const POLICEMAN = {
+    width: 100,
+    height: 70,
+    rangeX: [100, 1500],
+    count: 5,
+    speed_min: 1,
+    speed_max: 40,
+    time_threshold: 3000,
+    time_disabled: 3000,
+}
+
+export const POLICEMAN_SPRITE_INFO = {
+    setTo: [0.12, 0.12],
+    stand: {
+        frames: [0],
+        frameRate: 1,
+    }, 
+    move: {
+        frames: [7, 6, 5, 4, 3, 2, 1, 0],
+        frameRate: 8
+    }
+}
+
+export class Policeman extends Enemy{
     game: Phaser.Game
     sprite: Phaser.Sprite
     dir: number = Math.round(Math.random()) ? 1 : -1
@@ -15,74 +39,99 @@ export default class Policeman extends Enemy{
     timerChangingVelocity: number
 
     constructor(game: Phaser.Game) {
-        super(game, {
-            x: game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1]),
-            y: game.world.height - 50,
-            type: ENEMY_TYPES.policeman
-        });
+        super({
+            game, 
+            coord: {
+                x: game.rnd.between(POLICEMAN.rangeX[0], POLICEMAN.rangeX[1])
+            }, 
+            speed: {
+                min: POLICEMAN.speed_min,
+                max: POLICEMAN.speed_max,
+            }, 
+            key: LayersIds.policeman,
+            spriteOptions: POLICEMAN_SPRITE_INFO,
+            type: ENEMY_TYPES.policeman,
+            time_threshold: POLICEMAN.time_threshold,
+            time_disabled: POLICEMAN.time_disabled,
+        })
         
         this.game = game;
-
-        this.sprite.scale.setTo(0.12, 0.12)
-        this.sprite.anchor.set(0.5, 1)
-        // this.sprite.body.immovable = true
-        this.animationRun = this.sprite.animations.add('move', [7, 6, 5, 4, 3, 2, 1, 0], 8, true)
-        this.sprite.animations.play('stand')
-        this.sprite.body.gravity.y = 300
-        this.timerChangingVelocity = Date.now()
-        this.sprite.body.collideWorldBounds = true
-        this.velocity = this.game.rnd.between(POLICEMAN.speed_min, POLICEMAN.speed_max)
-
-        // store.subscribe(this.collideWithCactus)
     }
+}
 
-    update() {
-        if (this.isTouchedByCactus) {
-            this.sprite.animations.stop('move', true);
-            return true;
-        }
-        if (Date.now() - this.timerChangingVelocity > POLICEMAN.time_threshold) {
-            this.sprite.body.moves = true;
-            this.timerChangingVelocity = Date.now();
-            this.dir = Math.round(Math.random()) ? 1 : -1;
-            this.velocity = this.game.rnd.between(POLICEMAN.speed_min, POLICEMAN.speed_max);
-        }
+interface CollideEnemiesIdProps {
+    [k: string]: number
+}
 
-        this.sprite.scale.setTo(-this.dir * Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-        this.sprite.body.velocity.x = this.velocity * this.dir;
+interface EnemyObjProp {
+    [key: string]: Enemy
+}
+export interface PolicemanManagerProps {
+    // readonly policemen: typeof Policeman[]
+    readonly create: () => void,
+    readonly getAllSprites: () => void,
+    readonly update: () => void,
+    readonly getPolicemanPlayerId: (sprite: Phaser.Sprite) => void
+    readonly collidePerson: (policemanSprite: Phaser.Sprite) => void
+    readonly collideEnemiesId: CollideEnemiesIdProps
+    readonly enemiesObj: EnemyObjProp
+    readonly collideCactus: (enemy: Phaser.Sprite) => void
+}
 
-        if ((this.sprite.body.x <= 0 && this.dir < 0) ||
-            (this.sprite.body.x >= this.game.world.width && this.dir > 0)) {
-            if (this.sprite.body.x <= 0) {
-                this.sprite.body.x = 0;
+export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
+    return {
+        collideEnemiesId: {},
+        enemiesObj: {},
+        create: () => {
+            this.enemies = game.add.physicsGroup(Phaser.Physics.ARCADE);
+
+            for(let i = 0; i < POLICEMAN.count; i++) {
+                let policeman = new Policeman(
+                    game
+                )
+                // this.policemen.push(policeman)
+                // this.enemies.add(policeman.sprite)
+                this.enemiesObj[policeman.playerId] = policeman
             }
-            else {
-                this.sprite.body.x = this.game.world.width;
+        },
+        getAllSprites: () => {
+            return Object.values(this.enemiesObj).map((enemy: Policeman) => enemy.sprite)
+        },
+        update: () => {
+            Object.values(this.enemiesObj).forEach((policeman: Policeman) => {
+                policeman.update()
+            })
+            // for (let name in this.enemiesObj) {
+            //     if (this.enemiesObj[name].enemy === null) {
+            //         this.enemiesObj[name] = null;
+            //         delete this.enemiesObj[name];
+            //     }
+            // }
+        },
+        getPolicemanPlayerId: (sprite) => {
+            return Object
+                .keys(this.enemiesObj)
+                .find((playedId: string) => 
+                    this.enemiesObj[playedId].sprite === sprite
+                )
+        },
+
+        collidePerson: (policeman)=> {
+            const policemanId = this.getPolicemanPlayerId(policeman)
+            let cachedTime = this.collideEnemiesId[policemanId]
+            if ((
+                !cachedTime 
+                || Date.now() - cachedTime > TIMEOUT_COLLIDE_POLIMEN_CACTUS
+                ) && !this.enemiesObj[policemanId].isTouchedByCactus){
+                this.collideEnemiesId[policemanId] = Date.now();
+                store.dispatch(collidePersonWithPoliceman({
+                    id: policemanId
+                }));
             }
-            this.sprite.body.velocity.x = 0;
-            this.dir *= -1;
-            this.sprite.animations.stop('move', true);
-        }
-        else {
-            if (
-                this.sprite.animations.currentAnim.name !== 'move' ||
-                !this.sprite.animations.currentAnim.isPlaying
-            ) {
-                this.sprite.animations.play('move', (this.velocity < 15) ? 5 : 12);
-            }
+        },
+        collideCactus: (enemy: Phaser.Sprite) => {
+            const playerId = this.getPolicemanPlayerId(enemy)
+            this.enemiesObj[playerId].onCactusCollision()
         }
     }
-
-    // @autobind
-    // collideWithCactus() {
-    //     const state = store.getState();
-    //     if (state.collide_id_with_cactus == this.sprite.playerId) {
-    //
-    //     }
-    // }
-    //
-    // onCactusCollision() {
-    //
-    // }
-
 }

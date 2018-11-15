@@ -37,8 +37,8 @@ export const generatorId = () => {
     let id = 0;
     return {
         get: (name: string) => {
-            return name+'_'+(++id);
-        }
+            return name+'-'+(++id);
+        },
     }
 }
 
@@ -47,3 +47,12 @@ export const getRandom = () => Boolean(Math.round(Math.random()))
 export function deepFlatten<T>(arr: T[]): T[] { return [].concat(...arr.map(v => (Array.isArray(v) ? deepFlatten(v) : v)))}
 
 export const getRandomValueFromArray = (arr: any[]) => Math.floor(Math.random() * arr.length)
+
+export const sampleSize = ([...arr], n = 1) => {
+    let m = arr.length;
+    while (m) {
+      const i = Math.floor(Math.random() * m--);
+      [arr[m], arr[i]] = [arr[i], arr[m]];
+    }
+    return arr.slice(0, n);
+  }
