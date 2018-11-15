@@ -9,6 +9,21 @@ export const PERSON = {
     width: 40,
     height: 64,
     speed: 400,
+    setTo: [0.7, 0.85],
+    tweenSettings: {
+        'run': {
+            frames: [8, 9, 10, 11],
+            frameRate: 10
+        },
+        'jump': {
+            frames: [4],
+            frameRate: 1
+        },
+        'stand': {
+            frames: [0],
+            frameRate: 1
+        },
+    }
 }
 
 

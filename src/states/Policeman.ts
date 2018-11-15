@@ -116,7 +116,7 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
                 )
         },
 
-        collidePerson: (policeman)=> {
+        collidePerson: (policeman) => {
             const policemanId = this.getPolicemanPlayerId(policeman)
             let cachedTime = this.collideEnemiesId[policemanId]
             if ((

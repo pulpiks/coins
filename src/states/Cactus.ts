@@ -69,15 +69,15 @@ export interface CactusWatcherProps {
     readonly removeKilledCactuses: () => any
 }
 
-export function CactusWatcher(): CactusWatcherProps {
-    const cactuses = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
+export const CactusWatcher = (game: Phaser.Game): CactusWatcherProps => {
+    const cactuses = game.add.physicsGroup(Phaser.Physics.ARCADE);
     const arrFromCoords = sampleSize(CACTUS_COORDS, Math.floor(Math.random() * CACTUS_COORDS.length))
     const instances: Cactus[] = []    
     arrFromCoords.forEach(() => {
         let instance = new Cactus({
-            game: this.game,
-            x: Math.floor(Math.random() * (this.game.world.width - 100)) + 100,
-            y: this.game.height - 200,
+            game: game,
+            x: Math.floor(Math.random() * (game.world.width - 100)) + 100,
+            y: game.height - 200,
         })
         instances.push(instance)
     
@@ -90,7 +90,7 @@ export function CactusWatcher(): CactusWatcherProps {
         instances,
         update: () => {
             this.cactuses.forEachAlive((cactus: Phaser.Sprite) => {
-                this.game.debug.body(cactus);
+                game.debug.body(cactus);
             }, this);
             this.removeKilledCactuses()
         },

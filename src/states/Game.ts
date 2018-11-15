@@ -155,7 +155,7 @@ export default class Game extends Phaser.State{
 
         this.officials = renderOfficials(this.game)
         this.passers = renderPassers(this.game)
-        this.cactusWatcher = CactusWatcher()
+        this.cactusWatcher = CactusWatcher(this.game)
         this.policemanWatcher = PolicemanManager(this.game)
 
         // this.tween = this.game.add.tween(this.cloudsSprite).to(
@@ -182,7 +182,7 @@ export default class Game extends Phaser.State{
         // this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.overlap(
             this.person.sprite,
-            this.policemanWatcher.getPolicemen(),
+            this.policemanWatcher.getAllSprites(),
             (_: Phaser.Sprite, policeman: Phaser.Sprite) => 
                 this.policemanWatcher.collidePerson(policeman),
             null,
@@ -190,7 +190,7 @@ export default class Game extends Phaser.State{
         )
         this.physics.arcade.collide(
             this.ground, 
-            this.policemanWatcher.getPolicemen()
+            this.policemanWatcher.getAllSprites()
         )
         this.physics.arcade.collide(
             this.person.sprite,

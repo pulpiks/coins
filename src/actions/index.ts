@@ -19,14 +19,10 @@ export function addCactus() {
     }
 }
 
-
-
-
 type AddEnemyAction = {
     readonly playerId: string,
     readonly type: ENEMY_TYPES
 }
-
 
 export function addEnemy(action: AddEnemyAction) {
     return {

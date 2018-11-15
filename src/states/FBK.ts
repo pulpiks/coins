@@ -32,7 +32,7 @@ export default class FBK extends Person {
     private direction: number = 1
     private timer: Phaser.TimerEvent
     private keys: {[key: string]: Phaser.Key}
-    private onThrowCactus: (x: number, y: number, velocityX: number, angularVelocity: number) => void
+    // private onThrowCactus: (x: number, y: number, velocityX: number, angularVelocity: number) => void
     private isEnabledCollision: boolean
     private animationsRunRight: Phaser.Animation
     private animationsJump: Phaser.Animation
@@ -41,7 +41,7 @@ export default class FBK extends Person {
 
     constructor( {
         game, 
-        onThrowCactus 
+        // onThrowCactus 
     }: FBKProps) {
         
         super({
@@ -53,17 +53,15 @@ export default class FBK extends Person {
         
         this.game = game;
         this.time = Date.now();
-        this.onThrowCactus = onThrowCactus;
-
         // this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
 
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
-        this.sprite.scale.setTo(0.7, 0.85);
+        this.sprite.scale.setTo(PERSON.setTo[0], PERSON.setTo[1]);
         this.sprite.anchor.set(0.5, 1);
-        this.animationsRunRight = this.sprite.animations.add('run', [8, 9, 10, 11], 10, true);
-        this.animationsJump = this.sprite.animations.add('jump', [4], 20, true);
-        this.animationsStand = this.sprite.animations.add('stand', [0], 20, true);
+        this.animationsRunRight = this.sprite.animations.add('run', PERSON.tweenSettings.run.frames, PERSON.tweenSettings.run.frameRate, true);
+        this.animationsJump = this.sprite.animations.add('jump', PERSON.tweenSettings.jump.frames, PERSON.tweenSettings.jump.frameRate, true);
+        this.animationsStand = this.sprite.animations.add('stand', PERSON.tweenSettings.stand.frames, PERSON.tweenSettings.stand.frameRate, true);
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = 3000;
         // this.sprite.body.immovable = true;
