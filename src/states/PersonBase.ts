@@ -1,6 +1,6 @@
 import autobind from 'autobind-decorator'
 
-import { POLICEMAN, ENEMY_TYPES } from '../constants/constants'
+import { ENEMY_TYPES } from '../constants/constants'
 import Person from './Person'
 import Enemy from './Enemy'
 

@@ -9,15 +9,16 @@ import {
 } from '../constants/constants'
 
 import { throwCactus, changeMoney, reduceMood } from '../actions'
+import { PubSub } from './Pubsub';
 
 interface FBKProps {
     readonly game: Phaser.Game,
-    readonly onThrowCactus: (
-        x:number, 
-        y:number, 
-        velocityX: number, 
-        angularVelocity: number
-    ) => void
+    // readonly onThrowCactus: (
+    //     x:number, 
+    //     y:number, 
+    //     velocityX: number, 
+    //     angularVelocity: number
+    // ) => void
 }
 
 export default class FBK extends Person {
@@ -59,100 +60,49 @@ export default class FBK extends Person {
         this.sprite.height = PERSON.height;
         this.sprite.scale.setTo(PERSON.setTo[0], PERSON.setTo[1]);
         this.sprite.anchor.set(0.5, 1);
-        this.animationsRunRight = this.sprite.animations.add('run', PERSON.tweenSettings.run.frames, PERSON.tweenSettings.run.frameRate, true);
-        this.animationsJump = this.sprite.animations.add('jump', PERSON.tweenSettings.jump.frames, PERSON.tweenSettings.jump.frameRate, true);
-        this.animationsStand = this.sprite.animations.add('stand', PERSON.tweenSettings.stand.frames, PERSON.tweenSettings.stand.frameRate, true);
+        this.animationsRunRight = this.sprite.animations.add(
+            'run', 
+            PERSON.tweenSettings.run.frames, 
+            PERSON.tweenSettings.run.frameRate, 
+            true
+        );
+        this.animationsJump = this.sprite.animations.add(
+            'jump', 
+            PERSON.tweenSettings.jump.frames, 
+            PERSON.tweenSettings.jump.frameRate, 
+            true
+        );
+        this.animationsStand = this.sprite.animations.add(
+            'stand', 
+            PERSON.tweenSettings.stand.frames, 
+            PERSON.tweenSettings.stand.frameRate, 
+            true
+        );
         this.game.physics.arcade.enable(this.sprite);
         this.sprite.body.gravity.y = 3000;
         // this.sprite.body.immovable = true;
         // this.sprite.body.allowGravity = true; 
 
         this.sprite.animations.play('stand');
-        //
         this.sprite.body.collideWorldBounds = true;
         
+        this.game.camera.follow(this.sprite);
+        this.initiateKeyboardEvents()        
+    }
+
+    initiateKeyboardEvents = () => {
         this.keys = {
             up: this.game.input.keyboard.addKey(Phaser.Keyboard.UP),
             down: this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
             left: this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
             right: this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
-        };
-
-        this.game.camera.follow(this.sprite);
-        this.keys = {
-            ...this.keys,
             a: this.game.input.keyboard.addKey(Phaser.Keyboard.A), //throw
             d: this.game.input.keyboard.addKey(Phaser.Keyboard.D) //delete
-        };
-
+        }
     }
 
     render() {
         this.game.debug.spriteBounds(this.sprite);
-    }
-
-    move() {
-        let cursors = this.keys;
-        let player = this.sprite;
-        let jumpButton = this.keys.up;
-
-        if (!this.isTouchedEnemy) {
-
-            player.body.velocity.x = 0;
-
-            if (jumpButton.isDown && !this.isJumping)
-            {
-                player.animations.play('jump');
-                player.body.velocity.y = -700;
-                this.isJumping = true;
-            }
-
-            if (cursors.left.isDown)
-            {
-                player.body.velocity.x = -200;
-
-                if (this.facing != 'left')
-                {
-                    this.sprite.scale.setTo(-Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-                    player.animations.play('run');
-                    this.facing = 'left';
-                }
-            }
-            else if (cursors.right.isDown)
-            {
-                player.body.velocity.x = 200;
-
-                if (this.facing != 'right')
-                {
-                    this.sprite.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
-                    player.animations.play('run');
-                    this.facing = 'right';
-                }
-            }
-            else
-            {
-                if (this.facing != 'idle')
-                {
-                    player.animations.stop();
-
-                    if (this.facing == 'left')
-                    {
-                        player.frame = 0;
-                    }
-                    else
-                    {
-                        player.frame = 0;
-                    }
-
-                    this.facing = 'idle';
-                }
-            }
-
-            if (this.cactuses.length > 0 && this.keys.a.justDown) {
-                this.cactuses.pop();
-                this.throwCactus();
-            }
-        }
     }
 
     @autobind
@@ -199,20 +149,13 @@ export default class FBK extends Person {
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
 
-    getScale() {
-        return {
-            x: this.sprite.scale.x,
-            y: this.sprite.scale.y
-        }
-    }
-
     update() {
         let cursors = this.keys;
         let player = this.sprite;
         let jumpButton = this.keys.up;
         if (!this.isTouchedEnemy) {
             player.body.velocity.x = 0;
-            if (cursors.left.isDown){
+            if (cursors.left.isDown) {
                 player.body.velocity.x = -200;
 
                 if (this.facing != 'left' || player.body.touching.down || player.body.onFloor())
@@ -221,9 +164,7 @@ export default class FBK extends Person {
                     player.animations.play('run');
                     this.facing = 'left';
                 }
-            }
-            else if (cursors.right.isDown)
-            {
+            } else if (cursors.right.isDown) {
                 player.body.velocity.x = 200;
                 if (this.facing != 'right' || player.body.touching.down || player.body.onFloor())
                 {
@@ -231,9 +172,7 @@ export default class FBK extends Person {
                     player.animations.play('run');
                     this.facing = 'right';
                 }
-            }
-            else
-            {
+            } else {
                 if (this.facing != 'idle')
                 {
                     player.animations.stop();
@@ -278,15 +217,15 @@ export default class FBK extends Person {
         this.isEnabledCollision = false;
     }
 
-    throwCactus() {
+    public throwCactus() {
         store.dispatch(throwCactus());
-
-        this.onThrowCactus(
+        PubSub.publish(
             this.sprite.body.x,
             this.sprite.body.y - this.sprite.body.halfHeight,
             this.direction * 200,
             100
-        );
+        )
+        
     }
 
     @autobind
@@ -303,3 +242,5 @@ export default class FBK extends Person {
         // }
     }
 }
+
+// PubSub.subscribe(FBK.throwCactus)

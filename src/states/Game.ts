@@ -23,7 +23,7 @@ import Person from './Person'
 import FBK from './FBK'
 import Score from './Score'
 import { PolicemanManager, PolicemanManagerProps } from "./Policeman"
-import { CactusWatcher, CactusWatcherProps } from "./Cactus"
+import { CactusHandler, ThrowCactusProps, CactusHanlerProps } from "./Cactus"
 import {HandsHandler} from './Hands'
 
 import {
@@ -56,7 +56,7 @@ export default class Game extends Phaser.State{
     private handsHandler: HandsHandler
     private officials: OfficialProps
     private passers: PassersProps
-    cactusWatcher: CactusWatcherProps
+    cactusHandler: CactusHanlerProps
     policemanWatcher: PolicemanManagerProps
     assetsPath: string = './assets/'
 
@@ -155,7 +155,7 @@ export default class Game extends Phaser.State{
 
         this.officials = renderOfficials(this.game)
         this.passers = renderPassers(this.game)
-        this.cactusWatcher = CactusWatcher(this.game)
+        this.cactusHandler = CactusHandler(this.game)
         this.policemanWatcher = PolicemanManager(this.game)
 
         // this.tween = this.game.add.tween(this.cloudsSprite).to(
@@ -196,15 +196,15 @@ export default class Game extends Phaser.State{
             this.person.sprite,
             this.cactuses,
             (_: Phaser.Sprite, cactus: Phaser.Sprite) => {
-                this.cactusWatcher.collidePersonWithCactus(cactus)
+                this.cactusHandler.collidePersonWithCactus(cactus)
             },
             null,
             this
         )
         this.physics.arcade.collide(
             this.enemies,
-            this.cactusWatcher.throwCactus, 
-            this.cactusWatcher.collidePolicemanWithCactus,
+            this.cactusHandler.thrownCactuses, 
+            this.cactusHandler.collidePolicemanWithCactus,
             null, 
             this
         );
@@ -270,7 +270,7 @@ export default class Game extends Phaser.State{
         this.handsHandler.update(this.person.sprite.centerX)
         this.passers.update()
         this.officials.update()
-        this.cactusWatcher.update()
+        this.cactusHandler.update()
         this.policemanWatcher.update()
     }
 
