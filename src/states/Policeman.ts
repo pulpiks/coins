@@ -1,10 +1,10 @@
 import autobind from 'autobind-decorator';
 
-import { ENEMY_TYPES, TIMEOUT_COLLIDE_POLIMEN_CACTUS, passersConstants, LayersIds } from '../constants/constants';
+import { ENEMY_TYPES, passersConstants, LayersIds } from '../constants/constants';
 import Enemy from './Enemy';
 
 import store from '../store';
-import { collidePersonWithPoliceman } from '../actions';
+import { collidePersonWithPoliceman, removePolicemanFromCollided } from '../actions';
 import { generatorId } from '../utils';
 
 export const POLICEMAN = {
@@ -74,7 +74,6 @@ export interface PolicemanManagerProps {
     readonly update: () => void,
     readonly getPolicemanPlayerId: (sprite: Phaser.Sprite) => void
     readonly collidePerson: (policemanSprite: Phaser.Sprite) => void
-    readonly collideEnemiesId: CollideEnemiesIdProps
     // readonly enemiesObj: EnemyObjProp
     readonly collideCactus: (enemy: Phaser.Sprite) => void
 }
@@ -91,7 +90,6 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
         enemiesObj[policeman.playerId] = policeman
     }
     return {
-        collideEnemiesId: {},
         getAllSprites: function() {
             return Object.values(enemiesObj).map((enemy: Policeman) => enemy.sprite)
         },
@@ -121,18 +119,34 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
         },
 
         collidePerson: function(policeman) {
-            debugger
+            // const collidedPolicemanIds = store.getState().policeman.activeIds
             const policemanId = this.getPolicemanPlayerId(policeman)
-            let cachedTime = this.collideEnemiesId[policemanId]
-            if ((
-                !cachedTime 
-                || Date.now() - cachedTime > TIMEOUT_COLLIDE_POLIMEN_CACTUS
-                ) && !enemiesObj[policemanId].isTouchedByCactus){
-                this.collideEnemiesId[policemanId] = Date.now();
+            // let startTime = collidedPolicemanIds[policemanId].time
+            // if ((!startTime || Date.now() - startTime > TIMEOUT_COLLIDE_POLIMEN_CACTUS) && 
+            // enemiesObj[policemanId].isTouchedByCactus) {
+            //     
+            //     enemiesObj[policemanId]
+            // }
+            // const policemanStore = store.getState().policeman
+            // if (policemanStore.activeIds[policemanId]) {
+            //     return ;
+            // }
+
+
+            const collideBefore = () => {
                 store.dispatch(collidePersonWithPoliceman({
-                    id: policemanId
-                }));
+                    id: policemanId,
+                }))
             }
+
+            const collideAfter = () => {
+                store.dispatch(removePolicemanFromCollided({
+                    id: policemanId,
+                }))
+            }
+
+            enemiesObj[policemanId].collideWithPerson()
+
         },
         collideCactus: function(enemy: Phaser.Sprite) {
             const playerId = this.getPolicemanPlayerId(enemy)

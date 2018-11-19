@@ -9,7 +9,7 @@ type CollidePersonWithPolicemanAction = {
 export function collidePersonWithPoliceman(action: CollidePersonWithPolicemanAction) {
     return {
         type: TYPES.PERSON_POLICEMAN_COLLIDE,
-        id: action.id
+        id: action.id,
     };
 }
 

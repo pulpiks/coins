@@ -46,6 +46,7 @@ export const enum ENEMY_TYPES {
     policeman = 'policeman',
 }
 
+export const DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN = 2000
 // export const ENEMY = {
 //     width: 30,
 //     height: 90,
@@ -122,9 +123,6 @@ export const BUIDING_COORDS: buildingIdsInterface = {
 export const MOOD = {
     step : 10,
 }
-
-export const TIMEOUT_COLLIDE_POLIMEN_CACTUS = 3000
-
 
 export const enum LayersIds {
     person = 'person',

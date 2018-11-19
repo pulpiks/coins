@@ -1,6 +1,7 @@
 import {
     ENEMY_TYPES,
-    PasserConstantOptions
+    PasserConstantOptions,
+    DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN
 } from '../constants/constants';
 
 import Person from './Person';
@@ -42,6 +43,7 @@ export default class Enemy extends Passer{
     tween: Phaser.Tween
     timer: Phaser.TimerEvent
     type: ENEMY_TYPES
+    isCollidedWithPerson: boolean = false
 
     constructor(props: EnemyProps) {
         super(
@@ -110,5 +112,23 @@ export default class Enemy extends Passer{
 
     kill() {
         this.sprite.kill()
+    }
+
+    public collideWithPerson(cbBefore?: () => void, cbAfter?: () => void) {
+        if (!this.isTouchedByCactus && !this.isCollidedWithPerson) {
+            this.isCollidedWithPerson = true
+
+            if (cbBefore) {
+                cbBefore()
+            }
+
+            const timer = this.game.time.events.loop(DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN, () => {
+                this.isCollidedWithPerson = false
+                this.game.time.events.remove(timer);
+                if (cbAfter) {
+                    cbAfter()
+                }
+            }, this)
+        }
     }
 }

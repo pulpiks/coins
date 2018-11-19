@@ -11,18 +11,18 @@ const defaultState = {
 
 type CollideWithPersonAction = {
     type: typeof TYPES.PERSON_POLICEMAN_COLLIDE,
-    id: string
+    id: string,
 }
 
 
 type PolicemanRemoveAction = {
     type: typeof TYPES.PERSON_POLICEMAN_REMOVE,
-    id: string
+    id: string,
 }
 
 type CollideCactusAction = {
     type: typeof TYPES.COLLIDE_POLICEMAN_CACTUS,
-    id: string    
+    id: string,    
 }
 
 type PolicemanAction = CollideWithPersonAction | PolicemanRemoveAction | CollideCactusAction

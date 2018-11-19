@@ -6,7 +6,8 @@ import store from '../store'
 import {
     PERSON,
     ENEMY_TYPES,
-    MOOD
+    MOOD,
+    DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN
 } from '../constants/constants'
 
 import { throwCactus, changeMoney, reduceMood, changeMood } from '../actions'
@@ -24,6 +25,8 @@ interface FBKProps {
 interface CollideEventProps {
     readonly type: ENEMY_TYPES
 }
+
+
 
 export default class FBK extends Person {
     isTouchedEnemy: boolean = false
@@ -124,7 +127,6 @@ export default class FBK extends Person {
                 this.deactivateForTime();
                 break;
             case ENEMY_TYPES.policeman:
-                debugger
                 if (!this.isTouchedEnemy) {
                     this.addDisabledAnimation()
                     this.reduceMood(ENEMY_TYPES.policeman);
@@ -148,7 +150,12 @@ export default class FBK extends Person {
             300, Phaser.Easing.Linear.None, true, 0, 100, false
         );
 
-        this.timer = this.game.time.events.loop(2000, this.finishCollision, this);
+        this.timer = this.game.time.events.loop(
+            DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN, 
+            this.finishCollision, 
+            this
+        )
+
         this.animationsStand.play()
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
@@ -246,5 +253,3 @@ export default class FBK extends Person {
         // }
     }
 }
-
-// PubSub.subscribe(FBK.throwCactus)
