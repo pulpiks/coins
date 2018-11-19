@@ -182,9 +182,13 @@ export default class Game extends Phaser.State{
         // this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.overlap(
             this.person.sprite,
-            this.policemanWatcher.getAllSprites(),
-            (_: Phaser.Sprite, policeman: Phaser.Sprite) => 
-                this.policemanWatcher.collidePerson(policeman),
+            this.policemanWatcher.getAllActivePoliceman(),
+            (_: Phaser.Sprite, policeman: Phaser.Sprite) => {
+                this.policemanWatcher.collidePerson(policeman)
+                this.person.collideWithEnemy({
+                    type: ENEMY_TYPES.policeman
+                })
+            },
             null,
             this
         )

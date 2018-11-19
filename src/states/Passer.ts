@@ -4,11 +4,11 @@ import Person from './Person'
 import store from '../store'
 import { connect } from '../utils/connect';
 import PersonBase from './PersonBase';
-import { LayersIds, passers, PasserConstantType, passersConstants, PasserConstantOptions } from '../constants/constants';
+import { LayersIds, passers, passersConstants, PasserConstantOptions } from '../constants/constants';
 
 
 import '../assets/clerk/clerk.png'
-import { collideOfficial, changeMoney, collidePasser, reduceMood, changeMood } from '../actions';
+import { changeMoney, collidePasser, changeMood } from '../actions';
 import { deepFlatten } from '../utils';
 
 export type COORD = {

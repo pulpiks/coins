@@ -73,7 +73,6 @@ export interface CactusHanlerProps {
 export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
     const cactuses = game.add.physicsGroup(Phaser.Physics.ARCADE);
     const arrFromCoords = isDevelopment ? CACTUS_COORDS : sampleSize(CACTUS_COORDS, Math.floor(Math.random() * CACTUS_COORDS.length))
-    console.log(arrFromCoords, CACTUS_COORDS)
     const instances: Cactus[] = []   
     const thrownCactuses: CactusProp[] = [] 
     arrFromCoords.forEach((coord) => {
@@ -97,6 +96,8 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
         cactus.body.velocity.x = velocityX;
         cactus.body.velocity.y = 0;
         cactus.body.angularVelocity = angularVelocity;
+        cactus.body.allowGravity = true
+        cactus.body.gravity.y = 100
     }
 
     PubSub.subscribe(throwCactus)

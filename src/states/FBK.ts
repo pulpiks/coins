@@ -5,10 +5,11 @@ import store from '../store'
 
 import {
     PERSON,
-    ENEMY_TYPES
+    ENEMY_TYPES,
+    MOOD
 } from '../constants/constants'
 
-import { throwCactus, changeMoney, reduceMood } from '../actions'
+import { throwCactus, changeMoney, reduceMood, changeMood } from '../actions'
 import { PubSub } from './Pubsub';
 
 interface FBKProps {
@@ -19,6 +20,9 @@ interface FBKProps {
     //     velocityX: number, 
     //     angularVelocity: number
     // ) => void
+}
+interface CollideEventProps {
+    readonly type: ENEMY_TYPES
 }
 
 export default class FBK extends Person {
@@ -34,7 +38,6 @@ export default class FBK extends Person {
     private timer: Phaser.TimerEvent
     private keys: {[key: string]: Phaser.Key}
     // private onThrowCactus: (x: number, y: number, velocityX: number, angularVelocity: number) => void
-    private isEnabledCollision: boolean
     private animationsRunRight: Phaser.Animation
     private animationsJump: Phaser.Animation
     private animationsStand: Phaser.Animation
@@ -106,35 +109,35 @@ export default class FBK extends Person {
     }
 
     @autobind
-    collideWithEnemy(
-        enemies: any, 
-        person: Phaser.Sprite, 
-        enemy:Phaser.Sprite
-    ) {
+    collideWithEnemy(collideProps: CollideEventProps) {
         const state = store.getState();
-        switch(state.enemy.type) {
+        switch(collideProps.type) {
             case ENEMY_TYPES.fsb:
-                if (!this.isTouchedEnemy && !enemies[enemy.name].isDisabled) {
+                if (!this.isTouchedEnemy) {
                     state.dispatch(changeMoney(10))
-                    this.addDisabledAnimation();
+                    this.addDisabledAnimation()
                 }
                 break;
             case ENEMY_TYPES.gangster:
             case ENEMY_TYPES.official:
-                if (!this.isEnabledCollision) {
-                    state.dispatch(changeMoney(-10))
-                    this.deactivateForTime();
-                }
+                state.dispatch(changeMoney(-10))
+                this.deactivateForTime();
                 break;
             case ENEMY_TYPES.policeman:
-                this.reduceMood(ENEMY_TYPES.policeman);
-                break;
+                debugger
+                if (!this.isTouchedEnemy) {
+                    this.addDisabledAnimation()
+                    this.reduceMood(ENEMY_TYPES.policeman);
+                    store.dispatch(changeMood({
+                        incr: -MOOD.step
+                    }))
+                    break;
+                }
             default: break;
         }
     }
 
     deactivateForTime() {
-        this.isEnabledCollision = true;
         this.timer = this.game.time.events.loop(2000, this.activate, this);
     }
 
@@ -146,6 +149,7 @@ export default class FBK extends Person {
         );
 
         this.timer = this.game.time.events.loop(2000, this.finishCollision, this);
+        this.animationsStand.play()
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
 
@@ -214,17 +218,17 @@ export default class FBK extends Person {
 
     activate() {
         this.game.time.events.remove(this.timer);
-        this.isEnabledCollision = false;
+        this.isTouchedEnemy = false;
     }
 
     public throwCactus() {
         store.dispatch(throwCactus());
-        PubSub.publish(
-            this.sprite.body.x,
-            this.sprite.body.y - this.sprite.body.halfHeight,
-            this.direction * 200,
-            100
-        )
+        PubSub.publish({
+            x: this.sprite.body.x,
+            y: this.sprite.body.y - this.sprite.body.halfHeight,
+            velocityX: this.direction * 200,
+            angularVelocity: 100
+        })
         
     }
 

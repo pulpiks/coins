@@ -13,6 +13,13 @@ export function collidePersonWithPoliceman(action: CollidePersonWithPolicemanAct
     };
 }
 
+export function removePolicemanFromCollided(action: CollidePersonWithPolicemanAction) {
+    return {
+        type: TYPES.PERSON_POLICEMAN_REMOVE,
+        id: action.id
+    };
+}
+
 export function addCactus() {
     return {
         type: TYPES.ADD_CACTUS

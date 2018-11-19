@@ -70,6 +70,7 @@ export interface PolicemanManagerProps {
     // readonly policemen: typeof Policeman[]
     // readonly create: () => void,
     readonly getAllSprites: () => void,
+    readonly getAllActivePoliceman: () => void,
     readonly update: () => void,
     readonly getPolicemanPlayerId: (sprite: Phaser.Sprite) => void
     readonly collidePerson: (policemanSprite: Phaser.Sprite) => void
@@ -94,6 +95,12 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
         getAllSprites: function() {
             return Object.values(enemiesObj).map((enemy: Policeman) => enemy.sprite)
         },
+        getAllActivePoliceman: function() {
+            return Object
+                .values(enemiesObj)
+                .filter(enemy => !enemy.isTouchedByCactus)
+                .map((enemy: Policeman) => enemy.sprite)
+        },
         update: function() {
             Object.values(enemiesObj).forEach((policeman: Policeman) => {
                 policeman.update()
@@ -114,6 +121,7 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
         },
 
         collidePerson: function(policeman) {
+            debugger
             const policemanId = this.getPolicemanPlayerId(policeman)
             let cachedTime = this.collideEnemiesId[policemanId]
             if ((

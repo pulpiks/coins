@@ -1,4 +1,4 @@
-import { PERSON_POLICEMAN_COLLIDE, CHANGE_MOOD, REDUCE_MOOD } from '../types/types'
+import { CHANGE_MOOD, REDUCE_MOOD } from '../types/types'
 import { MOOD } from '../constants/constants'
 
 interface MoodStore {
@@ -9,9 +9,6 @@ const defaultState = {
     total: 100
 }
 
-type PersonPolicemanCollideAction = {
-    readonly type: typeof PERSON_POLICEMAN_COLLIDE,
-}
 
 type ChangeMoodAction = {
     readonly type: typeof CHANGE_MOOD,
@@ -23,19 +20,15 @@ type ReduceMoodAction = {
     readonly cause: string
 }
 
-type MoodAction = PersonPolicemanCollideAction | ChangeMoodAction | ReduceMoodAction
+type MoodAction = ChangeMoodAction | ReduceMoodAction
 
 export default function (state = defaultState, action: MoodAction) {
     switch(action.type) {
-        case PERSON_POLICEMAN_COLLIDE:
-            let total = state.total - MOOD.step < 0 ? 0 : state.total - MOOD.step;
-            return {
-                total: total < 0 ? 0 : total
-            };
         case CHANGE_MOOD:
+            let total = state.total + action.incr < 0 ? 0 : state.total + action.incr;
             return {
                 ...state,
-                total: state.total + action.incr
+                total: total
             } 
         case REDUCE_MOOD:
             return {

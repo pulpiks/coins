@@ -1,6 +1,3 @@
-import { PERSON_POLICEMAN_COLLIDE } from '../types/types';
-import { ENEMY_TYPES } from '../constants/constants';
-
 const defaultState = {
 };
 
