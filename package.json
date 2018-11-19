@@ -43,6 +43,7 @@
     "@types/lodash.debounce": "^4.0.4",
     "@types/lodash.omit": "^4.5.4",
     "autobind-decorator": "^2.1.0",
+    "dotenv-webpack": "^1.5.7",
     "lodash.debounce": "^4.0.8",
     "lodash.omit": "^4.5.0",
     "phaser-ce": "^2.10.0",

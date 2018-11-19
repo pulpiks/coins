@@ -68,70 +68,67 @@ interface EnemyObjProp {
 }
 export interface PolicemanManagerProps {
     // readonly policemen: typeof Policeman[]
-    readonly create: () => void,
+    // readonly create: () => void,
     readonly getAllSprites: () => void,
     readonly update: () => void,
     readonly getPolicemanPlayerId: (sprite: Phaser.Sprite) => void
     readonly collidePerson: (policemanSprite: Phaser.Sprite) => void
     readonly collideEnemiesId: CollideEnemiesIdProps
-    readonly enemiesObj: EnemyObjProp
+    // readonly enemiesObj: EnemyObjProp
     readonly collideCactus: (enemy: Phaser.Sprite) => void
 }
 
 export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
+    const enemies = game.add.physicsGroup(Phaser.Physics.ARCADE);
+    const enemiesObj: EnemyObjProp = {}
+    for(let i = 0; i < POLICEMAN.count; i++) {
+        let policeman = new Policeman(
+            game
+        )
+        // this.policemen.push(policeman)
+        // this.enemies.add(policeman.sprite)
+        enemiesObj[policeman.playerId] = policeman
+    }
     return {
         collideEnemiesId: {},
-        enemiesObj: {},
-        create: () => {
-            this.enemies = game.add.physicsGroup(Phaser.Physics.ARCADE);
-
-            for(let i = 0; i < POLICEMAN.count; i++) {
-                let policeman = new Policeman(
-                    game
-                )
-                // this.policemen.push(policeman)
-                // this.enemies.add(policeman.sprite)
-                this.enemiesObj[policeman.playerId] = policeman
-            }
+        getAllSprites: function() {
+            return Object.values(enemiesObj).map((enemy: Policeman) => enemy.sprite)
         },
-        getAllSprites: () => {
-            return Object.values(this.enemiesObj).map((enemy: Policeman) => enemy.sprite)
-        },
-        update: () => {
-            Object.values(this.enemiesObj).forEach((policeman: Policeman) => {
+        update: function() {
+            Object.values(enemiesObj).forEach((policeman: Policeman) => {
                 policeman.update()
             })
-            // for (let name in this.enemiesObj) {
-            //     if (this.enemiesObj[name].enemy === null) {
-            //         this.enemiesObj[name] = null;
-            //         delete this.enemiesObj[name];
+            // for (let name in enemiesObj) {
+            //     if (enemiesObj[name].enemy === null) {
+            //         enemiesObj[name] = null;
+            //         delete enemiesObj[name];
             //     }
             // }
         },
-        getPolicemanPlayerId: (sprite) => {
+        getPolicemanPlayerId: function(sprite) {
             return Object
-                .keys(this.enemiesObj)
+                .keys(enemiesObj)
                 .find((playedId: string) => 
-                    this.enemiesObj[playedId].sprite === sprite
+                    enemiesObj[playedId].sprite === sprite
                 )
         },
 
-        collidePerson: (policeman) => {
+        collidePerson: function(policeman) {
             const policemanId = this.getPolicemanPlayerId(policeman)
             let cachedTime = this.collideEnemiesId[policemanId]
             if ((
                 !cachedTime 
                 || Date.now() - cachedTime > TIMEOUT_COLLIDE_POLIMEN_CACTUS
-                ) && !this.enemiesObj[policemanId].isTouchedByCactus){
+                ) && !enemiesObj[policemanId].isTouchedByCactus){
                 this.collideEnemiesId[policemanId] = Date.now();
                 store.dispatch(collidePersonWithPoliceman({
                     id: policemanId
                 }));
             }
         },
-        collideCactus: (enemy: Phaser.Sprite) => {
+        collideCactus: function(enemy: Phaser.Sprite) {
             const playerId = this.getPolicemanPlayerId(enemy)
-            this.enemiesObj[playerId].onCactusCollision()
+            enemiesObj[playerId].onCactusCollision()
         }
     }
 }

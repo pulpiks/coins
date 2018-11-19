@@ -6,9 +6,9 @@ const PubSubFunction = () => {
         subscribe(fn: SubscriberFunction) {
             subscribers.push(fn)    
         },
-        publish(...args: any) {
+        publish(...args : any[]) {
             subscribers.forEach(subscriber => {
-                subscriber.apply(this, ...args)
+                subscriber.call(this,  ...Array.prototype.slice.apply(args) )
             })
         }
     }

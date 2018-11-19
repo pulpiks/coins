@@ -56,3 +56,6 @@ export const sampleSize = ([...arr], n = 1) => {
     }
     return arr.slice(0, n);
   }
+
+
+export const isDevelopment = process.env.DEVELOPMENT === 'true'

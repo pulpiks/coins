@@ -1,8 +1,9 @@
 import autobind from 'autobind-decorator';
 import store from '../store';
 import { addCactus } from '../actions';
-import { sampleSize } from '../utils';
+import { sampleSize, isDevelopment } from '../utils';
 import { PubSub } from './Pubsub';
+
 
 interface CactusProps {
     readonly game: Phaser.Game
@@ -20,7 +21,7 @@ export const CACTUS = {
     height: 30,
 }
 
-const CACTUS_COORDS = [{x: 200, y: 100}, {x: 70, y: 100}, {x: 140, y: 500}, {x: 300, y: 800}]
+const CACTUS_COORDS = [{x: 200, y: 100}, {x: 300, y: 100}, {x: 580, y: 100}, {x: 540, y: 500}, {x: 600, y: 800}]
 
 export class Cactus {
     cactus: Phaser.Sprite
@@ -60,26 +61,26 @@ export interface ThrowCactusProps {
 
 
 export interface CactusHanlerProps {
-    // readonly cactuses: Phaser.Group
+    readonly cactuses: Phaser.Group
     readonly thrownCactuses: CactusProp[] 
     readonly update: () => any
     readonly instances: Cactus[]
     readonly collidePolicemanWithCactus: (cactus: CactusProp)=> any
     readonly collidePersonWithCactus: (cactus: Phaser.Sprite) => any
-    readonly removeKilledCactuses: () => any
 }
 
 
 export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
     const cactuses = game.add.physicsGroup(Phaser.Physics.ARCADE);
-    const arrFromCoords = sampleSize(CACTUS_COORDS, Math.floor(Math.random() * CACTUS_COORDS.length))
+    const arrFromCoords = isDevelopment ? CACTUS_COORDS : sampleSize(CACTUS_COORDS, Math.floor(Math.random() * CACTUS_COORDS.length))
+    console.log(arrFromCoords, CACTUS_COORDS)
     const instances: Cactus[] = []   
     const thrownCactuses: CactusProp[] = [] 
-    arrFromCoords.forEach(() => {
+    arrFromCoords.forEach((coord) => {
         let instance = new Cactus({
             game: game,
-            x: Math.floor(Math.random() * (game.world.width - 100)) + 100,
-            y: game.height - 200,
+            x: coord.x/*Math.floor(Math.random() * (game.world.width - 100)) + 100*/,
+            y: game.height - 50 - coord.y,
         })
         instances.push(instance)
     
@@ -99,17 +100,21 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
     }
 
     PubSub.subscribe(throwCactus)
-
-    return {
+    const methods = {
         instances,
         thrownCactuses,
-        update: () => {
+        cactuses,
+        update: function() {
             cactuses.forEachAlive((cactus: Phaser.Sprite) => {
                 game.debug.body(cactus);
             }, this);
-            this.removeKilledCactuses()
+            cactuses.forEach((cactus: CactusProp) => {
+                if (!cactus.alive && cactus.isKilled){
+                    cactus.destroy();
+                }
+            }, this);
         },
-        collidePolicemanWithCactus: (cactus) => {
+        collidePolicemanWithCactus: function(cactus: CactusProp) {
             thrownCactuses.pop();
             cactus.kill();
             cactus.isKilled = true;
@@ -119,17 +124,11 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
         //     cactus.kill();
         //     cactus.isKilled = true;
         // },
-        collidePersonWithCactus: (cactus: Phaser.Sprite) => {
+        collidePersonWithCactus: function(cactus: Phaser.Sprite) {
             cactus.kill()
             thrownCactuses.push(cactus)
             store.dispatch(addCactus())
         },
-        removeKilledCactuses: () => {
-            cactuses.forEach((cactus: CactusProp) => {
-                if (!cactus.alive && cactus.isKilled){
-                    cactus.destroy();
-                }
-            }, this);
-        },
     }
+    return methods
 }

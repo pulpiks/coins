@@ -194,7 +194,7 @@ export default class Game extends Phaser.State{
         )
         this.physics.arcade.collide(
             this.person.sprite,
-            this.cactuses,
+            this.cactusHandler.cactuses,
             (_: Phaser.Sprite, cactus: Phaser.Sprite) => {
                 this.cactusHandler.collidePersonWithCactus(cactus)
             },

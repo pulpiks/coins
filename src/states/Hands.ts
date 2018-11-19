@@ -128,7 +128,6 @@ export class HandsHandler {
 
         this.hands.forEach((_, i) => {
             const index = handIndexes.find(handIndex => handIndex === i)
-            console.log(index)
             typeof(index)!=='undefined' && index >= 0 ? this.hands[i].changeVisibility(true): this.hands[i].changeVisibility(false)
         })
     }
