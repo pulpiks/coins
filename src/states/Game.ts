@@ -40,6 +40,7 @@ import {
 
 import { OfficialProps, renderOfficials } from './Official'
 import { renderPassers, PassersProps } from './Passer';
+import { isDevelopment } from '../utils';
 
 export default class Game extends Phaser.State{
     private map: Phaser.Tilemap
@@ -184,10 +185,12 @@ export default class Game extends Phaser.State{
             this.person.sprite,
             this.policemanWatcher.getAllActivePoliceman(),
             (_: Phaser.Sprite, policeman: Phaser.Sprite) => {
-                this.policemanWatcher.collidePerson(policeman)
-                this.person.collideWithEnemy({
-                    type: ENEMY_TYPES.policeman
-                })
+                if (!isDevelopment) {
+                    this.policemanWatcher.collidePerson(policeman)
+                    this.person.collideWithEnemy({
+                        type: ENEMY_TYPES.policeman
+                    })
+                }
             },
             null,
             this
@@ -206,9 +209,12 @@ export default class Game extends Phaser.State{
             this
         )
         this.physics.arcade.collide(
-            this.enemies,
+            this.policemanWatcher.getAllSprites(),
             this.cactusHandler.thrownCactuses, 
-            this.cactusHandler.collidePolicemanWithCactus,
+            (policeman: Phaser.Sprite, cactus: Phaser.Sprite) => {
+                this.policemanWatcher.collideCactus(policeman)
+                this.cactusHandler.collidePolicemanWithCactus(cactus)
+            },
             null, 
             this
         );

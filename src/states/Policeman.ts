@@ -10,8 +10,8 @@ import { generatorId } from '../utils';
 export const POLICEMAN = {
     width: 100,
     height: 70,
-    rangeX: [100, 1500],
-    count: 5,
+    rangeX: [700, 1500],
+    count: 2,
     speed_min: 1,
     speed_max: 40,
     time_threshold: 3000,
@@ -148,8 +148,8 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
             enemiesObj[policemanId].collideWithPerson()
 
         },
-        collideCactus: function(enemy: Phaser.Sprite) {
-            const playerId = this.getPolicemanPlayerId(enemy)
+        collideCactus: function(policemanSprite: Phaser.Sprite) {
+            const playerId = this.getPolicemanPlayerId(policemanSprite)
             enemiesObj[playerId].onCactusCollision()
         }
     }

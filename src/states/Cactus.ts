@@ -116,6 +116,7 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
             }, this);
         },
         collidePolicemanWithCactus: function(cactus: CactusProp) {
+            debugger
             thrownCactuses.pop();
             cactus.kill();
             cactus.isKilled = true;
