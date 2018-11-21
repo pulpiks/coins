@@ -10,7 +10,7 @@ import { generatorId } from '../utils';
 export const POLICEMAN = {
     width: 100,
     height: 70,
-    rangeX: [700, 1500],
+    rangeX: [2000, 5000],
     count: 2,
     speed_min: 1,
     speed_max: 40,
@@ -76,6 +76,7 @@ export interface PolicemanManagerProps {
     readonly collidePerson: (policemanSprite: Phaser.Sprite) => void
     // readonly enemiesObj: EnemyObjProp
     readonly collideCactus: (enemy: Phaser.Sprite) => void
+    readonly collideWithObstacles: (sprite: Phaser.Sprite) => void
 }
 
 export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
@@ -151,6 +152,10 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
         collideCactus: function(policemanSprite: Phaser.Sprite) {
             const playerId = this.getPolicemanPlayerId(policemanSprite)
             enemiesObj[playerId].onCactusCollision()
+        },
+        collideWithObstacles: function(sprite) {
+            const playedId = this.getPolicemanPlayerId(sprite)
+            enemiesObj[playedId].collideWithObstacles()
         }
     }
 }

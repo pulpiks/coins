@@ -76,10 +76,6 @@ export default class Enemy extends Passer{
         super.update()
     }
 
-    collideWithObstacles(enemy: Phaser.Sprite, obstacles: Phaser.Sprite) {
-        // this.enemiesObj[enemy.name].body.velocity.y = -400;
-    }
-
     onCactusCollision() {
         switch(this.type) {
             case ENEMY_TYPES.policeman:

@@ -39,9 +39,10 @@ export default function (state: ScoreStore = defaultState, action: Action) {
                 cactuses: state.cactuses + action.diff
             }
         case TYPES.UPDATE_MONEY:
+            const money = state.money + action.amount
             return {
                 ...state,
-                money: state.money + action.amount
+                money: money < 0 ? 0 : money
             }
         case TYPES.ADD_CACTUS:
             return {

@@ -80,4 +80,8 @@ export default class PersonBase extends Person{
             }
         }
     }
+
+    public collideWithObstacles() {
+        this.sprite.body.velocity.y *= -1
+    }
 }

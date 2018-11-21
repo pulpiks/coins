@@ -186,7 +186,9 @@ export default class Game extends Phaser.State{
 
     update() {
         this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
-        // this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
+        this.physics.arcade.collide(this.policemanWatcher.getAllSprites(), this.obstacles, (sprite: Phaser.Sprite) => {
+            this.policemanWatcher.collideWithObstacles(sprite)
+        }, null, this);
         this.physics.arcade.overlap(
             this.person.sprite,
             this.policemanWatcher.getAllActivePoliceman(),
@@ -301,11 +303,6 @@ export default class Game extends Phaser.State{
     render() {
         this.person.render()
     }
-
-    // collisionEnemyObstacles(enemy: Phaser.Sprite, obstacle: Phaser.Sprite) {
-    //     this.enemiesObj[enemy.name].collideWithObstacles(enemy, obstacle);
-    // }
-
 
     meetCrowd(person: Phaser.Sprite, crowd: Phaser.Sprite) {
         this.game.state.start('Finish', true, false);
