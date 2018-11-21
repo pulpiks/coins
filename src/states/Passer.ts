@@ -119,7 +119,7 @@ export const renderPassers = (game: Phaser.Game): PassersProps => {
             const state = store.getState()
             if (state.passers.collided.indexOf(instance.key) < 0) {
                 store.dispatch(collidePasser(instance.key))
-                store.dispatch(changeMoney(AMOUNT_FUNDRISING))
+                store.dispatch(changeMoney(-AMOUNT_FUNDRISING))
 
                 const numberCollided = state.passers.collided.length
                 if (numberCollided % MOOD_DEVIDER_COLLIDED_PASSERS === 0) {

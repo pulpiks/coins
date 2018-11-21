@@ -1,0 +1,13 @@
+{ "columns":23,
+ "image":"obstacles.png",
+ "imageheight":57,
+ "imagewidth":375,
+ "margin":0,
+ "name":"obstacles",
+ "spacing":0,
+ "tilecount":69,
+ "tileheight":16,
+ "tilewidth":16,
+ "transparentcolor":"#ff00ff",
+ "type":"tileset"
+}

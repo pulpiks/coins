@@ -56,7 +56,7 @@ export class Official extends PersonBase {
         super({
             game: game,
             x: game.rnd.between(100, coord.x),
-            y: game.world.height - 50,
+            y: game.world.height - 48,
             key: key,
             speed: speed,
             time_threshold: TIME_THRESHOLD,

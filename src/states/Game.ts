@@ -1,11 +1,10 @@
 import autobind from 'autobind-decorator'
 import debounce from 'lodash.debounce'
-import Phaser from 'phaser-ce'
+import Phaser, { TilemapLayer } from 'phaser-ce'
 
 import '../assets/player.png'
 import '../assets/hands/raised_hands.png'
 import '../assets/one-coin.png'
-import '../assets/enemy.png'
 import '../assets/ground.png'
 import '../assets/cactuses.png'
 import '../assets/clouds/clouds.png'
@@ -14,6 +13,9 @@ import '../assets/passers/kindpasser.png'
 import '../assets/passers/kindpasser_green.png'
 import '../assets/passers/pupil.png'
 import '../assets/passers/sentsov.png'
+import '../assets/super_mario.png'
+import '../assets/obstacles.png'
+import '../assets/test_level1.json'
 
 
 import store from '../store'
@@ -45,13 +47,12 @@ import { isDevelopment } from '../utils';
 export default class Game extends Phaser.State{
     private map: Phaser.Tilemap
     private obstacles: Phaser.TilemapLayer
-    private enemies: Phaser.Group
     private person: FBK
     private cactuses: Phaser.Group
     private crowd: Phaser.TilemapLayer
     private ground: Phaser.Sprite
     private cloudsSprite: Phaser.TileSprite
-    
+    private backgroundlayer: Phaser.TilemapLayer;
     private listBuidingsSprite: Phaser.Sprite[] = []
     private score: Score
     private handsHandler: HandsHandler
@@ -68,13 +69,13 @@ export default class Game extends Phaser.State{
     preload() {
         this.load.spritesheet(LayersIds.person, `${this.assetsPath}player.png`, 128, 128, 12)
         this.load.image(LayersIds.hands, `${this.assetsPath}raised_hands.png`)
-        // need to change with of person here
-        // this.load.tilemap(LayersIds.tilemap, `${assetsPath}level.json`, null, Phaser.Tilemap.TILED_JSON)
+        this.load.tilemap(LayersIds.tilemap, `${this.assetsPath}test_level1.json`, null, Phaser.Tilemap.TILED_JSON)
         this.load.image(LayersIds.coin, `${this.assetsPath}one-coin.png`)
-        this.load.image(LayersIds.enemy, `${this.assetsPath}enemy.png`)
+        this.load.image(LayersIds.tiles, `${this.assetsPath}super_mario.png`)
         this.load.image(LayersIds.ground, `${this.assetsPath}ground.png`)
         this.load.image(LayersIds.cactus, `${this.assetsPath}cactuses.png`)
         this.load.image(LayersIds.clouds, `${this.assetsPath}clouds.png`)
+        this.load.image(LayersIds.obstacles, `${this.assetsPath}obstacles.png`)
         this.load.spritesheet(LayersIds.policeman, `${this.assetsPath}policeman.png`, 274, 756.5, 8)
         this.load.spritesheet(LayersIds.clerk, `${this.assetsPath}clerk.png`, 721.5, 1105, 8)
         this.loadSpritesPassers()
@@ -125,17 +126,22 @@ export default class Game extends Phaser.State{
         this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
 
 
-        // this.map = this.add.tilemap('tilemap');
-        // this.map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
         this.createClouds();
         this.createGround();
         this.createBuidings();
 
-        // this.obstacles = this.map.createLayer('obstacles');
-
-        // this.physics.arcade.enable(this.obstacles);
-        // this.map.setCollision([15, 23, 16], true, this.obstacles);
-
+        this.map = this.add.tilemap(LayersIds.tilemap);
+        this.backgroundlayer = this.map.createLayer('background')
+        
+        this.map.addTilesetImage('obstacles', LayersIds.obstacles);
+        
+        this.obstacles = this.map.createLayer('obstacles');
+        
+        this.obstacles.anchor.y = 0
+        this.obstacles.anchor.x = 0
+        const collisionPoints = [...Array(96)].map((_, v) => v)
+        this.physics.arcade.enable(this.obstacles);
+        this.map.setCollision(collisionPoints, true, this.obstacles);
         // this.crowd = this.map.createLayer('crowd');
 
         // this.physics.arcade.enable(this.crowd);
@@ -179,7 +185,7 @@ export default class Game extends Phaser.State{
     
 
     update() {
-        // this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
+        this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
         // this.physics.arcade.collide(this.enemies, this.obstacles, this.collisionEnemyObstacles, null, this);
         this.physics.arcade.overlap(
             this.person.sprite,

@@ -54,7 +54,7 @@ export default class FBK extends Person {
         super({
             game: game,
             x: 0,
-            y: game.world.height - 50,
+            y: game.world.height - 48,
             key: 'person'
         });
         

@@ -136,9 +136,15 @@ export const enum LayersIds {
     policeman = 'policeman',
     hands = 'hands',
     clerk = 'clerk',
-    passer = 'passer'
+    passer = 'passer',
+    obstacles = 'obstacles',
 }
 
+
+const TILE = {
+    x: 16,
+    y: 16
+}
 
 export interface PasserConstantOptions {
     setTo: number[]
