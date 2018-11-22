@@ -3,6 +3,7 @@ import store from '../store';
 import { addCactus } from '../actions';
 import { sampleSize, isDevelopment } from '../utils';
 import { PubSub } from './Pubsub';
+import { ground } from '../constants/constants';
 
 
 interface CactusProps {
@@ -79,7 +80,7 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
         let instance = new Cactus({
             game: game,
             x: coord.x/*Math.floor(Math.random() * (game.world.width - 100)) + 100*/,
-            y: game.height - 50 - coord.y,
+            y: game.height - ground.height - coord.y,
         })
         instances.push(instance)
     

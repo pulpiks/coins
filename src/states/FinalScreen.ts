@@ -3,7 +3,7 @@ class FinalScreen {
     back: Phaser.Text;
 
     preload() {
-        this.game.stage.backgroundColor = '#000';
+        this.game.stage.backgroundColor = 'rgba(0, 0, 0, .8)';
     }
 
     create() {

@@ -4,7 +4,7 @@ import Person from './Person'
 import store from '../store'
 import { connect } from '../utils/connect';
 import PersonBase from './PersonBase';
-import { LayersIds, passers, passersConstants, PasserConstantOptions } from '../constants/constants';
+import { LayersIds, passers, passersConstants, PasserConstantOptions, ground, PassersKeys } from '../constants/constants';
 
 
 import '../assets/clerk/clerk.png'
@@ -55,7 +55,7 @@ export class Passer extends PersonBase {
         super({
             game: game,
             x: game.rnd.between(100, coord.x),
-            y: game.world.height - 50,
+            y: game.world.height - ground.height,
             key: key,
             speed: speed,
             time_threshold: time_threshold ? time_threshold : TIME_THRESHOLD,
@@ -86,13 +86,14 @@ export interface PassersProps {
     instances: Passer[],
     update: any,
     collisionWithPerson: (sprite: Phaser.Sprite) => any
+    collideWithObstacles: (sprite: Phaser.Sprite) => any
 }
 
 export const renderPassers = (game: Phaser.Game): PassersProps => {
     // const passerInstances: Passer[] = []
     const passerInstances: Passer[][] = passers.map((passer) => {
         const arr = []
-        if (passer.count > 0) {
+        if (passer.count > 0 && passer.key !== 'pupil') {
             for(let i=0; i<passer.count; i++) {
                 arr.push(new Passer(
                     game, 
@@ -109,6 +110,10 @@ export const renderPassers = (game: Phaser.Game): PassersProps => {
     })
 
     const instances = deepFlatten<any>(passerInstances)
+
+    new CrowdHandler(
+        game
+    )
 
     return {
         sprites: instances.map((p) => p.sprite),
@@ -128,9 +133,58 @@ export const renderPassers = (game: Phaser.Game): PassersProps => {
                     }))
                 }
             }
-            
+        },
+        collideWithObstacles: (sprite) => {
+            const passer = instances.find(p => p.sprite === sprite)
+            passer.collideWithObstacles()
         }
     }
 } 
 
+
+export class CrowdHandler {
+    arr: Passer[]
+    game: Phaser.Game
+    isRendered: boolean = false
+    constructor(game: Phaser.Game) {
+        // const state = store.getState()
+        // this.isRendered =  state.events.renderCrown
+        this.game = game
+        store.subscribe(this.render)     
+    }
+
+    collisionWithPerson(sprite: Phaser.Sprite) {
+        console.log('collide with person')
+    }
+
+    render() {
+        const state = store.getState()
+        
+        if (!state.events.renderCrown || state.event.renderCrown === this.isRendered) {
+            return ;
+        }
+        console.log('render crowd')
+        this.isRendered = state.event.renderCrown  
+        const passerKey: PassersKeys = passers
+            .find(p => p.key === 'pupil')
+        
+        this.arr = []    
+        if (passerKey.count > 0) {
+            for(let i=0; i<passerKey.count; i++) {
+                this.arr.push(new Passer(
+                    this.game, 
+                    {
+                        x: this.game.rnd.between(
+                            this.game.world.width - 300, 
+                            this.game.world.width
+                        )
+                    }, 
+                    PASSER_SPEED, 
+                    `${LayersIds.passer}-${passerKey.key}`,
+                    passersConstants[passerKey.key]
+                ))
+            }
+        }
+    }
+}
 

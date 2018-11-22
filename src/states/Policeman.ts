@@ -69,10 +69,10 @@ interface EnemyObjProp {
 export interface PolicemanManagerProps {
     // readonly policemen: typeof Policeman[]
     // readonly create: () => void,
-    readonly getAllSprites: () => void,
-    readonly getAllActivePoliceman: () => void,
+    readonly getAllSprites: () => Phaser.Sprite[],
+    readonly getAllActivePoliceman: () => Phaser.Sprite[],
     readonly update: () => void,
-    readonly getPolicemanPlayerId: (sprite: Phaser.Sprite) => void
+    readonly getPolicemanPlayerId: (sprite: Phaser.Sprite) => string
     readonly collidePerson: (policemanSprite: Phaser.Sprite) => void
     // readonly enemiesObj: EnemyObjProp
     readonly collideCactus: (enemy: Phaser.Sprite) => void
@@ -149,7 +149,7 @@ export const PolicemanManager = (game: Phaser.Game): PolicemanManagerProps => {
             enemiesObj[policemanId].collideWithPerson()
 
         },
-        collideCactus: function(policemanSprite: Phaser.Sprite) {
+        collideCactus: function(policemanSprite) {
             const playerId = this.getPolicemanPlayerId(policemanSprite)
             enemiesObj[playerId].onCactusCollision()
         },

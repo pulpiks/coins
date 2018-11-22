@@ -32,6 +32,7 @@ export const RANGE = [0, 1000]
 export const backgroundColor = 'rgba(85, 154, 198, 30)'
 export const ground = {
     width: 4000,
+    height: 48
 }
 
 export const ENEMIES = {
@@ -217,12 +218,12 @@ export type passersIdsTypes = keyof typeof passersTypes
 
 
 
-type PassersKeys = {
+export type PassersKeys = {
     readonly key: passersIdsTypes,
     readonly count: number,
-}[]
+}
 
-export const passers: PassersKeys = [
+export const passers: PassersKeys[] = [
     {key: 'usual-1', count: 1}, 
     {key: 'usual-2', count: 1}, 
     {key: 'sentsov', count: 1}, 

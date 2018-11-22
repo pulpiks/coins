@@ -4,7 +4,7 @@ import Person from './Person'
 import store from '../store'
 import { connect } from '../utils/connect';
 import PersonBase from './PersonBase';
-import { LayersIds } from '../constants/constants';
+import { LayersIds, ground } from '../constants/constants';
 
 
 import '../assets/clerk/clerk.png'
@@ -56,7 +56,7 @@ export class Official extends PersonBase {
         super({
             game: game,
             x: game.rnd.between(100, coord.x),
-            y: game.world.height - 48,
+            y: game.world.height - ground.height,
             key: key,
             speed: speed,
             time_threshold: TIME_THRESHOLD,
@@ -87,6 +87,7 @@ export interface OfficialProps {
     instances: Official[],
     update: any,
     collisionWithPerson: (sprite: Phaser.Sprite) => any
+    collideWithObstacles: (sprite: Phaser.Sprite) => any
 }
 
 export const renderOfficials = (game: Phaser.Game): OfficialProps => {
@@ -106,6 +107,10 @@ export const renderOfficials = (game: Phaser.Game): OfficialProps => {
                 store.dispatch(collideOfficial(id))
                 store.dispatch(changeMoney(PENALTY_IN_COLLISION_WITH_OFFICIAL))
             }
+        },
+        collideWithObstacles: function(sprite: Phaser.Sprite) {
+            const official = passers.find(p => p.sprite === sprite)
+            official.collideWithObstacles()
         }
     }
 } 

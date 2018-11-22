@@ -1,3 +1,4 @@
+import once from 'lodash.once'
 import autobind from 'autobind-decorator'
 
 import Person from './Person'
@@ -7,10 +8,11 @@ import {
     PERSON,
     ENEMY_TYPES,
     MOOD,
-    DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN
+    DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN,
+    ground
 } from '../constants/constants'
 
-import { throwCactus, changeMoney, reduceMood, changeMood } from '../actions'
+import { throwCactus, changeMoney, reduceMood, changeMood, renderCrowd } from '../actions'
 import { PubSub } from './Pubsub';
 
 interface FBKProps {
@@ -54,13 +56,12 @@ export default class FBK extends Person {
         super({
             game: game,
             x: 0,
-            y: game.world.height - 48,
+            y: game.world.height - ground.height,
             key: 'person'
         });
         
         this.game = game;
         this.time = Date.now();
-        // this.sprite = this.game.add.sprite(0, this.game.world.height-50, 'person');
 
         this.sprite.width = PERSON.width;
         this.sprite.height = PERSON.height;
@@ -159,11 +160,20 @@ export default class FBK extends Person {
         this.animationsStand.play()
         this.sprite.body.velocity.x = -1 * Math.abs(this.sprite.body.velocity.x);
     }
+    
+    
+    renderCrowd = once(() => {
+        store.dispatch(renderCrowd())
+    })
 
     update() {
         let cursors = this.keys;
         let player = this.sprite;
         let jumpButton = this.keys.up;
+        if (this.sprite.worldPosition.x >= ground.width/2) {
+            debugger
+            this.renderCrowd()
+        }
         if (!this.isTouchedEnemy) {
             player.body.velocity.x = 0;
             if (cursors.left.isDown) {

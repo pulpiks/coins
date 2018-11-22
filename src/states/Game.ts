@@ -96,9 +96,9 @@ export default class Game extends Phaser.State{
     }
 
     createGround() {
-        this.ground = this.game.add.sprite(0, this.game.world.height-50, 'ground')
+        this.ground = this.game.add.sprite(0, this.game.world.height-ground.height, 'ground')
         this.ground.width = ground.width
-        this.ground.height = 50
+        this.ground.height = ground.height
         this.physics.arcade.enable(this.ground)
         this.ground.body.immovable = true
     }
@@ -109,7 +109,7 @@ export default class Game extends Phaser.State{
                 let buildingInfo = BUIDING_COORDS[type]
                 let building = this.game.add.sprite(
                     buildingInfo.position.x, 
-                    this.game.world.height - 50, 
+                    this.game.world.height - ground.height, 
                     'buildings', 
                     `${typesBuiding[type]}`
                 )
@@ -129,19 +129,19 @@ export default class Game extends Phaser.State{
         this.createClouds();
         this.createGround();
         this.createBuidings();
-
+        
         this.map = this.add.tilemap(LayersIds.tilemap);
-        this.backgroundlayer = this.map.createLayer('background')
         
         this.map.addTilesetImage('obstacles', LayersIds.obstacles);
-        
+        this.backgroundlayer = this.map.createLayer('background', ground.width, ground.height)
         this.obstacles = this.map.createLayer('obstacles');
-        
-        this.obstacles.anchor.y = 0
-        this.obstacles.anchor.x = 0
+        this.physics.arcade.enable(this.backgroundlayer);
         const collisionPoints = [...Array(96)].map((_, v) => v)
+        this.backgroundlayer.anchor.setTo(0)    
         this.physics.arcade.enable(this.obstacles);
         this.map.setCollision(collisionPoints, true, this.obstacles);
+        this.map.setCollision([57, 58], true, this.backgroundlayer);
+        this.backgroundlayer.resizeWorld()        
         // this.crowd = this.map.createLayer('crowd');
 
         // this.physics.arcade.enable(this.crowd);
@@ -183,12 +183,39 @@ export default class Game extends Phaser.State{
     }
 
     
-
     update() {
-        this.physics.arcade.collide(this.person.sprite, this.obstacles, null, null, this);
-        this.physics.arcade.collide(this.policemanWatcher.getAllSprites(), this.obstacles, (sprite: Phaser.Sprite) => {
-            this.policemanWatcher.collideWithObstacles(sprite)
-        }, null, this);
+        this.physics.arcade.collide(
+            this.person.sprite, 
+            this.obstacles, 
+            null, 
+            null, 
+            this
+        );
+
+        this.physics.arcade.collide(
+            this.policemanWatcher.getAllSprites(), 
+            this.obstacles, 
+            this.policemanWatcher.collideWithObstacles, 
+            null, 
+            this
+        );
+
+        this.physics.arcade.collide(
+            this.officials.sprites, 
+            this.obstacles, 
+            this.officials.collideWithObstacles, 
+            null, 
+            this
+        );
+
+        this.physics.arcade.collide(
+            this.passers.sprites,
+            this.obstacles,
+            this.passers.collideWithObstacles,
+            null,
+            this
+        )
+
         this.physics.arcade.overlap(
             this.person.sprite,
             this.policemanWatcher.getAllActivePoliceman(),

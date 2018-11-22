@@ -52,6 +52,12 @@ export function changeMoney(amount: number) {
     }        
 }
 
+export function renderCrowd() {
+    return {
+        type: TYPES.RENDER_CROWD
+    }
+}
+
 // export function collidePersonWithEnemy(action) {
 //     return {
 //         type: TYPES.ENEMY_COLLIDE,

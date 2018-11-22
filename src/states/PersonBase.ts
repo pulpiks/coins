@@ -1,6 +1,6 @@
 import autobind from 'autobind-decorator'
 
-import { ENEMY_TYPES } from '../constants/constants'
+import { ENEMY_TYPES, ground } from '../constants/constants'
 import Person from './Person'
 import Enemy from './Enemy'
 
@@ -37,7 +37,7 @@ export default class PersonBase extends Person{
         super({
             game: props.game,
             x: props.x,
-            y: props.game.world.height - 50,
+            y: props.game.world.height - ground.height,
             key: props.key,
         })
         this.game = props.game

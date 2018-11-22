@@ -9,6 +9,7 @@ import mood from '../reducers/mood'
 import score from '../reducers/score'
 import official from '../reducers/official'
 import passers from '../reducers/passer'
+import events from '../reducers/events'
 
 const rootReducer = combineReducers({
     policeman,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     score,
     official,
     passers,
+    events
 });
 
 const store = createStore(
