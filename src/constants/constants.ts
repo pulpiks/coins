@@ -139,6 +139,7 @@ export const enum LayersIds {
     clerk = 'clerk',
     passer = 'passer',
     obstacles = 'obstacles',
+    donation = 'donation'
 }
 
 
@@ -227,7 +228,7 @@ export const passers: PassersKeys[] = [
     {key: 'usual-1', count: 1}, 
     {key: 'usual-2', count: 1}, 
     {key: 'sentsov', count: 1}, 
-    {key: 'pupil', count: 1}
+    {key: 'pupil', count: 10}
 ]
 
 export const FAIL_MSG = {

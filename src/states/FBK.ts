@@ -170,8 +170,7 @@ export default class FBK extends Person {
         let cursors = this.keys;
         let player = this.sprite;
         let jumpButton = this.keys.up;
-        if (this.sprite.worldPosition.x >= ground.width/2) {
-            debugger
+        if (this.sprite.position.x >= ground.width/2) {
             this.renderCrowd()
         }
         if (!this.isTouchedEnemy) {

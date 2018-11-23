@@ -19,5 +19,7 @@ export default function (state = defaultState, action: Action) {
                 ...state,
                 renderCrowd: true 
             }
+        default: 
+            return state    
     }
 }

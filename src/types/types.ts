@@ -23,3 +23,5 @@ export const COLLIDE_PASSER = 'COLLIDE_PASSER'
 export const ADD_ENEMY = 'ADD_ENEMY';
 
 export const RENDER_CROWD = 'RENDER_CROWD'
+
+export const HAPPY_END = 'HAPPY_END'

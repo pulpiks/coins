@@ -111,13 +111,11 @@ export const renderPassers = (game: Phaser.Game): PassersProps => {
 
     const instances = deepFlatten<any>(passerInstances)
 
-    new CrowdHandler(
-        game
-    )
+
 
     return {
         sprites: instances.map((p) => p.sprite),
-        instances,
+        instances: instances,
         update: () => instances.forEach((inst: Passer) => inst.update()),
         collisionWithPerson: (sprite) => {
             const instance = instances.find(p => p.sprite === sprite)
@@ -143,12 +141,13 @@ export const renderPassers = (game: Phaser.Game): PassersProps => {
 
 
 export class CrowdHandler {
-    arr: Passer[]
+    public arr: Passer[] = []
     game: Phaser.Game
     isRendered: boolean = false
+    sprites: Phaser.Sprite[] = []
     constructor(game: Phaser.Game) {
         // const state = store.getState()
-        // this.isRendered =  state.events.renderCrown
+        // this.isRendered =  state.events.renderCrowd
         this.game = game
         store.subscribe(this.render)     
     }
@@ -157,14 +156,19 @@ export class CrowdHandler {
         console.log('collide with person')
     }
 
-    render() {
+    update() {
+        this.arr.forEach((inst) => {
+            inst.update()
+        })  
+    }
+
+    render = () => {
         const state = store.getState()
         
-        if (!state.events.renderCrown || state.event.renderCrown === this.isRendered) {
+        if (!state.events.renderCrowd || state.events.renderCrowd === this.isRendered) {
             return ;
         }
-        console.log('render crowd')
-        this.isRendered = state.event.renderCrown  
+        this.isRendered = state.events.renderCrowd  
         const passerKey: PassersKeys = passers
             .find(p => p.key === 'pupil')
         
@@ -175,7 +179,7 @@ export class CrowdHandler {
                     this.game, 
                     {
                         x: this.game.rnd.between(
-                            this.game.world.width - 300, 
+                            this.game.world.width - 100, 
                             this.game.world.width
                         )
                     }, 
@@ -184,6 +188,8 @@ export class CrowdHandler {
                     passersConstants[passerKey.key]
                 ))
             }
+            
+            this.sprites = this.arr.map((p) => p.sprite)
         }
     }
 }

@@ -14,6 +14,7 @@ import '../assets/passers/kindpasser_green.png'
 import '../assets/passers/pupil.png'
 import '../assets/passers/sentsov.png'
 import '../assets/super_mario.png'
+import '../assets/donation.png'
 import '../assets/obstacles.png'
 import '../assets/test_level1.json'
 
@@ -41,7 +42,7 @@ import {
 } from '../constants/constants'
 
 import { OfficialProps, renderOfficials } from './Official'
-import { renderPassers, PassersProps } from './Passer';
+import { renderPassers, PassersProps, CrowdHandler } from './Passer';
 import { isDevelopment } from '../utils';
 
 export default class Game extends Phaser.State{
@@ -49,7 +50,7 @@ export default class Game extends Phaser.State{
     private obstacles: Phaser.TilemapLayer
     private person: FBK
     private cactuses: Phaser.Group
-    private crowd: Phaser.TilemapLayer
+    private crowd: CrowdHandler
     private ground: Phaser.Sprite
     private cloudsSprite: Phaser.TileSprite
     private backgroundlayer: Phaser.TilemapLayer;
@@ -58,6 +59,7 @@ export default class Game extends Phaser.State{
     private handsHandler: HandsHandler
     private officials: OfficialProps
     private passers: PassersProps
+    donation: Phaser.Group
     cactusHandler: CactusHanlerProps
     policemanWatcher: PolicemanManagerProps
     assetsPath: string = './assets/'
@@ -78,6 +80,7 @@ export default class Game extends Phaser.State{
         this.load.image(LayersIds.obstacles, `${this.assetsPath}obstacles.png`)
         this.load.spritesheet(LayersIds.policeman, `${this.assetsPath}policeman.png`, 274, 756.5, 8)
         this.load.spritesheet(LayersIds.clerk, `${this.assetsPath}clerk.png`, 721.5, 1105, 8)
+        this.load.image(LayersIds.donation, `${this.assetsPath}donation.png`);
         this.loadSpritesPassers()
     }
 
@@ -124,14 +127,10 @@ export default class Game extends Phaser.State{
 
         this.stage.backgroundColor = backgroundColor;
         this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
-
-
         this.createClouds();
         this.createGround();
         this.createBuidings();
-        
         this.map = this.add.tilemap(LayersIds.tilemap);
-        
         this.map.addTilesetImage('obstacles', LayersIds.obstacles);
         this.backgroundlayer = this.map.createLayer('background', ground.width, ground.height)
         this.obstacles = this.map.createLayer('obstacles');
@@ -141,7 +140,7 @@ export default class Game extends Phaser.State{
         this.physics.arcade.enable(this.obstacles);
         this.map.setCollision(collisionPoints, true, this.obstacles);
         this.map.setCollision([57, 58], true, this.backgroundlayer);
-        this.backgroundlayer.resizeWorld()        
+        // this.backgroundlayer.resizeWorld()        
         // this.crowd = this.map.createLayer('crowd');
 
         // this.physics.arcade.enable(this.crowd);
@@ -153,8 +152,14 @@ export default class Game extends Phaser.State{
         this.person = new FBK({
             game: this.game
         });
-    
-        // this.map.createFromObjects('cactuses', 'cactus', 'tilescactus', 0, true, false, this.cactuses);
+        
+        this.donation = this.game.add.group();
+        this.map.createFromObjects('finalpoints', 'point', LayersIds.donation, 0, true, false, this.donation);
+
+        this.donation.forEach((cactus: Phaser.Sprite) => {
+            cactus.width = 50
+            cactus.height = 50
+        }, this);
 
         this.score = new Score({
             game: this.game,
@@ -164,6 +169,10 @@ export default class Game extends Phaser.State{
         this.passers = renderPassers(this.game)
         this.cactusHandler = CactusHandler(this.game)
         this.policemanWatcher = PolicemanManager(this.game)
+
+        this.crowd = new CrowdHandler(
+            this.game
+        )
 
         // this.tween = this.game.add.tween(this.cloudsSprite).to(
         //     {},
@@ -184,36 +193,43 @@ export default class Game extends Phaser.State{
 
     
     update() {
-        this.physics.arcade.collide(
-            this.person.sprite, 
-            this.obstacles, 
-            null, 
-            null, 
-            this
-        );
+        // this.physics.arcade.collide(
+        //     this.person.sprite, 
+        //     this.obstacles, 
+        //     null, 
+        //     null, 
+        //     this
+        // );
 
-        this.physics.arcade.collide(
-            this.policemanWatcher.getAllSprites(), 
-            this.obstacles, 
-            this.policemanWatcher.collideWithObstacles, 
-            null, 
-            this
-        );
+        // this.physics.arcade.collide(
+        //     this.policemanWatcher.getAllSprites(), 
+        //     this.obstacles, 
+        //     this.policemanWatcher.collideWithObstacles, 
+        //     null, 
+        //     this
+        // );
 
-        this.physics.arcade.collide(
-            this.officials.sprites, 
-            this.obstacles, 
-            this.officials.collideWithObstacles, 
-            null, 
-            this
-        );
+        // this.physics.arcade.collide(
+        //     this.officials.sprites, 
+        //     this.obstacles, 
+        //     this.officials.collideWithObstacles, 
+        //     null, 
+        //     this
+        // );
 
+        // this.physics.arcade.collide(
+        //     this.passers.sprites,
+        //     this.obstacles,
+        //     this.passers.collideWithObstacles,
+        //     null,
+        //     this
+        // )
         this.physics.arcade.collide(
-            this.passers.sprites,
-            this.obstacles,
-            this.passers.collideWithObstacles,
-            null,
-            this
+            this.ground, 
+            this.person.sprite,
+            () => {
+                this.person.collideFinalPoints()
+            }
         )
 
         this.physics.arcade.overlap(
@@ -287,6 +303,12 @@ export default class Game extends Phaser.State{
             this.officials.sprites
         )
 
+        this.physics.arcade.collide(
+            this.ground,
+            this.crowd.sprites
+        )
+
+
         this.physics.arcade.overlap(
             this.person.sprite,
             this.handsHandler.getHandsSprite(),
@@ -317,6 +339,7 @@ export default class Game extends Phaser.State{
         this.officials.update()
         this.cactusHandler.update()
         this.policemanWatcher.update()
+        this.crowd.update()
     }
 
     collideWithOfficials(person: Phaser.Sprite, official: Phaser.Sprite) {
@@ -333,5 +356,9 @@ export default class Game extends Phaser.State{
 
     meetCrowd(person: Phaser.Sprite, crowd: Phaser.Sprite) {
         this.game.state.start('Finish', true, false);
+    }
+
+    collideFinal() {
+        store.dispatch()
     }
 }
