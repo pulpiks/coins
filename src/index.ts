@@ -14,7 +14,7 @@
 
 // (window as WindowPhaser).Phaser = Phaser
 
-import Boot from './states/Boot'
+import PreBoot from './states/Boot'
 import Game from './states/Game'
 import FinalScreen from './states/FinalScreen'
 
@@ -23,6 +23,7 @@ import { rgResizeBody } from './utils/sizes'
 import {
     STATES,
 } from './constants/constants'
+// import {MenuWrapper} from './states/Menu';
 
 
 const getSizes = (className: string) => {
@@ -42,10 +43,10 @@ const initGame = () => {
         renderer: Phaser.CANVAS
     })
 
-    this.game.state.add(STATES.Boot, Boot)
+    this.game.state.add(STATES.PreBoot, PreBoot)
     this.game.state.add(STATES.Game, Game)
     this.game.state.add(STATES.Finish, FinalScreen)
-    this.game.state.start(STATES.Finish)
+    this.game.state.start(STATES.PreBoot)
 }
 
 window.onload = initGame

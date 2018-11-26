@@ -62,7 +62,11 @@ export const DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN = 2000
 export const enum STATES {
     Game = 'Game',
     Finish = 'Finish',
+    PreBoot = 'PreBoot',
     Boot = 'Boot',
+    Preload = 'Preload',
+    Help = 'Help',
+    Menu = 'Menu',
 }
 
 
@@ -141,6 +145,7 @@ export const enum LayersIds {
     obstacles = 'obstacles',
     donation = 'donation',
     mood = 'mood',
+    loading = 'loading'
 }
 
 

@@ -59,3 +59,12 @@ export const sampleSize = ([...arr], n = 1) => {
 
 
 export const isDevelopment = process.env.DEVELOPMENT === 'true'
+
+
+export const utils = {
+    centerGameObjects: function (objects: any[]) {
+      objects.forEach(function (object) {
+        object.anchor.setTo(0.5);
+      })
+    }
+};

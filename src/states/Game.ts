@@ -58,7 +58,7 @@ export default class Game extends Phaser.State{
     }
 
     createClouds() {
-        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width*3000, 300, 'clouds', 0)
+        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width * 3000, 300, 'clouds', 0)
         this.cloudsSprite.scale.set(1.1, 0.8)
         this.cloudsSprite.smoothed = true;
         this.cloudsSprite.autoScroll(-5, 0);
