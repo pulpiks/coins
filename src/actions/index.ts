@@ -98,6 +98,13 @@ export function gameOver(action: GameOverAction) {
     }
 }
 
+
+export function gameEnd() {
+    return {
+        type: TYPES.HAPPY_END
+    }
+}
+
 export function collideOfficial(id: number) {
    return {
        type: TYPES.COLLIDE_OFFICIAL,

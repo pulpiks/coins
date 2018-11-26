@@ -45,8 +45,7 @@ const initGame = () => {
     this.game.state.add(STATES.Boot, Boot)
     this.game.state.add(STATES.Game, Game)
     this.game.state.add(STATES.Finish, FinalScreen)
-
-    this.game.state.start(STATES.Boot)
+    this.game.state.start(STATES.Finish)
 }
 
 window.onload = initGame

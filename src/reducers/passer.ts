@@ -1,11 +1,11 @@
 import { ENEMY_TYPES } from '../constants/constants'
 import { COLLIDE_PASSER } from '../types/types'
 
-interface State {
+export interface PasserState {
     collided: number[]
 }
 
-const defaultState: State = {
+const defaultState: PasserState = {
     collided: []
 }
 
@@ -17,7 +17,7 @@ type ActionCollide = {
 type Action = ActionCollide
 // XXX maybe this file need to be removed
 
-export default function (state: State = defaultState, action: Action) {
+export default function (state = defaultState, action: Action) {
     switch(action.type) {
         case COLLIDE_PASSER:
             return {

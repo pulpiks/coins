@@ -1,7 +1,7 @@
 import * as TYPES from '../types/types'
 import { COINS } from '../constants/constants'
 
-export interface ScoreStore {
+export interface ScoreState {
    readonly cactuses: number,
    readonly money: number 
 }
@@ -31,7 +31,7 @@ type ThrowCactus = {
 
 type Action = UpdateScore | UpdateMoney | AddCactus | ThrowCactus
 
-export default function (state: ScoreStore = defaultState, action: Action) {
+export default function (state: ScoreState = defaultState, action: Action) {
     switch(action.type) {
         case TYPES.UPDATE_SCORE:
             return {

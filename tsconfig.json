@@ -21,7 +21,6 @@
     "preserveConstEnums": true,
     "allowJs": true,
     "esModuleInterop": true,
-    "noEmitOnError": true,
   },
   "files": [
     "node_modules/phaser-ce/typescript/phaser.d.ts",

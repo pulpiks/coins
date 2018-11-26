@@ -1,5 +1,9 @@
 import { RENDER_CROWD } from "../types/types";
 
+export interface EventsState {
+    readonly renderCrowd: boolean
+}
+
 const defaultState = {
     renderCrowd: false
 };
@@ -12,7 +16,7 @@ type Action = RenderCrowdAction
 
 // XXX maybe this file need to be removed
 
-export default function (state = defaultState, action: Action) {
+export default function (state: EventsState = defaultState, action: Action) {
     switch(action.type) {
         case RENDER_CROWD: 
             return {

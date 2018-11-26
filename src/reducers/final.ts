@@ -1,6 +1,6 @@
-import { GAME_OVER } from '../types/types'
+import { GAME_OVER, HAPPY_END } from '../types/types'
 
-interface FinalState {}
+export interface FinalState {}
 
 const defaultState = {}
 
@@ -9,15 +9,24 @@ type GameOverAction = {
     readonly msg: string,
 }
 
-type Action = GameOverAction
+type HappyEndAction = {
+    readonly type: typeof HAPPY_END,
+}
 
-export default function final(state: FinalState = defaultState, action: Action) {
+type Action = GameOverAction | HappyEndAction
+
+export default function statusGame(state: FinalState = defaultState, action: Action) {
     switch(action.type) {
         case GAME_OVER: 
             return {
                 ...state,
                 status: 'fail',
                 msg: action.msg,
+            }
+        case HAPPY_END:
+            return {
+                ...state,
+                status: 'end'
             }
         default: return state    
     }

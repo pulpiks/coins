@@ -9,10 +9,11 @@ import {
     ENEMY_TYPES,
     MOOD,
     DEACTIVATE_TIME_FOR_COLLIDE_PERSON_POLICEMAN,
-    ground
+    ground,
+    STATES
 } from '../constants/constants'
 
-import { throwCactus, changeMoney, reduceMood, changeMood, renderCrowd } from '../actions'
+import { throwCactus, changeMoney, reduceMood, changeMood, renderCrowd, gameEnd } from '../actions'
 import { PubSub } from './Pubsub';
 
 interface FBKProps {
@@ -261,4 +262,9 @@ export default class FBK extends Person {
         //     this.sprite.body.gravity.y = 0;
         // }
     }
+
+    public collideFinalPoints = once(() => {
+        store.dispatch(gameEnd())
+        this.game.state.start(STATES.Finish)
+    })
 }

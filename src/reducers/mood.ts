@@ -1,7 +1,7 @@
 import { CHANGE_MOOD, REDUCE_MOOD } from '../types/types'
 import { MOOD } from '../constants/constants'
 
-interface MoodStore {
+export interface MoodState {
     readonly total: number
 }
 
@@ -22,13 +22,13 @@ type ReduceMoodAction = {
 
 type MoodAction = ChangeMoodAction | ReduceMoodAction
 
-export default function (state = defaultState, action: MoodAction) {
+export default function (state: MoodState = defaultState, action: MoodAction) {
     switch(action.type) {
         case CHANGE_MOOD:
             let total = state.total + action.incr < 0 ? 0 : state.total + action.incr;
             return {
                 ...state,
-                total: total
+                total
             } 
         case REDUCE_MOOD:
             return {

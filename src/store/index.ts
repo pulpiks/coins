@@ -3,22 +3,35 @@ import {
     combineReducers
 } from 'redux'
 
-import policeman from '../reducers/policeman'
-import enemy from '../reducers/enemy'
-import mood from '../reducers/mood'
-import score from '../reducers/score'
-import official from '../reducers/official'
-import passers from '../reducers/passer'
-import events from '../reducers/events'
+import policeman, { PolicemanState } from '../reducers/policeman'
+import enemy, { EnemyState } from '../reducers/enemy'
+import mood, { MoodState } from '../reducers/mood'
+import score, { ScoreState } from '../reducers/score'
+import official, { OfficialState } from '../reducers/official'
+import passers, { PasserState } from '../reducers/passer'
+import events, { EventsState } from '../reducers/events'
+import statusGame, { FinalState } from '../reducers/final'
 
-const rootReducer = combineReducers({
+export interface State {
+    readonly policeman: PolicemanState,
+    readonly enemy: EnemyState,
+    readonly mood: MoodState,
+    readonly score: ScoreState,
+    readonly official: OfficialState,
+    readonly passers: PasserState,
+    readonly events: EventsState,
+    readonly statusGame: FinalState,
+}
+
+const rootReducer = combineReducers<State>({
     policeman,
     enemy,
     mood,
     score,
     official,
     passers,
-    events
+    events,
+    statusGame,
 });
 
 const store = createStore(

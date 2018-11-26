@@ -1,7 +1,7 @@
 import omit from 'lodash.omit'
 import * as TYPES from '../types/types'
 
-interface PolicemanStore {
+export interface PolicemanState {
     readonly activeIds: {[k: string]: boolean}
 }
 
@@ -27,7 +27,7 @@ type CollideCactusAction = {
 
 type PolicemanAction = CollideWithPersonAction | PolicemanRemoveAction | CollideCactusAction
 
-export default function (state: PolicemanStore = defaultState, action: PolicemanAction) {
+export default function (state: PolicemanState = defaultState, action: PolicemanAction) {
     switch(action.type) {
         case TYPES.PERSON_POLICEMAN_COLLIDE:
             return {

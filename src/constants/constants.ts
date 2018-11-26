@@ -139,7 +139,8 @@ export const enum LayersIds {
     clerk = 'clerk',
     passer = 'passer',
     obstacles = 'obstacles',
-    donation = 'donation'
+    donation = 'donation',
+    mood = 'mood',
 }
 
 

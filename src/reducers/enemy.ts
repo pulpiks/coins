@@ -1,7 +1,7 @@
 import { ADD_ENEMY } from '../types/types';
 import { ENEMY_TYPES } from '../constants/constants';
 
-interface State {
+export interface EnemyState {
     enemies: {
         [k in string]: string[]
     }
@@ -23,7 +23,7 @@ type Action = AddActionType
 
 // XXX maybe this file need to be removed
 
-export default function (state: State = defaultState, action: Action) {
+export default function (state: EnemyState = defaultState, action: Action) {
     switch(action.type) {
         case ADD_ENEMY:
             const enemies = {...state.enemies}
