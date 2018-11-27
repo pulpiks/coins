@@ -3,6 +3,7 @@ import { COINS, LayersIds } from "../constants/constants";
 import { isDevelopment } from "../utils";
 
 import '../assets/smiles.png'
+import '../assets/menu_bg.png'
 
 class FinalScreen {
     game: Phaser.Game;
@@ -16,6 +17,7 @@ class FinalScreen {
         this.game.stage.backgroundColor = 'rgb(65, 75, 122)'
         this.game.load.spritesheet(LayersIds.mood, `${this.assetsPath}smiles.png`, 203.2, 204, 5)
         this.game.load.image(LayersIds.coin, `${this.assetsPath}one-coin.png`)
+        this.game.load.image('background',`${this.assetsPath}menu_bg.png`);
     }
 
     createCharacteristics() {
@@ -51,6 +53,7 @@ class FinalScreen {
     }
 
     create() {
+        this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
         this.state = store.getState()
 
         const statusGame = this.state.statusGame

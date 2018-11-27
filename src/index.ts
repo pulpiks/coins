@@ -24,6 +24,7 @@ import {
     STATES,
 } from './constants/constants'
 import { mainMenu, Menu, MenuWrapper } from './states/Menu';
+import Help from './states/Help';
 // import {MenuWrapper} from './states/Menu';
 
 
@@ -48,6 +49,7 @@ const initGame = () => {
     this.game.state.add(STATES.Game, Game)
     this.game.state.add(STATES.Finish, FinalScreen)
     this.game.state.add(STATES.Menu, MenuWrapper)
+    this.game.state.add(STATES.Help, Help)
     this.game.state.start(STATES.PreBoot)
 }
 
