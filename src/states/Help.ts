@@ -33,7 +33,7 @@ class Help extends Phaser.State{
             }, 
             {
                 image: this.game.make.sprite(0, 0, LayersIds.cactus), 
-                text: 'item for the protection player against cops',
+                text: 'PRESS "A" to throw a cactus. This item used for protection player against cops',
                 options: {
                     image: {
                         width: 40,

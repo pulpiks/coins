@@ -51,6 +51,7 @@ class Boot extends Phaser.State {
     }
 
     preload () {
+        this.game.stage.backgroundColor = '#000';
         this.loadingBar = this.add.sprite(this.world.centerX, 100, LayersIds.loading);
         this.logo       = this.add.sprite(this.world.centerX, 200, LayersIds.cactus);
         this.status     = this.add.text(this.world.centerX, 380, 'Loading...', {fill: 'white'});

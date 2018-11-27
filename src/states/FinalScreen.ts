@@ -1,5 +1,5 @@
 import store, { State } from "../store";
-import { COINS, LayersIds } from "../constants/constants";
+import { COINS, LayersIds, STATES } from "../constants/constants";
 import { isDevelopment } from "../utils";
 
 import '../assets/smiles.png'
@@ -12,6 +12,7 @@ class FinalScreen {
     assetsPath: string = './assets/'
     heading: Phaser.Text
     backWrapper: Phaser.Graphics
+    bg: Phaser.TileSprite
 
     preload() {
         this.game.stage.backgroundColor = 'rgb(65, 75, 122)'
@@ -53,26 +54,28 @@ class FinalScreen {
     }
 
     create() {
-        this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+        this.bg = this.game.add.tileSprite(0, 0, this.game.width * 3000, this.game.height * 100, 'background');
+        this.bg.scale.set(0.3, 0.3)
+        this.bg.smoothed = true;
+        this.bg.alpha = 0.2
         this.state = store.getState()
-
-        const statusGame = this.state.statusGame
+        const statusGame = this.state.statusGame.status || 'end'
 
         let title = ''
         let description = ''
         let template = ''
-
         switch(statusGame) {
             case "fail":
                 title = 'Game Over, Man!'
-                description = 'You should try again, the most important thing is not to give up and defeat the damned corrupt! Good luck!'
+                description = 'You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!'
+                break;
             case "end":
                 title = 'Congratulations!'
                 description = 'That was hard but you did it!'
+                break;
             default: 
                 return ;        
         }
-
         const bar = this.game.add.graphics()
         bar.beginFill(0x000000, 0.2)
         bar.drawRect(0, 100, this.game.width, 100)
@@ -237,7 +240,7 @@ class FinalScreen {
     handleClickBack() {
         if (this.backWrapper.getBounds().contains(this.game.input.x, this.game.input.y)) {
             this.game.input.onDown.remove(this.handleClickBack, this);
-            this.game.state.start('Boot', true, false);
+            this.game.state.start(STATES.PreBoot, true, false);
             return true;
         }
     }

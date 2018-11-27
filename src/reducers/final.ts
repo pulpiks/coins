@@ -1,8 +1,12 @@
 import { GAME_OVER, HAPPY_END } from '../types/types'
 
-export interface FinalState {}
+export interface FinalState {
+    readonly [k: string]: string
+}
 
-const defaultState = {}
+const defaultState = {
+    status: 'fail'
+}
 
 type GameOverAction = {
     readonly type: typeof GAME_OVER,

@@ -64,10 +64,12 @@ export default class FBK extends Person {
         this.game = game;
         this.time = Date.now();
 
-        this.sprite.width = PERSON.width;
-        this.sprite.height = PERSON.height;
+        // this.sprite.width = PERSON.width;
+        // this.sprite.height = PERSON.height;
+        // 
+        this.sprite.body.setSize(PERSON.width, PERSON.height, 44, 29)
         this.sprite.scale.setTo(PERSON.setTo[0], PERSON.setTo[1]);
-        this.sprite.anchor.set(0.5, 1);
+        this.sprite.anchor.set(0.5, 0);
         this.animationsRunRight = this.sprite.animations.add(
             'run', 
             PERSON.tweenSettings.run.frames, 
@@ -110,7 +112,7 @@ export default class FBK extends Person {
     }
 
     render() {
-        this.game.debug.spriteBounds(this.sprite);
+        this.game.debug.body(this.sprite);
     }
 
     @autobind
