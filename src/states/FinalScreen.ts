@@ -54,22 +54,23 @@ class FinalScreen {
     }
 
     create() {
-        this.bg = this.game.add.tileSprite(0, 0, this.game.width * 3000, this.game.height * 100, 'background');
+        this.game.world.setBounds(0, 0, this.game.width, this.game.height);
+        this.bg = this.game.add.tileSprite(0, 0, this.game.world.width * 2, this.game.world.height * 5, 'background');
         this.bg.scale.set(0.3, 0.3)
         this.bg.smoothed = true;
         this.bg.alpha = 0.2
         this.state = store.getState()
-        const statusGame = this.state.statusGame.status || 'end'
+        const statusGame = this.state.statusGame.status
 
         let title = ''
         let description = ''
-        let template = ''
         switch(statusGame) {
             case "fail":
                 title = 'Game Over, Man!'
                 description = 'You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!'
                 break;
             case "end":
+                debugger
                 title = 'Congratulations!'
                 description = 'That was hard but you did it!'
                 break;
@@ -100,9 +101,8 @@ class FinalScreen {
             
         this.heading.setTextBounds(0, 100, this.game.width, 100);    
 
-
         const descriptionElement = this.game.add.text(
-            this.game.world.centerX,
+            this.game.world.centerX ,
             bar.getBounds().y + bar.getBounds().height + 10,
             description, 
             {
@@ -159,7 +159,6 @@ class FinalScreen {
             }
 
             // icon.anchor.set(0, 0.5);
-            console.log(characteristicsMapping[key])
             const textObject = this.game.add.text(
                 0,
                 0,
@@ -170,7 +169,6 @@ class FinalScreen {
                     wordWrap: true,
                     wordWrapWidth: this.game.width * 0.6,
                     align: 'left',
-                    // backgroundColor: '#ba0009'
                 }
             );
 
@@ -221,7 +219,6 @@ class FinalScreen {
 
         const grd = this.back.context.createLinearGradient(0, 0, this.back.width, this.back.height);
 
-        //  Add in 2 color stops
         grd.addColorStop(0, '#FFD1AA');   
         grd.addColorStop(1, '#D49A6A');
 
@@ -232,9 +229,7 @@ class FinalScreen {
     }
 
     render() {
-        // if (isDevelopment) {
-        //     this.game.debug.geom(this.back.textBounds);
-        // }
+        
     }
 
     handleClickBack() {

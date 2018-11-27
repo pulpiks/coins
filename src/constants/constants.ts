@@ -6,10 +6,9 @@ export const COINS = {
 }
 
 export const PERSON = {
-    width: 40,
-    height: 70,
+    width: 70,
+    height: 110,
     speed: 400,
-    setTo: [0.3125, 0.547],
     tweenSettings: {
         'run': {
             frames: [8, 9, 10, 11],

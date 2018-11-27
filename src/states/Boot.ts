@@ -59,7 +59,7 @@ class Boot extends Phaser.State {
         this.logo.scale.setTo(1.2);
 
         utils.centerGameObjects([this.logo, this.status]);
-        this.load.setPreloadSprite(this.loadingBar, 1);
+        this.load.setPreloadSprite(this.loadingBar, 0);
         this.game.load.atlasJSONHash(
             'buildings', 
             './assets/buildings.png', 
@@ -86,7 +86,8 @@ class Boot extends Phaser.State {
     
     create() {
         this.status.setText('Ready!');
-        this.state.start(STATES.Menu)
+        // this.state.start(STATES.Menu)
+        this.state.start(STATES.Game)
     }
 
     render () {
