@@ -5,7 +5,7 @@ interface MainMenuInterface {
     readonly targetState: string
 }
 
-let mainMenu = [{
+export let mainMenu = [{
     text: 'Start Game',
     targetState: STATES.Game
 }, {
@@ -31,30 +31,22 @@ let mainMenu = [{
 
 const config = {
     textStyle: {
-        font: "20px Arial",
+        font: "24px Arial",
         fill: "#888"
     },
     textStyleFocused: {
-        font: '20px Arial',
+        font: '30px Arial',
         fill: '#000',
         backgroundColor: '#888'
     }
 };
 
 
-export class MenuWrapper extends Phaser.State {
-    constructor() {
-        super()
-    }
-
-    create() {
-        this.state.add(STATES.Menu, () => {
-            return new Menu('Menu:', mainMenu);
-        });
-    }
+export const MenuWrapper = function() {
+    return new Menu('Menu:', mainMenu);
 }
 
-class Menu extends Phaser.State {
+export class Menu extends Phaser.State {
     focused: number = 0
     keyboard: Phaser.Keyboard
     controls: any
@@ -78,11 +70,13 @@ class Menu extends Phaser.State {
             down: Phaser.Keyboard.DOWN,
             left: Phaser.Keyboard.LEFT,
             right: Phaser.Keyboard.RIGHT,
-            interact: Phaser.Keyboard.SPACEBAR
+            interact: Phaser.Keyboard.ENTER
         });
 
-        this.game.add.text(20, 20, this.heading, config.textStyle);
-
+        this.game.add
+            .text(this.game.world.centerX, this.game.world.centerY - 100, this.heading, config.textStyle)
+            .anchor.set(0.5);
+        
         this.menuItems = [];
 
         for (let i = 0; i < this.options.length; i++) {
@@ -91,7 +85,7 @@ class Menu extends Phaser.State {
 
             options = this.options[i];
 
-            menuItem = new MenuItem(this.game, 20, (((i + 1) * 40) + 40), options.text, options.targetState);
+            menuItem = new MenuItem(this.game, this.game.world.centerX, this.game.world.centerY + (((i + 1) * 70)), options.text, options.targetState);
 
             this.menuItems.push(menuItem);
         }
@@ -143,6 +137,7 @@ class MenuItem extends Phaser.Text {
         this.focused = focused;
 
         this.game.world.addChild(this);
+        this.anchor.set(0.5)
     }
 
     focus(focused: boolean) {

@@ -85,9 +85,9 @@ class Boot extends Phaser.State {
     
     create() {
         this.status.setText('Ready!');
+        this.state.start(STATES.Menu)
     }
 
     render () {
-        this.state.start(STATES.Game)
     }
 }

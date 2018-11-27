@@ -23,6 +23,7 @@ import { rgResizeBody } from './utils/sizes'
 import {
     STATES,
 } from './constants/constants'
+import { mainMenu, Menu, MenuWrapper } from './states/Menu';
 // import {MenuWrapper} from './states/Menu';
 
 
@@ -46,6 +47,7 @@ const initGame = () => {
     this.game.state.add(STATES.PreBoot, PreBoot)
     this.game.state.add(STATES.Game, Game)
     this.game.state.add(STATES.Finish, FinalScreen)
+    this.game.state.add(STATES.Menu, MenuWrapper)
     this.game.state.start(STATES.PreBoot)
 }
 
