@@ -61,13 +61,14 @@ class FinalScreen {
         this.bg.alpha = 0.2
         this.state = store.getState()
         const statusGame = this.state.statusGame.status
+        const statusGameStatusMsg = this.state.statusGame.msg
 
         let title = ''
         let description = ''
         switch(statusGame) {
             case "fail":
                 title = 'Game Over, Man!'
-                description = 'You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!'
+                description = statusGameStatusMsg || 'You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!'
                 break;
             case "end":
                 debugger

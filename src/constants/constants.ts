@@ -237,7 +237,8 @@ export const passers: PassersKeys[] = [
 ]
 
 export const FAIL_MSG = {
-    mood: 'Терпеть и не сдаваться! Попробуйте еще раз!'
+    mood: 'You are not gonna be in a good mood at this moment! Will try tomorrow!)',
+    money: 'You are out of money!'
 }
 
 export const HANDS = {

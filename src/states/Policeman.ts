@@ -10,7 +10,7 @@ import { generatorId } from '../utils';
 export const POLICEMAN = {
     width: 100,
     height: 70,
-    rangeX: [2000, 5000],
+    rangeX: [2500, 5000],
     count: 2,
     speed_min: 1,
     speed_max: 40,

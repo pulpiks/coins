@@ -1,8 +1,9 @@
 import autobind from 'autobind-decorator';
 
-import { COINS } from '../constants/constants';
+import { COINS, FAIL_MSG } from '../constants/constants';
 
 import store from '../store';
+import { gameOver } from '../actions';
 
 export default class Coins {
     coinImage: Phaser.Sprite;
@@ -47,6 +48,11 @@ export default class Coins {
         if (money !== this.money) {
             this.money = money;
             this.label.setText(this.money.toString());
+            if (money) {
+                store.dispatch(gameOver({
+                    msg: FAIL_MSG.money
+                }))
+            }
         }
     }
 }
