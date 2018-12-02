@@ -55,7 +55,7 @@ class FinalScreen {
 
     create() {
         this.game.world.setBounds(0, 0, this.game.width, this.game.height);
-        this.bg = this.game.add.tileSprite(0, 0, this.game.world.width * 2, this.game.world.height * 5, 'background');
+        this.bg = this.game.add.tileSprite(0, 0, this.game.world.width * 5, this.game.world.height * 5, 'background');
         this.bg.scale.set(0.3, 0.3)
         this.bg.smoothed = true;
         this.bg.alpha = 0.2
@@ -71,7 +71,6 @@ class FinalScreen {
                 description = statusGameStatusMsg || 'You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!'
                 break;
             case "end":
-                debugger
                 title = 'Congratulations!'
                 description = 'That was hard but you did it!'
                 break;

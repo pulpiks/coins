@@ -72,10 +72,10 @@ export class Hands extends Person {
     getTweenProps(isVisible: boolean) {
         return (isVisible) ? { 
             alpha: 1,
-            y: this.sprite.y + 10,
+            y: this.sprite.y + 20,
         } : { 
             alpha: 0,
-            y: this.sprite.y - 10,
+            y: this.sprite.y - 20,
         }
     }
 

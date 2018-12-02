@@ -30,6 +30,8 @@ interface CollideEventProps {
 }
 
 
+const COUNT_JUMPING_TRIALS = 2
+
 
 export default class FBK extends Person {
     isTouchedEnemy: boolean = false
@@ -47,6 +49,7 @@ export default class FBK extends Person {
     private animationsRunRight: Phaser.Animation
     private animationsJump: Phaser.Animation
     private animationsStand: Phaser.Animation
+    countJumps: number = 0
     // private collideWithEnemy: (enemies: any, person: Phaser.Sprite, enemy:Phaser.Sprite) => void
 
     constructor( {
@@ -68,14 +71,14 @@ export default class FBK extends Person {
         this.sprite.height = PERSON.height;
         
         this.sprite.anchor.set(0.5, 1);
-        this.sprite.body.setSize(PERSON.width, PERSON.height, 20, 17) // 44, 29
+        this.sprite.body.setSize(PERSON.width, PERSON.height, 20, 17) 
         // this.sprite.scale.setTo(PERSON.setTo[0], PERSON.setTo[1]);
         // this.sprite.body.offset.y = this.sprite.body.offset.y - 18;
 
         this.animationsRunRight = this.sprite.animations.add(
-            'run', 
-            PERSON.tweenSettings.run.frames, 
-            PERSON.tweenSettings.run.frameRate, 
+            'run',
+            PERSON.tweenSettings.run.frames,
+            PERSON.tweenSettings.run.frameRate,
             true
         );
         this.animationsJump = this.sprite.animations.add(
@@ -99,7 +102,7 @@ export default class FBK extends Person {
         this.sprite.body.collideWorldBounds = true;
         
         this.game.camera.follow(this.sprite);
-        this.initiateKeyboardEvents()        
+        this.initiateKeyboardEvents()   
     }
 
     initiateKeyboardEvents = () => {
@@ -181,7 +184,8 @@ export default class FBK extends Person {
         if (!this.isTouchedEnemy) {
             player.body.velocity.x = 0;
             if (cursors.left.isDown) {
-                player.body.velocity.x = -200;
+                this.direction = -1
+                player.body.velocity.x = -PERSON.velocityX;
 
                 if (this.facing != 'left' || player.body.touching.down || player.body.onFloor())
                 {
@@ -190,7 +194,8 @@ export default class FBK extends Person {
                     this.facing = 'left';
                 }
             } else if (cursors.right.isDown) {
-                player.body.velocity.x = 200;
+                player.body.velocity.x = PERSON.velocityX;
+                this.direction = 1 
                 if (this.facing != 'right' || player.body.touching.down || player.body.onFloor())
                 {
                     this.sprite.scale.setTo(Math.abs(this.sprite.scale.x), this.sprite.scale.y);
@@ -208,16 +213,21 @@ export default class FBK extends Person {
                     if ( player.body.touching.down || player.body.onFloor() ) {
                         player.frame = 0;
                         this.facing = 'idle';
+                        this.countJumps = 0
                     }
                 }
             }
 
-            if (jumpButton.isDown && !this.isJumping)
+            if (jumpButton.isDown)
             {
-                player.animations.play('jump');
-                player.body.velocity.y = -700;
-                this.isJumping = true;
+                this.countJumps++
+                if (this.countJumps < COUNT_JUMPING_TRIALS || !this.isJumping) {
+                    player.animations.play('jump');
+                    player.body.velocity.y = player.body.velocity.y - PERSON.velocityY;
+                    this.isJumping = true;
+                }
             }
+
 
             const state = store.getState();
             if (state.score.cactuses > 0 && this.keys.a.justDown) {
@@ -245,9 +255,9 @@ export default class FBK extends Person {
     public throwCactus() {
         store.dispatch(throwCactus());
         PubSub.publish({
-            x: this.sprite.body.x,
-            y: this.sprite.body.y - this.sprite.body.halfHeight,
-            velocityX: this.direction * 200,
+            x: this.sprite.position.x,
+            y: this.sprite.worldPosition.y - this.sprite.body.height,
+            velocityX: this.direction * PERSON.velocityX,
             angularVelocity: 100
         })
         
@@ -269,7 +279,6 @@ export default class FBK extends Person {
 
     public collideFinalPoints = once(() => {
         store.dispatch(gameEnd())
-        console.log(store.getState().statusGame.status)
         this.game.state.start(STATES.Finish)
     })
 }

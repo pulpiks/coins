@@ -22,10 +22,23 @@ export const CACTUS = {
     height: 30,
 }
 
-const CACTUS_COORDS = [{x: 200, y: 100}, {x: 300, y: 100}, {x: 580, y: 100}, {x: 540, y: 500}, {x: 600, y: 800}]
+const CACTUS_COORDS = [
+    {x: 200, y: 100}, 
+    {x: 300, y: 100}, 
+    {x: 400, y: 100}, 
+    {x: 500, y: 100}, 
+    {x: 700, y: 100}, 
+    {x: 1010, y: 100}, 
+    {x: 1010, y: 230}, 
+    {x: 1300, y: 170}, 
+    {x: 2190, y: 170}, 
+    {x: 2330, y: 170}, 
+    {x: 2463, y: 170}, 
+    {x: 2595, y: 170},  
+]
 
 export class Cactus {
-    cactus: Phaser.Sprite
+    cactus: CactusProp
 
     constructor({
         game, 
@@ -46,6 +59,7 @@ export class Cactus {
         this.cactus.body.collideWorldBounds = true;
         this.cactus.body.onWorldBounds = new Phaser.Signal();
         this.cactus.body.onWorldBounds.add(this.hitWorldBounds, this);
+        this.cactus.anchor.set(0.5, 1)
     }
 
     hitWorldBounds() {
@@ -64,10 +78,12 @@ export interface ThrowCactusProps {
 export interface CactusHanlerProps {
     readonly cactuses: Phaser.Group
     readonly thrownCactuses: CactusProp[] 
+    readonly aliveCactuses: () => Phaser.Sprite[]
     readonly update: () => any
     readonly instances: Cactus[]
     readonly collidePolicemanWithCactus: (cactus: CactusProp)=> any
-    readonly collidePersonWithCactus: (cactus: Phaser.Sprite) => any
+    readonly collidePersonWithCactus: (cactus: CactusProp) => any
+    readonly collideObstaclesWithCactus: (cactus: CactusProp) => any
 }
 
 
@@ -80,7 +96,7 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
         let instance = new Cactus({
             game: game,
             x: coord.x/*Math.floor(Math.random() * (game.world.width - 100)) + 100*/,
-            y: game.height - ground.height - coord.y,
+            y: game.world.height - ground.height - coord.y,
         })
         instances.push(instance)
     
@@ -89,9 +105,19 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
 
 
     const throwCactus = (props: ThrowCactusProps) => {
-        const {x,y,velocityX,angularVelocity} = props
+        const {
+            x, 
+            y,
+            velocityX,
+            angularVelocity
+        } = props
+        if (!thrownCactuses.length) {
+            return ;
+        }
         const cactus = thrownCactuses[thrownCactuses.length-1];
         cactus.revive();
+        game.physics.arcade.enable(cactus);
+        cactus.body.enable = true
         cactus.body.x = x;
         cactus.body.y = y;
         cactus.body.velocity.x = velocityX;
@@ -102,35 +128,35 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
     }
 
     PubSub.subscribe(throwCactus)
-    const methods = {
+    return  {
         instances,
         thrownCactuses,
         cactuses,
-        update: function() {
-            cactuses.forEachAlive((cactus: Phaser.Sprite) => {
+        update: () => {
+            cactuses.forEachAlive((cactus: CactusProp) => {
                 game.debug.body(cactus);
             }, this);
-            cactuses.forEach((cactus: CactusProp) => {
-                if (!cactus.alive && cactus.isKilled){
-                    cactus.destroy();
-                }
-            }, this);
+            // cactuses.forEach((cactus: CactusProp) => {
+            //     if (!cactus.alive && cactus.isKilled){
+            //         cactus.destroy();
+            //     }
+            // }, this);
         },
-        collidePolicemanWithCactus: function(cactus: CactusProp) {
-            thrownCactuses.pop();
-            cactus.kill();
-            cactus.isKilled = true;
+        aliveCactuses: () => cactuses.getAll('isKilled', false || undefined),
+        collidePolicemanWithCactus: (cactus) => {
+            thrownCactuses.pop()
+            cactus.destroy();
+            // cactus.isKilled = true;
         },
-        // collideObstaclesWithCactus: (obstacle: Phaser.Sprite) => {
-        //     const cactus = thrownCactuses.pop();
-        //     cactus.kill();
-        //     cactus.isKilled = true;
-        // },
-        collidePersonWithCactus: function(cactus: Phaser.Sprite) {
+        collideObstaclesWithCactus: (cactus) => {
+            thrownCactuses.pop()
+            cactus.destroy()
+        },
+        collidePersonWithCactus: (cactus) => {
+            cactus.isKilled = true
             cactus.kill()
             thrownCactuses.push(cactus)
             store.dispatch(addCactus())
         },
     }
-    return methods
 }

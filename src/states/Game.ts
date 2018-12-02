@@ -1,7 +1,7 @@
 import autobind from 'autobind-decorator'
 import debounce from 'lodash.debounce'
 import once from 'lodash.once'
-import Phaser, { TilemapLayer } from 'phaser-ce'
+import Phaser, { TilemapLayer, Sprite } from 'phaser-ce'
 
 
 import store from '../store'
@@ -13,6 +13,7 @@ import Score from './Score'
 import { PolicemanManager, PolicemanManagerProps } from "./Policeman"
 import { CactusHandler, ThrowCactusProps, CactusHanlerProps } from "./Cactus"
 import {HandsHandler} from './Hands'
+import {render as renderObstacles} from './Obstacles'
 
 import {
     backgroundColor,
@@ -23,7 +24,8 @@ import {
     ENEMY_TYPES,
     LayersIds,
     passers,
-    passersTypes
+    passersTypes,
+    obstaclesKeys
 } from '../constants/constants'
 
 import { OfficialProps, renderOfficials } from './Official'
@@ -32,13 +34,13 @@ import { isDevelopment } from '../utils';
 
 export default class Game extends Phaser.State{
     private map: Phaser.Tilemap
-    private obstacles: Phaser.TilemapLayer
+    private obstacles: Phaser.Group
     private person: FBK
     private cactuses: Phaser.Group
     private crowd: CrowdHandler
     private ground: Phaser.Sprite
     private cloudsSprite: Phaser.TileSprite
-    private backgroundlayer: Phaser.TilemapLayer;
+    private ladder: Phaser.TilemapLayer;
     private listBuidingsSprite: Phaser.Sprite[] = []
     private score: Score
     private handsHandler: HandsHandler
@@ -58,16 +60,24 @@ export default class Game extends Phaser.State{
     }
 
     createClouds() {
-        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width * 3000, 300, 'clouds', 0)
-        this.cloudsSprite.scale.set(1.1, 0.8)
+        console.log(this.game.height)
+        this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width * 3000, this.game.height - 200, 'clouds', 0)
+        this.cloudsSprite.scale.set(1.1, 1)
         this.cloudsSprite.smoothed = true;
         this.cloudsSprite.autoScroll(-5, 0);
     }
 
     createGround() {
-        this.ground = this.game.add.sprite(0, this.game.world.height-ground.height, 'ground')
+        let graphics: Phaser.Graphics = this.game.make.graphics()
+        graphics.beginFill(0x766627, 1)
+        graphics.drawRect(0, 0, ground.width, ground.height)
+        graphics.endFill()
+        graphics.boundsPadding = 0;
+        this.ground = this.game.add.sprite(0, this.game.world.height - ground.height)
+        this.ground.addChild(graphics)
         this.ground.width = ground.width
         this.ground.height = ground.height
+        this.ground.anchor.set(0, 0)
         this.physics.arcade.enable(this.ground)
         this.ground.body.immovable = true
     }
@@ -88,29 +98,119 @@ export default class Game extends Phaser.State{
         }
     }
 
+    createGroundFromTiles() {
+        // const layer = this.map.createLayer('background')
+        // this.physics.arcade.enable(layer);
+        // layer.anchor.set(0, 0)    
+        // // layer.debug = true
+        // this.map.setCollision([58, 59, 60], true, layer);
+        // layer.position.x = 0
+        // layer.position.y = 0
+        // layer.fixedToCamera = false
+        // layer.scrollFactorX = 0
+        // layer.scrollFactorY = 0
+        // layer.setScale(Math.round(this.game.world.width/this.game.width), 1)
+        // layer.position.set(0, this.game.height - 512)
+        // this.backgroundlayer = layer
+    }
+
+
+    _createObstacles() {
+        // this.map.addTilesetImage('obstacles', LayersIds.obstacles);
+        // const collisionPoints = [...Array(96)].map((_, v) => v)
+        // this.obstacles = this.map.createLayer('obstacles');
+        // this.physics.arcade.enable(this.obstacles);
+        // this.obstacles.anchor.set(0, 0)
+        // this.map.setCollision(collisionPoints, true, this.obstacles);
+        // console.log('height = ', this.obstacles.height)
+        // // this.obstacles.debug = true
+        // this.obstacles.position.x = 0
+        // this.obstacles.position.y = 0
+        // this.obstacles.fixedToCamera = false
+        // this.obstacles.scrollFactorX = 0
+        // this.obstacles.scrollFactorY = 0
+        // console.log(this.obstacles.getLocalBounds())
+        // console.log(this.obstacles.scale.y)
+        // this.obstacles.position.set(0, 0)
+    }
+
+
+    createObstacles() {
+        
+        // var bmd = this.game.make.bitmapData(320, 256)
+        // bmd.copy(obstaclesKeys.texture)
+        // const sprite = this.game.add.sprite(100, this.game.height - ground.height, obstaclesKeys.texture)
+        // sprite.anchor.set(0, 1)
+        // group.add(sprite)
+        // sprite.body.immovable = true
+        
+
+        const poly = new Phaser.Polygon()
+
+        //  And then populate it via setTo, using any combination of values as above
+        poly.setTo([ new Phaser.Point(200, 100), new Phaser.Point(350, 100), new Phaser.Point(375, 200), new Phaser.Point(150, 200) ])
+
+        // this.physics.arcade.enable(group);
+        // this.physics.arcade.enable(shapeSprite);
+        // group.forEach((el: Phaser.Graphics) => {
+        // shapeSprite.body.allowGravity = true
+        // shapeSprite.body.gravity.y = 400
+        // shapeSprite.body.immovable = true
+        // })
+
+        this.obstacles = renderObstacles.call({game: this.game})
+    }
+
+    createLadder() {
+        this.map = this.add.tilemap(LayersIds.tilemap);
+        this.map.heightInPixels = this.game.world.height
+        this.map.addTilesetImage('obstacles', LayersIds.tiles);
+        this.ladder = this.map.createLayer('ladder');
+
+        this.physics.arcade.enable(this.ladder);
+        this.map.setCollision([58, 59], true, this.ladder);
+        this.ladder.anchor.set(0, 0)
+        // this.ladder.anchor.set(0, 1)
+        this.ladder.scrollFactorY = 0
+        this.ladder.scrollFactorX = 0
+        this.ladder.scrollY = 0
+        this.ladder.fixedToCamera = false
+        // this.ladder.resize(this.game.width, this.game.world.height)
+        // this.ladder.scale.set(1, Math.round(960/this.game.world.height))
+    }
+
+    createFinalPoints() {
+        const coords = [{
+            y: this.game.world.height - ground.height - 400,
+            x: this.game.world.width - 100
+        }]
+
+        this.donation = this.game.add.physicsGroup(Phaser.Physics.ARCADE)
+        // this.map.createFromObjects('finalpoints', 'point', LayersIds.donation, 0, true, false, this.donation); 
+
+        coords.forEach((coord: Phaser.Sprite) => {
+            const sprite = this.game.add.sprite(coord.x, coord.y, LayersIds.donation)
+            sprite.width = 50
+            sprite.height = 50
+            this.donation.add(sprite)
+        })
+    }
+
     create() {
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.stage.backgroundColor = backgroundColor;
-        this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
+        // this.game.world.setBounds(0, 0, ground.width, this.game.world.height);
+        this.game.world.resize(ground.width, this.game.height);
+        this.createLadder()
         this.createClouds();
         this.createGround();
         this.createBuidings();
-        this.map = this.add.tilemap(LayersIds.tilemap);
-        this.map.addTilesetImage('obstacles', LayersIds.obstacles);
-        this.backgroundlayer = this.map.createLayer('background', ground.width, ground.height)
-        this.obstacles = this.map.createLayer('obstacles');
-        this.physics.arcade.enable(this.backgroundlayer);
-        const collisionPoints = [...Array(96)].map((_, v) => v)
-        this.backgroundlayer.anchor.setTo(0)    
-        this.physics.arcade.enable(this.obstacles);
-        this.map.setCollision(collisionPoints, true, this.obstacles);
-        this.map.setCollision([57, 58], true, this.backgroundlayer);
-        // this.backgroundlayer.resizeWorld()        
-        // this.crowd = this.map.createLayer('crowd');
+        this.createObstacles()
+        this.createFinalPoints()
+        
+        
 
-        // this.physics.arcade.enable(this.crowd);
-        // this.map.setCollision([14], true, this.crowd);
         this.handsHandler = new HandsHandler(
             this.game
         )
@@ -119,13 +219,7 @@ export default class Game extends Phaser.State{
             game: this.game
         });
         
-        this.donation = this.game.add.physicsGroup(Phaser.Physics.ARCADE);
-        this.map.createFromObjects('finalpoints', 'point', LayersIds.donation, 0, true, false, this.donation); 
-
-        this.donation.forEach((cactus: Phaser.Sprite) => {
-            cactus.width = 50
-            cactus.height = 50
-        });
+        
 
 
         this.score = new Score({
@@ -140,33 +234,27 @@ export default class Game extends Phaser.State{
         this.crowd = new CrowdHandler(
             this.game
         )
-
-        // this.tween = this.game.add.tween(this.cloudsSprite).to(
-        //     {},
-        //     5000,
-        //     Phaser.Easing.Linear.None,
-        //     true,
-        //     0,
-        //     -1,
-        //     false
-        // );
-
-        // let cloudsSpriteAnimation = setTimeout(function tick(ctx) {
-        //     ctx.cloudsSprite.tilePosition.x -= 8;
-        //     clearTimeout(cloudsSpriteAnimation);
-        //     setTimeout(tick, 2000);
-        // }, 2000, this);
+       
     }
 
     
     update() {
-        // this.physics.arcade.collide(
-        //     this.person.sprite, 
-        //     this.obstacles, 
-        //     null, 
-        //     null, 
-        //     this
-        // );
+
+        this.physics.arcade.collide(
+            this.person.sprite, 
+            this.obstacles, 
+            null, 
+            null, 
+            this
+        );
+
+        this.physics.arcade.collide(
+            this.obstacles,
+            this.ground,
+            null,
+            null, 
+            this
+        )
 
         // this.physics.arcade.collide(
         //     this.policemanWatcher.getAllSprites(), 
@@ -228,7 +316,7 @@ export default class Game extends Phaser.State{
         )
         this.physics.arcade.collide(
             this.person.sprite,
-            this.cactusHandler.cactuses,
+            this.cactusHandler.aliveCactuses(),
             (_: Phaser.Sprite, cactus: Phaser.Sprite) => {
                 this.cactusHandler.collidePersonWithCactus(cactus)
             },
@@ -245,13 +333,13 @@ export default class Game extends Phaser.State{
             null, 
             this
         );
-        // this.physics.arcade.collide(
-        //     this.obstacles, 
-        //     this.thrownCactuses, 
-        //     this.collideObstaclesWithCactus, 
-        //     null, 
-        //     this
-        // );
+        this.physics.arcade.collide(
+            this.cactusHandler.thrownCactuses, 
+            this.obstacles, 
+            this.cactusHandler.collideObstaclesWithCactus, 
+            null, 
+            this
+        );
         this.physics.arcade.collide(
             this.person.sprite, 
             this.crowd, 
@@ -266,7 +354,7 @@ export default class Game extends Phaser.State{
                 this.person.endJumping();
             }, 
             null, 
-            this.person
+            this
         );
 
         this.physics.arcade.collide(
@@ -327,7 +415,15 @@ export default class Game extends Phaser.State{
     }
 
     render() {
+        // this.game.debug.geom( this.obstacles, 'rgba(255,0,0,1)' ) ;
+        // this.game.debug.body(this.ground);
+
+        this.obstacles.forEach((o: Phaser.Sprite) => {
+            // this.game.debug.body(o);
+        })
         this.person.render()
+        // this.game.debug.body(this.ladder);
+        
     }
 
     meetCrowd(person: Phaser.Sprite, crowd: Phaser.Sprite) {

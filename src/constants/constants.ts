@@ -9,6 +9,8 @@ export const PERSON = {
     width: 70,
     height: 110,
     speed: 400,
+    velocityX: 200,
+    velocityY: 900,
     tweenSettings: {
         'run': {
             frames: [8, 9, 10, 11],
@@ -30,7 +32,7 @@ export const RANGE = [0, 1000]
 
 export const backgroundColor = 'rgba(85, 154, 198, 30)'
 export const ground = {
-    width: 4000,
+    width: 4300,
     height: 48
 }
 
@@ -141,10 +143,16 @@ export const enum LayersIds {
     hands = 'hands',
     clerk = 'clerk',
     passer = 'passer',
-    obstacles = 'obstacles',
+    // obstacles = 'obstacles',
     donation = 'donation',
     mood = 'mood',
-    loading = 'loading'
+    loading = 'loading',
+    background = 'background',
+}
+
+export enum obstaclesKeys {
+    vasya = 'obstacles_vasya',
+    texture = 'obstacles_texture'
 }
 
 

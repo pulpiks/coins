@@ -57,6 +57,6 @@ window.onload = initGame
 
 window.onresize = () => {
     if (this.game) {
-        this.game.scale.setGameSize(...getSizes('.js-game-container'))
+        // this.game.scale.setGameSize(...getSizes('.js-game-container'))
     }
 }
