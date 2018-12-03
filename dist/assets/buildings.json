@@ -1,0 +1,43 @@
+{"frames": [
+{
+	"filename": "big_school.png",
+	"frame": {"x":0,"y":886,"w":1156,"h":559},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1156,"h":599},
+	"sourceSize": {"w":1156,"h":599}
+},
+{
+	"filename": "innovation_house.png",
+	"frame": {"x":0,"y":0,"w":689,"h":381},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":689,"h":386},
+	"sourceSize": {"w":689,"h":386}
+},
+{
+	"filename": "ministerstvo.png",
+	"frame": {"x":795,"y":387,"w":812,"h":464},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":812,"h":464},
+	"sourceSize": {"w":812,"h":464}
+},
+{
+	"filename": "zakupki_and_tenderi.png",
+	"frame": {"x":0,"y":387,"w":795,"h":455},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":795,"h":499},
+	"sourceSize": {"w":795,"h":499}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "buildings.png",
+	"format": "RGBA8888",
+	"size": {"w":1607,"h":1485},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ca5505b13c786c5209ed3b851d9e3449:dcd58c257217644684807b48624976c3:8f670863a0ac9ac15291caba2801fd50$"
+}
+}

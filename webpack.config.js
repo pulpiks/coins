@@ -4,12 +4,33 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const Dotenv = require("dotenv-webpack")
 // const CleanWebpackPlugin = require("clean-webpack-plugin")
 
-const IS_PRODUCTION = (process.env.NODE_ENV === 'production')
+const IS_PRODUCTION = (process.env.NODE_ENV === 'production' || process.env.WEBPACK_MODE === 'production')
 
 // const phaserModule = path.join(__dirname, '/node_modules/phaser-ce/')
 // const phaser = path.join(phaserModule, 'build/phaser.js')
 
 // const pathPhaser = /node_modules\/phaser-ce\/build/
+
+console.log(IS_PRODUCTION)
+
+console.log(path.resolve(__dirname))
+
+const plugins = [
+    // new CleanWebpackPlugin("dist"),
+    IS_PRODUCTION ? false: new Dotenv(),
+    new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, "index.html"),
+        chunks: [
+            // "phaser",
+            "vendor",
+            "runtime",
+            "index",
+        ],
+        chunksSortMode: "manual",
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+].filter(Boolean)
+
 
 module.exports = {
     context: path.resolve(__dirname),
@@ -23,7 +44,7 @@ module.exports = {
         // publicPath: '/',
         // path: path.resolve(__dirname, 'dist'),
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/',
+        publicPath: './',
     },
     resolve: {
         extensions: ['.ts', '.js'],
@@ -35,21 +56,7 @@ module.exports = {
             // 'phaser-ce': phaser
         },
     },
-    plugins: [
-        // new CleanWebpackPlugin("dist"),
-        new Dotenv(),
-        new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, "index.html"),
-            chunks: [
-                // "phaser",
-                "vendor",
-                "runtime",
-                "index",
-            ],
-            chunksSortMode: "manual",
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-    ],
+    plugins: plugins,
     module: {
         rules: [
             {
@@ -139,7 +146,7 @@ module.exports = {
             cacheGroups: {
                 commons: {
                     // test: (module, chunks) => {
-                        //     return module.context.includes('node_modules') && !module.context.includes('phaser-ce')
+                    //     return module.context.includes('node_modules') && !module.context.includes('phaser-ce')
                         // },
                     test: /[\\/]node_modules[\\/]/,
                     name: "vendor",
@@ -147,8 +154,27 @@ module.exports = {
                 }
             }
         },
+        // IS_PRODUCTION ?  ...{ 
+        //     minimizer: [
+        //         // we specify a custom UglifyJsPlugin here to get source maps in production
+        //         new UglifyJsPlugin({
+        //             cache: true,
+        //             parallel: true,
+        //             uglifyOptions: {
+        //                 compress: false,
+        //                 ecma: 6,
+        //                 mangle: true
+        //             },
+        //             sourceMap: true,
+        //             output: {
+        //                 comments: false,
+        //                 beautify: false
+        //             }
+        //         })
+        //     ]
+        // } : ...{}
     },
-    mode: "development",
+    mode: IS_PRODUCTION ? "production" : "development",
     devServer: {
         index: 'index.html',
         contentBase: path.join(__dirname, 'dist'),

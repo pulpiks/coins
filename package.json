@@ -6,7 +6,8 @@
     "watch": "webpack --watch",
     "phaser": "mkdir dist && cp ./node_modules/phaser-ce/build/phaser.js ./dist/",
     "start": "webpack-dev-server --hot --host 0.0.0.0",
-    "build": "webpack",
+    "build-dev": "webpack",
+    "build-prod": "rm -rf ./dist && yarn phaser && NODE_ENV=production webpack --mode=production",
     "lint:ts": "tslint --exclude '**/node_modules/**/*.ts?(x)' --config ./tslint.json --fix --format stylish '**/*.ts?(x)'"
   },
   "lint-staged": {
@@ -37,7 +38,8 @@
     "tslint-config-airbnb": "^5.11.0",
     "typescript": "^2.6.2",
     "typings": "^2.1.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "uglifyjs-webpack-plugin": "^2.0.1"
   },
   "dependencies": {
     "@types/lodash.debounce": "^4.0.4",
