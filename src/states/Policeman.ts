@@ -11,7 +11,7 @@ export const POLICEMAN = {
     width: 100,
     height: 70,
     rangeX: [2000, 5000],
-    count: 10,
+    count: 7,
     speed_min: 1,
     speed_max: 40,
     time_threshold: 3000,

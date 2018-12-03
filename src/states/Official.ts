@@ -20,13 +20,13 @@ type SPEED = {
 const PASSER_COORDS: COORD[] = [{
     x: 600,
 }, {
-    x: 800,
+    x: 900,
 }, {
     x: 2000
 }, {
     x: 700,
 }, {
-    x: 900,
+    x: 950,
 }, {
     x: 1000
 }]
