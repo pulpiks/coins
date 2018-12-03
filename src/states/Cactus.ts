@@ -23,6 +23,7 @@ export const CACTUS = {
 }
 
 const CACTUS_COORDS = [
+    {x: 100, y: 200},
     {x: 200, y: 100}, 
     {x: 300, y: 100}, 
     {x: 400, y: 100}, 
@@ -81,7 +82,7 @@ export interface CactusHanlerProps {
     readonly aliveCactuses: () => Phaser.Sprite[]
     readonly update: () => any
     readonly instances: Cactus[]
-    readonly collidePolicemanWithCactus: (cactus: CactusProp)=> any
+    readonly collideEnemyWithCactus: (cactus: CactusProp)=> any
     readonly collidePersonWithCactus: (cactus: CactusProp) => any
     readonly collideObstaclesWithCactus: (cactus: CactusProp) => any
 }
@@ -136,24 +137,25 @@ export const CactusHandler = (game: Phaser.Game): CactusHanlerProps => {
             cactuses.forEachAlive((cactus: CactusProp) => {
                 game.debug.body(cactus);
             }, this);
-            // cactuses.forEach((cactus: CactusProp) => {
-            //     if (!cactus.alive && cactus.isKilled){
-            //         cactus.destroy();
-            //     }
-            // }, this);
+            
+            cactuses.forEach((cactus: CactusProp) => {
+                if (!cactus.alive && cactus.isKilled){
+                    cactus.destroy();
+                }
+            }, this);
         },
         aliveCactuses: () => cactuses.getAll('isKilled', false || undefined),
-        collidePolicemanWithCactus: (cactus) => {
+        collideEnemyWithCactus: (cactus) => {
             thrownCactuses.pop()
             cactus.destroy();
-            // cactus.isKilled = true;
+            cactus.isKilled = true
         },
         collideObstaclesWithCactus: (cactus) => {
             thrownCactuses.pop()
-            cactus.destroy()
+            cactus.kill()
+            cactus.isKilled = true
         },
         collidePersonWithCactus: (cactus) => {
-            cactus.isKilled = true
             cactus.kill()
             thrownCactuses.push(cactus)
             store.dispatch(addCactus())

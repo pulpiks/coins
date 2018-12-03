@@ -4,7 +4,7 @@ import MoodRange from './RangeComponent';
 
 import store from '../store';
 import { gameOver } from '../actions';
-import { FAIL_MSG } from '../constants/constants';
+import { FAIL_MSG, STATES } from '../constants/constants';
 
 interface Colors {
     readonly [percentage: string]: string
@@ -97,6 +97,7 @@ export default class Mood {
                 store.dispatch(gameOver({
                     msg: FAIL_MSG.mood
                 })) 
+                this.game.state.start(STATES.Finish)
             }
 
             const percentages = Object.keys(colors).filter((p) => !Number.isNaN(+p)).map(p => +p)

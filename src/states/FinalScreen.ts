@@ -4,6 +4,7 @@ import { isDevelopment } from "../utils";
 
 import '../assets/smiles.png'
 import '../assets/menu_bg.png'
+import { startGame } from "../actions";
 
 class FinalScreen {
     game: Phaser.Game;
@@ -13,6 +14,7 @@ class FinalScreen {
     heading: Phaser.Text
     backWrapper: Phaser.Graphics
     bg: Phaser.TileSprite
+    enterKey: Phaser.Key
 
     preload() {
         this.game.stage.backgroundColor = 'rgb(65, 75, 122)'
@@ -68,7 +70,7 @@ class FinalScreen {
         switch(statusGame) {
             case "fail":
                 title = 'Game Over, Man!'
-                description = statusGameStatusMsg || 'You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!'
+                description = `${statusGameStatusMsg} \n You should try again, the most important thing is not to give up and \ndefeat the damned corrupt! Good luck!`
                 break;
             case "end":
                 title = 'Congratulations!'
@@ -118,76 +120,95 @@ class FinalScreen {
         descriptionElement.setShadow(2, 2, "#333333", 2, true, false);
 
         descriptionElement.anchor.set(0.5, 0);
-            
-        const characteristics = this.createCharacteristics()
-
-        interface CharacteristicsMapping {
-            readonly [key: string]: string
-        }
-        const characteristicsMapping: CharacteristicsMapping = {
-            [LayersIds.mood]: characteristics.moodTemplate,
-            [LayersIds.coin]: characteristics.moneyTalk
-        }
-        
-
+         
         const {y, height} = descriptionElement.getBounds()   
         let offset = y + height
         
-        for(let key in characteristicsMapping) {
-            let results: Phaser.Group = this.game.add.group();
-            let icon: Phaser.Sprite;
-            if (key === LayersIds.mood) {
-                icon = this.game.add.sprite(50, 50, LayersIds.mood);
-                switch(characteristics.moodLevel) {
-                    case "bad":
-                        icon.frame = 4
-                    case "good":
-                        icon.frame = 0
-                    case "excellent":
-                        icon.frame = 2
-                    default:
-                        icon.frame = 0    
-                }
-                icon.width = 50
-                icon.height = 50
+        if (statusGame !== 'fail') {
+            const characteristics = this.createCharacteristics()
+    
+            interface CharacteristicsMapping {
+                readonly [key: string]: string
             }
-
-            if (key === LayersIds.coin) {
-                icon = this.game.add.sprite(50, 50, LayersIds.coin);
-                icon.width = 50
-                icon.height = 50
+            const characteristicsMapping: CharacteristicsMapping = {
+                [LayersIds.mood]: characteristics.moodTemplate,
+                [LayersIds.coin]: characteristics.moneyTalk
             }
-
-            // icon.anchor.set(0, 0.5);
-            const textObject = this.game.add.text(
-                0,
-                0,
-                `${characteristicsMapping[key]}`,
-                {
-                    font: `20px Arial`,
-                    fill: '#fff',
-                    wordWrap: true,
-                    wordWrapWidth: this.game.width * 0.6,
-                    align: 'left',
+            
+            for(let key in characteristicsMapping) {
+                let results: Phaser.Group = this.game.add.group();
+                let icon: Phaser.Sprite;
+                if (key === LayersIds.mood) {
+                    icon = this.game.add.sprite(50, 50, LayersIds.mood);
+                    switch(characteristics.moodLevel) {
+                        case "bad":
+                            icon.frame = 4
+                        case "good":
+                            icon.frame = 0
+                        case "excellent":
+                            icon.frame = 2
+                        default:
+                            icon.frame = 0    
+                    }
+                    icon.width = 50
+                    icon.height = 50
                 }
-            );
-
-            textObject.x = 110
-
-            icon.centerY = textObject.centerY
-
-            results.add(icon)
-            results.add(textObject)
-            offset += 40
-            results.y = offset;
-            offset +=  textObject.height
-            results.centerX = this.game.world.centerX
+    
+                if (key === LayersIds.coin) {
+                    icon = this.game.add.sprite(50, 50, LayersIds.coin);
+                    icon.width = 50
+                    icon.height = 50
+                }
+    
+                // icon.anchor.set(0, 0.5);
+                const textObject = this.game.add.text(
+                    0,
+                    0,
+                    `${characteristicsMapping[key]}`,
+                    {
+                        font: `20px Arial`,
+                        fill: '#fff',
+                        wordWrap: true,
+                        wordWrapWidth: this.game.width * 0.6,
+                        align: 'left',
+                    }
+                );
+    
+                textObject.x = 110
+    
+                icon.centerY = textObject.centerY
+    
+                results.add(icon)
+                results.add(textObject)
+                offset += 40
+                results.y = offset;
+                offset +=  textObject.height
+                results.centerX = this.game.world.centerX
+            }
         }
+
+        offset += 50
+
+        const validationButtonText = this.game.add.text(
+            0, 
+            0,
+            'Press Enter or click on button below', 
+            {
+                font: '19px Arial',
+                fill: '#fff',
+                align: 'center',
+                wordWrapWidth: this.game.width * 0.7 ,
+            },
+        )
+
+        validationButtonText.centerX = this.game.world.centerX
+        validationButtonText.y = offset
 
         this.backWrapper = this.game.add.graphics()
         this.backWrapper.beginFill(0xd70000, 0.9)
         this.backWrapper.drawRect(this.game.world.centerX - 300/2, offset + 50, 300, 100);
         
+
         this.back = this.game.add
         .text(
             0,
@@ -226,6 +247,7 @@ class FinalScreen {
         
         this.game.input.onDown.add(this.handleClickBack, this);
 
+        this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER)
     }
 
     render() {
@@ -237,6 +259,12 @@ class FinalScreen {
             this.game.input.onDown.remove(this.handleClickBack, this);
             this.game.state.start(STATES.PreBoot, true, false);
             return true;
+        }
+    }
+
+    update() {
+        if (this.enterKey.isDown) {
+            this.game.state.start(STATES.PreBoot, true, false);
         }
     }
 }

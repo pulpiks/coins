@@ -7,7 +7,7 @@
     "phaser": "mkdir dist && cp ./node_modules/phaser-ce/build/phaser.js ./dist/",
     "start": "webpack-dev-server --hot --host 0.0.0.0",
     "build-dev": "webpack",
-    "build-prod": "rm -rf ./dist && yarn phaser && NODE_ENV=production webpack --mode=production",
+    "build-prod": "rm -rf ./dist && yarn phaser && NODE_ENV=production webpack",
     "lint:ts": "tslint --exclude '**/node_modules/**/*.ts?(x)' --config ./tslint.json --fix --format stylish '**/*.ts?(x)'"
   },
   "lint-staged": {

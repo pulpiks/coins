@@ -24,6 +24,8 @@ import '../assets/obstacles.png'
 import '../assets/obstacles/grey_texture.png'
 import '../assets/obstacles/vasya.png'
 import '../assets/test_level2.json'
+
+
 import { utils } from "../utils";
 
 export default class PreBoot extends Phaser.State {

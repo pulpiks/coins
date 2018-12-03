@@ -118,3 +118,10 @@ export function collidePasser(id: passersIdsTypes) {
         id
     }
 }
+
+
+export function startGame() {
+    return {
+        type: TYPES.START_GAME
+    }
+}

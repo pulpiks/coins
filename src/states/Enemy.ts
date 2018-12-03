@@ -77,20 +77,24 @@ export default class Enemy extends Passer{
     }
 
     onCactusCollision() {
+        debugger
         switch(this.type) {
             case ENEMY_TYPES.policeman:
                 this.deactivateForTheTime()
                 break
+            case ENEMY_TYPES.official:
+                this.deactivateForTheTime()
+                break    
             default: break
         }
     }
 
-    deactivateForTheTime() {
+    deactivateForTheTime(time = 300) {
         this.isTouchedByCactus = true
         this.sprite.body.moves = false
         this.tween = this.game.add.tween(this.sprite).to(
             { alpha: 0 },
-            300, Phaser.Easing.Linear.None, true, 0, 100, false
+            time, Phaser.Easing.Linear.None, true, 0, 100, false
         )
         // this.timer = this.game.time.create(false)
         // this.timer.loop(2000, this.finishCollision, this)

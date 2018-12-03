@@ -2,14 +2,14 @@ import { strEnumHelper } from "../utils/helpers"
 import { getRandomValueFromArray } from "../utils";
 
 export const COINS = {
-    startSum: 1000
+    startSum: 500
 }
 
 export const PERSON = {
     width: 70,
     height: 110,
     speed: 400,
-    velocityX: 200,
+    velocityX: 300,
     velocityY: 900,
     tweenSettings: {
         'run': {
@@ -238,9 +238,9 @@ export type PassersKeys = {
 }
 
 export const passers: PassersKeys[] = [
-    {key: 'usual-1', count: 1}, 
-    {key: 'usual-2', count: 1}, 
-    {key: 'sentsov', count: 1}, 
+    {key: 'usual-1', count: 5}, 
+    {key: 'usual-2', count: 5}, 
+    {key: 'sentsov', count: 5}, 
     {key: 'pupil', count: 10}
 ]
 

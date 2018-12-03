@@ -126,7 +126,7 @@ export default class FBK extends Person {
         switch(collideProps.type) {
             case ENEMY_TYPES.fsb:
                 if (!this.isTouchedEnemy) {
-                    state.dispatch(changeMoney(10))
+                    state.dispatch(changeMoney(-10))
                     this.addDisabledAnimation()
                 }
                 break;

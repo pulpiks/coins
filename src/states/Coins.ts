@@ -1,6 +1,6 @@
 import autobind from 'autobind-decorator';
 
-import { COINS, FAIL_MSG } from '../constants/constants';
+import { COINS, FAIL_MSG, STATES } from '../constants/constants';
 
 import store from '../store';
 import { gameOver } from '../actions';
@@ -48,10 +48,11 @@ export default class Coins {
         if (money !== this.money) {
             this.money = money;
             this.label.setText(this.money.toString());
-            if (money) {
+            if (money === 0) {
                 store.dispatch(gameOver({
                     msg: FAIL_MSG.money
                 }))
+                this.game.state.start(STATES.Finish)
             }
         }
     }

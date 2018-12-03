@@ -11,6 +11,7 @@ import official, { OfficialState } from '../reducers/official'
 import passers, { PasserState } from '../reducers/passer'
 import events, { EventsState } from '../reducers/events'
 import statusGame, { FinalState } from '../reducers/final'
+import * as TYPES from '../types/types';
 
 export interface State {
     readonly policeman: PolicemanState,
@@ -23,7 +24,7 @@ export interface State {
     readonly statusGame: FinalState,
 }
 
-const rootReducer = combineReducers<State>({
+const appReducer = combineReducers<State>({
     policeman,
     enemy,
     mood,
@@ -33,6 +34,15 @@ const rootReducer = combineReducers<State>({
     events,
     statusGame,
 });
+
+
+const rootReducer = (state: State, action: any) => {
+    if (action.type === TYPES.START_GAME) {
+        state = undefined
+    }
+
+    return appReducer(state, action)
+} 
 
 const store = createStore(
     rootReducer,

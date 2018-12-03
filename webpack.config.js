@@ -11,10 +11,6 @@ const IS_PRODUCTION = (process.env.NODE_ENV === 'production' || process.env.WEBP
 
 // const pathPhaser = /node_modules\/phaser-ce\/build/
 
-console.log(IS_PRODUCTION)
-
-console.log(path.resolve(__dirname))
-
 const plugins = [
     // new CleanWebpackPlugin("dist"),
     IS_PRODUCTION ? false: new Dotenv(),
@@ -44,7 +40,7 @@ module.exports = {
         // publicPath: '/',
         // path: path.resolve(__dirname, 'dist'),
         path: path.resolve(__dirname, './dist'),
-        publicPath: './',
+        publicPath: IS_PRODUCTION ? './' : '/',
     },
     resolve: {
         extensions: ['.ts', '.js'],

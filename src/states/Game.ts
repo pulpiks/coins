@@ -31,6 +31,7 @@ import {
 import { OfficialProps, renderOfficials } from './Official'
 import { renderPassers, PassersProps, CrowdHandler } from './Passer';
 import { isDevelopment } from '../utils';
+import { startGame } from '../actions';
 
 export default class Game extends Phaser.State{
     private map: Phaser.Tilemap
@@ -52,7 +53,7 @@ export default class Game extends Phaser.State{
     assetsPath: string = './assets/'
 
     init() {
-         
+        store.dispatch(startGame())
     }
 
     preload() {
@@ -60,7 +61,6 @@ export default class Game extends Phaser.State{
     }
 
     createClouds() {
-        console.log(this.game.height)
         this.cloudsSprite = this.game.add.tileSprite(0, 0, this.game.width * 3000, this.game.height - 200, 'clouds', 0)
         this.cloudsSprite.scale.set(1.1, 1)
         this.cloudsSprite.smoothed = true;
@@ -234,7 +234,6 @@ export default class Game extends Phaser.State{
         this.crowd = new CrowdHandler(
             this.game
         )
-       
     }
 
     
@@ -249,36 +248,20 @@ export default class Game extends Phaser.State{
         );
 
         this.physics.arcade.collide(
-            this.obstacles,
-            this.ground,
-            null,
+            this.policemanWatcher.getAllSprites(), 
+            this.obstacles, 
+            this.policemanWatcher.collideWithObstacles, 
+            null, 
+            this.policemanWatcher
+        );
+
+        this.physics.arcade.collide(
+            this.officials.sprites, 
+            this.obstacles, 
+            this.officials.collideWithObstacles, 
             null, 
             this
-        )
-
-        // this.physics.arcade.collide(
-        //     this.policemanWatcher.getAllSprites(), 
-        //     this.obstacles, 
-        //     this.policemanWatcher.collideWithObstacles, 
-        //     null, 
-        //     this
-        // );
-
-        // this.physics.arcade.collide(
-        //     this.officials.sprites, 
-        //     this.obstacles, 
-        //     this.officials.collideWithObstacles, 
-        //     null, 
-        //     this
-        // );
-
-        // this.physics.arcade.collide(
-        //     this.passers.sprites,
-        //     this.obstacles,
-        //     this.passers.collideWithObstacles,
-        //     null,
-        //     this
-        // )
+        );
 
         this.physics.arcade.collide(
             this.passers.sprites,
@@ -328,18 +311,39 @@ export default class Game extends Phaser.State{
             this.cactusHandler.thrownCactuses, 
             (policeman: Phaser.Sprite, cactus: Phaser.Sprite) => {
                 this.policemanWatcher.collideCactus(policeman)
-                this.cactusHandler.collidePolicemanWithCactus(cactus)
+                this.cactusHandler.collideEnemyWithCactus(cactus)
             },
             null, 
             this
         );
+
         this.physics.arcade.collide(
+            this.officials.sprites,
             this.cactusHandler.thrownCactuses, 
-            this.obstacles, 
-            this.cactusHandler.collideObstaclesWithCactus, 
+            (official: Phaser.Sprite, cactus: Phaser.Sprite) => {
+                this.officials.collideCactus(official)
+                this.cactusHandler.collideEnemyWithCactus(cactus)
+            },
             null, 
             this
         );
+
+        this.physics.arcade.collide(
+            this.cactusHandler.thrownCactuses, 
+            this.obstacles, 
+            this.cactusHandler.collideObstaclesWithCactus,
+            null, 
+            this.cactusHandler
+        )
+
+        this.physics.arcade.collide(
+            this.cactusHandler.thrownCactuses, 
+            this.ground, 
+            this.cactusHandler.collideObstaclesWithCactus, 
+            null, 
+            this.cactusHandler
+        )
+
         this.physics.arcade.collide(
             this.person.sprite, 
             this.crowd, 
