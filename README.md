@@ -2,6 +2,7 @@
 
 Survive in the playing field and try to keep both the character's happy and enough money while cops try to illegally arrested you. 
 
+
 [**Play the game**](https://pulpiks.github.io/coins/dist/)
 
 ![gameplay screenshot](../src/assets/screencapture.png)
