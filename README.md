@@ -15,18 +15,18 @@ Your goal is to survive and reach the end, trying to save resources.
 * increasing the number of cactuses
 * improving the mood of person 
 
-1. The game is over either person's mood reaches zero(the spripe gets blinking red tint) or he is out of money. Mind the progress bar in the top left corner.
-2. Person's mood **decreases** gradually byt colliding clerks. **Cheer his up** by colliding with kind passers(not clerks, not policemen). 
+1. The game is over when either person's mood reaches zero(the spripe gets blinking red tint) or he is out of money. Mind the progress bar in the top left corner.
+2. Person's mood **decreases** gradually while colliding policemen permanently. **Cheer his up** by colliding with kind passers(not clerks, not policemen) to raise the money. 
 
 ### Enemies
 
-1. **Cops** will be run into you on your way.  If they catch you, you loose and becoming disabled(cooldown) for a few sec. You can jump over them if you have enough velocity and good position.
-2. **Clerks** will take your mood. Each clerk is unique and is able to take mood once. 
+1. **Cops** will be run into you on your way.  If they catch you, you loose and becoming disabled(cooldown) for a few sec. You can jump over them if you have a good position.
+2. **Clerks** will affect your mood. So each clerk is unique on the map and is able to affect the mood only once even if the collision happens twice or more. 
 
 
 ### Good characters
 
-1. **Squad from passers**, looks like people in colorful skins. There are passer with poster with picture of Sentsov, pupils, etc. They collide the main person and donate money to your mission. If you collide more then N passers you will get additional cash awards.
+1. **Squad from passers**, looks like group of people in colorful skins. There are passers with posters with picture of Sentsov, pupils, etc. They collide the main person and donate money to your mission on impact. If you collide more then N passers you will get additional cash awards.
 
  
 ### Tips
