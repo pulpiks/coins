@@ -15,7 +15,7 @@ Your goal is to survive and reach the end, trying to save resources.
 * increasing the number of cactuses
 * improving the mood of person 
 
-1. The game is over either person's mood reaches zero(the spripe gets blinking red tint) or he is out of money. Mind the progress bar in the top left corner.
+1. The game is over when either person's mood reaches zero(the spripe gets blinking red tint) or he is out of money. Mind the progress bar in the top left corner.
 2. Person's mood **decreases** gradually byt colliding clerks. **Cheer his up** by colliding with kind passers(not clerks, not policemen). 
 
 ### Enemies
