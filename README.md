@@ -5,7 +5,7 @@ Survive in the playing field and try to keep both the character's happy and enou
 
 [**Play the game**](https://pulpiks.github.io/coins/dist/)
 
-![gameplay screenshot](../src/assets/screencapture.png)
+![gameplay screenshot](./src/assets/screencapture.png)
  
 ## How to play
 
