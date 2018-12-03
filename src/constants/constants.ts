@@ -238,10 +238,10 @@ export type PassersKeys = {
 }
 
 export const passers: PassersKeys[] = [
-    {key: 'usual-1', count: 5}, 
-    {key: 'usual-2', count: 5}, 
-    {key: 'sentsov', count: 5}, 
-    {key: 'pupil', count: 10}
+    {key: 'usual-1', count: 2}, 
+    {key: 'usual-2', count: 3}, 
+    {key: 'sentsov', count: 3}, 
+    {key: 'pupil', count: 5}
 ]
 
 export const FAIL_MSG = {
