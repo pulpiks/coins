@@ -50,3 +50,9 @@ Your goal is to survive and reach the end, trying to save resources.
 #### Game engine:
 
 [Phaser.js](http://phaser.io)
+
+### TODO
+
+* tslint, typescript rules
+* jest tests
+* notifications, messages' bus
